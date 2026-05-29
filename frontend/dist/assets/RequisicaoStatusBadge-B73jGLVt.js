@@ -1,0 +1,1 @@
+import{j as a,p as t}from"./index-Cw1PFMX8.js";import{c as e,d as o}from"./sacRequisicao-GzO5VXgU.js";const p=({status:s})=>a.jsx("span",{className:t("status-badge px-2 py-0.5 rounded text-xs font-medium",e[s]),children:o[s]});export{p as R};

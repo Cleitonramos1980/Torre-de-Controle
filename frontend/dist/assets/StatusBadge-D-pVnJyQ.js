@@ -1,0 +1,1 @@
+import{j as a,p as e,q as o}from"./index-Cw1PFMX8.js";import{g as r}from"./statusText-CAD0X8BX.js";const g=({status:t,className:s})=>a.jsx("span",{className:e("status-badge",o[t]||"bg-muted text-muted-foreground",s),children:r(t)});export{g as S};

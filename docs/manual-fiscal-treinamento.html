@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual de Treinamento — Módulo Fiscal | Torre de Controle</title>
+<style>
+  :root {
+    --azul:    #1e3a5f;
+    --azul2:   #2563eb;
+    --cinza1:  #f8fafc;
+    --cinza2:  #e2e8f0;
+    --cinza3:  #94a3b8;
+    --texto:   #1e293b;
+    --verde:   #16a34a;
+    --laranja: #d97706;
+    --vermelho:#dc2626;
+    --roxo:    #7c3aed;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 13px;
+    color: var(--texto);
+    background: #fff;
+    line-height: 1.6;
+  }
+
+  /* ── CAPA ── */
+  .capa {
+    page-break-after: always;
+    background: var(--azul);
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 60px 40px;
+  }
+  .capa .logo-area { margin-bottom: 40px; }
+  .capa .torre { font-size: 48px; font-weight: 900; letter-spacing: -1px; color: #fff; }
+  .capa .subtitulo-capa { font-size: 18px; color: #93c5fd; margin-top: 6px; }
+  .capa h1 { font-size: 34px; font-weight: 700; margin: 30px 0 12px; color: #fff; }
+  .capa .linha { width: 80px; height: 4px; background: #3b82f6; margin: 0 auto 24px; border-radius: 2px; }
+  .capa p { font-size: 15px; color: #bfdbfe; max-width: 560px; }
+  .capa .versao { margin-top: 50px; font-size: 12px; color: #64748b; }
+  .capa .modulos { display: flex; gap: 16px; margin-top: 40px; flex-wrap: wrap; justify-content: center; }
+  .capa .modulo-chip {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 8px 20px;
+    font-size: 13px;
+    color: #e0f2fe;
+  }
+
+  /* ── SUMÁRIO ── */
+  .sumario {
+    page-break-after: always;
+    padding: 50px 60px;
+  }
+  .sumario h2 { font-size: 24px; color: var(--azul); border-bottom: 3px solid var(--azul2); padding-bottom: 10px; margin-bottom: 28px; }
+  .sumario ol { list-style: none; counter-reset: sumario; }
+  .sumario > ol > li { counter-increment: sumario; margin-bottom: 6px; }
+  .sumario > ol > li > span.num { color: var(--azul2); font-weight: 700; margin-right: 8px; }
+  .sumario a { text-decoration: none; color: var(--texto); }
+  .sumario a:hover { color: var(--azul2); }
+  .sumario .dots { flex: 1; border-bottom: 1px dotted #ccc; margin: 0 8px; }
+  .sumario .linha-sum { display: flex; align-items: baseline; margin-bottom: 5px; }
+  .sumario .pg { color: var(--cinza3); font-size: 12px; }
+  .sumario .sub { margin-left: 28px; font-size: 12px; color: #64748b; }
+
+  /* ── PÁGINA GERAL ── */
+  .pagina {
+    padding: 48px 60px;
+    page-break-before: always;
+  }
+  .pagina-sem-break { padding: 0 60px 48px; }
+
+  /* ── CABEÇALHO DE SEÇÃO ── */
+  .secao-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 32px;
+    padding-bottom: 16px;
+    border-bottom: 3px solid var(--azul2);
+  }
+  .secao-num {
+    background: var(--azul2);
+    color: #fff;
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .secao-header h2 { font-size: 22px; color: var(--azul); }
+  .secao-header .secao-sub { font-size: 13px; color: var(--cinza3); }
+
+  /* ── OBJETIVO ── */
+  .objetivo {
+    background: #eff6ff;
+    border-left: 4px solid var(--azul2);
+    padding: 14px 18px;
+    border-radius: 0 8px 8px 0;
+    margin-bottom: 28px;
+    font-size: 13px;
+    color: #1e3a5f;
+  }
+  .objetivo strong { display: block; margin-bottom: 4px; font-size: 14px; }
+
+  /* ── TÍTULOS INTERNOS ── */
+  h3 { font-size: 15px; color: var(--azul); margin: 28px 0 12px; border-left: 3px solid var(--azul2); padding-left: 10px; }
+  h4 { font-size: 13px; color: var(--texto); font-weight: 600; margin: 18px 0 8px; }
+
+  /* ── TABELAS ── */
+  table { width: 100%; border-collapse: collapse; margin: 12px 0 20px; font-size: 12px; }
+  th { background: var(--azul); color: #fff; padding: 8px 10px; text-align: left; font-weight: 600; }
+  td { padding: 7px 10px; border-bottom: 1px solid var(--cinza2); vertical-align: top; }
+  tr:nth-child(even) td { background: var(--cinza1); }
+  tr:hover td { background: #eff6ff; }
+
+  /* ── PASSO A PASSO ── */
+  .passos { list-style: none; counter-reset: passo; margin: 12px 0 20px; }
+  .passos > li {
+    counter-increment: passo;
+    display: flex;
+    gap: 14px;
+    margin-bottom: 14px;
+    align-items: flex-start;
+  }
+  .passos > li::before {
+    content: counter(passo);
+    background: var(--azul2);
+    color: #fff;
+    min-width: 26px; height: 26px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .passos > li .passo-conteudo { flex: 1; padding-top: 3px; }
+  .passos > li .passo-conteudo strong { color: var(--azul); }
+
+  /* ── BADGES ── */
+  .badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .badge-verde   { background: #dcfce7; color: #15803d; }
+  .badge-laranja { background: #fef3c7; color: #b45309; }
+  .badge-vermelho{ background: #fee2e2; color: #b91c1c; }
+  .badge-azul    { background: #dbeafe; color: #1d4ed8; }
+  .badge-cinza   { background: #f3f4f6; color: #374151; }
+  .badge-roxo    { background: #ede9fe; color: #6d28d9; }
+
+  /* ── BOTÃO VISUAL ── */
+  .btn {
+    display: inline-block;
+    padding: 3px 12px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    border: 1px solid;
+    white-space: nowrap;
+  }
+  .btn-azul    { background: #2563eb; color: #fff; border-color: #1d4ed8; }
+  .btn-verde   { background: #16a34a; color: #fff; border-color: #15803d; }
+  .btn-laranja { background: #d97706; color: #fff; border-color: #b45309; }
+  .btn-cinza   { background: #e2e8f0; color: #334155; border-color: #cbd5e1; }
+  .btn-roxo    { background: #7c3aed; color: #fff; border-color: #6d28d9; }
+  .btn-vermelho{ background: #dc2626; color: #fff; border-color: #b91c1c; }
+
+  /* ── ALERTA / DICA ── */
+  .alerta {
+    display: flex; gap: 12px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin: 16px 0;
+    font-size: 12px;
+  }
+  .alerta-info     { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; }
+  .alerta-aviso    { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; }
+  .alerta-critico  { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
+  .alerta-sucesso  { background: #f0fdf4; border: 1px solid #bbf7d0; color: #14532d; }
+  .alerta .icone { font-size: 16px; flex-shrink: 0; line-height: 1.4; }
+
+  /* ── TELA VISUAL ── */
+  .tela-visual {
+    border: 2px solid var(--cinza2);
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 16px 0 24px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  }
+  .tela-barra {
+    background: var(--azul);
+    color: #fff;
+    padding: 8px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .tela-barra .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .tela-barra .r { background: #ef4444; }
+  .tela-barra .y { background: #f59e0b; }
+  .tela-barra .g { background: #22c55e; }
+  .tela-body {
+    background: #f8fafc;
+    padding: 16px;
+    font-size: 12px;
+    min-height: 60px;
+  }
+  .tela-row { display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; align-items: center; }
+  .tela-campo {
+    background: #fff;
+    border: 1px solid #cbd5e1;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 11px;
+    color: #64748b;
+  }
+  .tela-tabela { width: 100%; border-collapse: collapse; margin-top: 8px; }
+  .tela-tabela th { background: #1e3a5f; color: #fff; padding: 5px 8px; font-size: 10px; text-align: left; }
+  .tela-tabela td { background: #fff; border-bottom: 1px solid #e2e8f0; padding: 5px 8px; font-size: 10px; }
+  .tela-tabela tr:hover td { background: #f0f9ff; }
+  .tela-tabela .tr-sel td { background: #dbeafe; }
+
+  /* ── DRAWER / PAINEL ── */
+  .drawer-preview {
+    display: flex;
+    gap: 12px;
+    margin: 16px 0 24px;
+  }
+  .drawer-lista { flex: 1; }
+  .drawer-panel {
+    width: 280px;
+    border: 2px solid var(--azul2);
+    border-radius: 8px;
+    overflow: hidden;
+    font-size: 11px;
+  }
+  .drawer-panel-header {
+    background: var(--azul);
+    color: #fff;
+    padding: 10px 12px;
+    font-weight: 700;
+    font-size: 12px;
+  }
+  .drawer-nivel {
+    border-bottom: 1px solid var(--cinza2);
+  }
+  .drawer-nivel-titulo {
+    background: #f1f5f9;
+    padding: 7px 12px;
+    font-weight: 600;
+    font-size: 11px;
+    color: var(--azul);
+    cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .drawer-nivel-body { padding: 8px 12px; background: #fff; }
+  .campo-linha { display: flex; justify-content: space-between; padding: 3px 0; border-bottom: 1px dotted #e2e8f0; font-size: 10px; }
+  .campo-chave { color: #64748b; }
+  .campo-valor { font-weight: 600; color: var(--texto); max-width: 140px; text-align: right; }
+
+  /* ── MODAL PREVIEW ── */
+  .modal-preview {
+    border: 2px solid var(--cinza2);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 16px 0 24px;
+    max-width: 480px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  }
+  .modal-header {
+    background: var(--azul);
+    color: #fff;
+    padding: 12px 18px;
+    font-size: 14px; font-weight: 700;
+  }
+  .modal-body { padding: 16px 18px; background: #fff; }
+  .modal-campo { margin-bottom: 10px; }
+  .modal-campo label { display: block; font-size: 11px; color: #64748b; margin-bottom: 3px; }
+  .modal-campo input-visual {
+    display: block;
+    width: 100%;
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-radius: 5px;
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+  .modal-campo .field-val {
+    display: block;
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-radius: 5px;
+    padding: 6px 10px;
+    font-size: 12px;
+    color: var(--texto);
+  }
+  .modal-footer {
+    padding: 12px 18px;
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+    display: flex; justify-content: flex-end; gap: 10px;
+  }
+
+  /* ── KPI CARDS ── */
+  .kpi-row { display: flex; gap: 12px; margin: 16px 0 24px; }
+  .kpi-card {
+    flex: 1;
+    border: 1px solid var(--cinza2);
+    border-radius: 8px;
+    padding: 12px 14px;
+    background: var(--cinza1);
+    text-align: center;
+  }
+  .kpi-card .kpi-val { font-size: 20px; font-weight: 700; color: var(--azul); }
+  .kpi-card .kpi-label { font-size: 10px; color: var(--cinza3); margin-top: 3px; }
+  .kpi-card.alerta-val .kpi-val { color: var(--vermelho); }
+
+  /* ── DIVISOR ── */
+  .divider { border: none; border-top: 1px solid var(--cinza2); margin: 24px 0; }
+
+  /* ── ÍNDICE DE CAMPOS ── */
+  .campo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin: 12px 0 20px;
+  }
+  .campo-item {
+    background: var(--cinza1);
+    border: 1px solid var(--cinza2);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+  .campo-item .ci-nome { font-weight: 600; color: var(--azul); font-size: 12px; }
+  .campo-item .ci-desc { color: #64748b; font-size: 11px; margin-top: 2px; }
+
+  /* ── RODAPÉ ── */
+  .rodape {
+    position: running(rodape);
+    border-top: 2px solid var(--azul2);
+    padding: 10px 60px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: var(--cinza3);
+    background: #fff;
+  }
+
+  /* ── PRINT ── */
+  @media print {
+    body { font-size: 12px; }
+    .capa { min-height: 100vh; }
+    .pagina, .sumario { padding: 40px 50px; }
+    .pagina-sem-break { padding: 0 50px 40px; }
+    h3 { break-after: avoid; }
+    .passos > li, .alerta, .tela-visual { break-inside: avoid; }
+    table { break-inside: avoid; }
+    .secao-header { break-after: avoid; }
+    .no-print { display: none; }
+    @page { margin: 15mm 10mm; }
+  }
+
+  /* ── LINHA DE CAMINHO ── */
+  .caminho {
+    display: flex; align-items: center; gap: 6px;
+    background: #f1f5f9; border: 1px solid var(--cinza2);
+    border-radius: 6px; padding: 7px 14px;
+    font-size: 12px; margin: 10px 0 20px;
+  }
+  .caminho span { color: #94a3b8; }
+  .caminho strong { color: var(--azul); }
+
+  .nivel-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: #1e3a5f; color: #fff;
+    border-radius: 6px; padding: 4px 12px;
+    font-size: 11px; font-weight: 700;
+    margin: 12px 0 8px;
+  }
+  .numero-nivel {
+    background: #3b82f6; border-radius: 50%;
+    width: 18px; height: 18px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 10px;
+  }
+
+  .legenda-cores {
+    display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 20px;
+  }
+  .legenda-item {
+    display: flex; align-items: center; gap: 6px; font-size: 11px;
+  }
+  .legenda-dot { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════
+     CAPA
+════════════════════════════════════════════ -->
+<div class="capa">
+  <div class="logo-area">
+    <div class="torre">🏢 Torre de Controle</div>
+    <div class="subtitulo-capa">Sistema de Gestão Rodrigues Colchões</div>
+  </div>
+  <div class="linha"></div>
+  <h1>Manual de Treinamento<br>Módulo Fiscal</h1>
+  <p>Guia completo com passo a passo detalhado para operação das telas de documentos fiscais eletrônicos recebidos e tomados.</p>
+  <div class="modulos">
+    <div class="modulo-chip">📄 NF-e Recebidas</div>
+    <div class="modulo-chip">🚛 CT-e Recebidos</div>
+    <div class="modulo-chip">🔧 NFS-e Tomadas</div>
+  </div>
+  <div class="versao">Versão 1.0 &nbsp;·&nbsp; Maio 2026 &nbsp;·&nbsp; Rodrigues Colchões</div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     SUMÁRIO
+════════════════════════════════════════════ -->
+<div class="sumario">
+  <h2>Sumário</h2>
+  <div style="margin-bottom:28px">
+    <div class="linha-sum"><span class="num" style="color:#2563eb;font-weight:700;margin-right:8px">1.</span><span>Visão Geral do Módulo Fiscal</span><span class="dots"></span><span class="pg">3</span></div>
+    <div class="sub">Como acessar · Navegação · Conceitos fundamentais</div>
+  </div>
+  <div style="margin-bottom:28px">
+    <div class="linha-sum"><span class="num" style="color:#2563eb;font-weight:700;margin-right:8px">2.</span><span>NF-e Recebidas</span><span class="dots"></span><span class="pg">4</span></div>
+    <div class="sub">Filtros · Tabela principal · Painel de detalhes · Manifestação · Cadastro de fornecedor</div>
+  </div>
+  <div style="margin-bottom:28px">
+    <div class="linha-sum"><span class="num" style="color:#2563eb;font-weight:700;margin-right:8px">3.</span><span>CT-e Recebidos</span><span class="dots"></span><span class="pg">9</span></div>
+    <div class="sub">Filtros · Tabela principal · Painel de detalhes · NF-es vinculadas · Cadastro de transportadora</div>
+  </div>
+  <div style="margin-bottom:28px">
+    <div class="linha-sum"><span class="num" style="color:#2563eb;font-weight:700;margin-right:8px">4.</span><span>NFS-e Tomadas — Pendentes de Lançamento</span><span class="dots"></span><span class="pg">14</span></div>
+    <div class="sub">Sincronização ADN · Importação WinThor · Validação · Lançamento · Detalhes</div>
+  </div>
+  <div style="margin-bottom:28px">
+    <div class="linha-sum"><span class="num" style="color:#2563eb;font-weight:700;margin-right:8px">5.</span><span>Referência Rápida — Legendas e Status</span><span class="dots"></span><span class="pg">18</span></div>
+    <div class="sub">Cores · Badges · Glossário</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     SEÇÃO 1 — VISÃO GERAL
+════════════════════════════════════════════ -->
+<div class="pagina">
+  <div class="secao-header">
+    <div class="secao-num">1</div>
+    <div>
+      <h2>Visão Geral do Módulo Fiscal</h2>
+      <div class="secao-sub">Introdução, acesso e conceitos fundamentais</div>
+    </div>
+  </div>
+
+  <div class="objetivo">
+    <strong>O que você encontra neste manual</strong>
+    Este documento ensina como operar as três telas fiscais de documentos recebidos/tomados no sistema Torre de Controle: <strong>NF-e Recebidas</strong>, <strong>CT-e Recebidos</strong> e <strong>NFS-e Tomadas — Pendentes de Lançamento</strong>. Cada seção traz o fluxo completo em passo a passo, com descrição de cada campo, botão e status.
+  </div>
+
+  <h3>1.1 Como acessar o Módulo Fiscal</h3>
+  <ol class="passos">
+    <li><div class="passo-conteudo">Abra o sistema no navegador: <strong>https://visitante.rodriguescolchoes.com.br:3344</strong></div></li>
+    <li><div class="passo-conteudo">Faça login com seu e-mail e senha cadastrados.</div></li>
+    <li><div class="passo-conteudo">No menu lateral esquerdo, localize e clique em <strong>Fiscal</strong>.</div></li>
+    <li><div class="passo-conteudo">O menu expandirá exibindo os sub-módulos. Clique na opção desejada:<br>
+      <div style="margin-top:8px; display:flex; gap:8px; flex-wrap:wrap;">
+        <div class="caminho" style="flex:none; margin:0; padding:5px 12px;"><strong>NF-e Recebidas</strong></div>
+        <div class="caminho" style="flex:none; margin:0; padding:5px 12px;"><strong>CT-e Recebidos</strong></div>
+        <div class="caminho" style="flex:none; margin:0; padding:5px 12px;"><strong>NFS-e Tomadas</strong></div>
+      </div>
+    </div></li>
+  </ol>
+
+  <h3>1.2 Conceitos Fundamentais</h3>
+  <table>
+    <thead><tr><th>Termo</th><th>Significado</th></tr></thead>
+    <tbody>
+      <tr><td><strong>NF-e</strong></td><td>Nota Fiscal Eletrônica — documento de compra de mercadorias (emitido pelo fornecedor, recebido pela empresa)</td></tr>
+      <tr><td><strong>CT-e</strong></td><td>Conhecimento de Transporte Eletrônico — documento referente ao frete (emitido pela transportadora)</td></tr>
+      <tr><td><strong>NFS-e</strong></td><td>Nota Fiscal de Serviços Eletrônica — nota de prestadores de serviço tomados (serviços contratados)</td></tr>
+      <tr><td><strong>SEFAZ</strong></td><td>Secretaria da Fazenda — órgão que autoriza os documentos fiscais</td></tr>
+      <tr><td><strong>Manifestação</strong></td><td>Declaração oficial da empresa perante a SEFAZ sobre uma NF-e recebida</td></tr>
+      <tr><td><strong>WinThor</strong></td><td>ERP da empresa — onde ficam registrados os pedidos de compra e lançamentos fiscais</td></tr>
+      <tr><td><strong>ADN</strong></td><td>Ambiente Nacional de NFS-e — plataforma federal de notas de serviço do Governo Federal</td></tr>
+      <tr><td><strong>Score de Risco</strong></td><td>Pontuação calculada automaticamente pelo sistema para indicar divergências ou irregularidades em documentos fiscais</td></tr>
+      <tr><td><strong>Chave de Acesso</strong></td><td>Código de 44 dígitos que identifica unicamente cada documento fiscal eletrônico</td></tr>
+      <tr><td><strong>PCFORNEC</strong></td><td>Tabela do WinThor onde ficam cadastrados os fornecedores</td></tr>
+    </tbody>
+  </table>
+
+  <h3>1.3 Legenda Geral de Cores</h3>
+  <div class="legenda-cores">
+    <div class="legenda-item"><div class="legenda-dot" style="background:#16a34a"></div><span><strong>Verde</strong> — OK / Autorizado / Cadastrado</span></div>
+    <div class="legenda-item"><div class="legenda-dot" style="background:#d97706"></div><span><strong>Laranja</strong> — Pendente / Atenção / Sem vínculo</span></div>
+    <div class="legenda-item"><div class="legenda-dot" style="background:#dc2626"></div><span><strong>Vermelho</strong> — Crítico / Cancelado / Não cadastrado</span></div>
+    <div class="legenda-item"><div class="legenda-dot" style="background:#2563eb"></div><span><strong>Azul</strong> — Informativo / Atenção moderada</span></div>
+    <div class="legenda-item"><div class="legenda-dot" style="background:#7c3aed"></div><span><strong>Roxo</strong> — Ação de lançamento / Sistema</span></div>
+    <div class="legenda-item"><div class="legenda-dot" style="background:#94a3b8"></div><span><strong>Cinza</strong> — Não validado / Inativo</span></div>
+  </div>
+
+  <div class="alerta alerta-aviso">
+    <span class="icone">⚠️</span>
+    <div><strong>Atenção:</strong> Qualquer manifestação de NF-e é um ato oficial junto à SEFAZ e não pode ser desfeita. Leia com atenção os dados da nota antes de confirmar uma manifestação.</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     SEÇÃO 2 — NF-e RECEBIDAS
+════════════════════════════════════════════ -->
+<div class="pagina">
+  <div class="secao-header">
+    <div class="secao-num">2</div>
+    <div>
+      <h2>NF-e Recebidas</h2>
+      <div class="secao-sub">Notas Fiscais Eletrônicas recebidas de fornecedores</div>
+    </div>
+  </div>
+
+  <div class="objetivo">
+    <strong>Objetivo desta tela</strong>
+    Consultar, analisar e manifestar as Notas Fiscais Eletrônicas emitidas pelos fornecedores e destinadas à empresa. Também permite verificar se os fornecedores estão cadastrados no WinThor e, se não estiverem, cadastrá-los diretamente pelo sistema.
+  </div>
+
+  <div class="caminho">
+    <strong>Menu Fiscal</strong> <span>›</span> <strong>NF-e Recebidas</strong>
+  </div>
+
+  <h3>2.1 Indicadores no topo da página</h3>
+  <p style="margin-bottom:12px">Ao abrir a tela, quatro cartões de resumo são exibidos no topo:</p>
+  <div class="kpi-row">
+    <div class="kpi-card">
+      <div class="kpi-val">248</div>
+      <div class="kpi-label">Total NF-e</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-val">R$ 1,2M</div>
+      <div class="kpi-label">Valor Total</div>
+    </div>
+    <div class="kpi-card alerta-val">
+      <div class="kpi-val">12</div>
+      <div class="kpi-label">Pend. Manifestação ⚠️</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-val">3</div>
+      <div class="kpi-label">Canceladas</div>
+    </div>
+  </div>
+  <div class="alerta alerta-aviso">
+    <span class="icone">⚠️</span>
+    <div>Se o cartão <strong>Pend. Manifestação</strong> estiver em vermelho, existem notas aguardando sua manifestação. Priorize esses registros — há prazo legal para manifestar.</div>
+  </div>
+</div>
+
+<div class="pagina-sem-break">
+  <h3>2.2 Como filtrar as NF-es</h3>
+  <div class="tela-visual">
+    <div class="tela-barra"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>&nbsp;Filtros — NF-e Recebidas</div>
+    <div class="tela-body">
+      <div class="tela-row">
+        <div class="tela-campo">🔍 Buscar por chave, emitente ou CNPJ</div>
+        <div class="tela-campo">Status SEFAZ ▾</div>
+        <div class="tela-campo">Status Manifestação ▾</div>
+        <div class="tela-campo">Status Risco ▾</div>
+        <div class="tela-campo">📅 Data início</div>
+        <div class="tela-campo">📅 Data fim</div>
+        <span class="btn btn-azul">Filtrar</span>
+      </div>
+      <div class="tela-row" style="font-size:11px; color:#64748b;">
+        <label>☐ Sem pedido WinThor</label>&nbsp;&nbsp;
+        <label>☐ Apenas canceladas</label>&nbsp;&nbsp;
+        <span class="btn btn-cinza" style="font-size:10px;">⬇ Exportar CSV</span>
+      </div>
+    </div>
+  </div>
+
+  <table>
+    <thead><tr><th>Campo de Filtro</th><th>O que faz</th><th>Quando usar</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Busca livre</strong></td><td>Pesquisa por chave de acesso, nome do emitente ou CNPJ</td><td>Quando você já sabe qual nota procura</td></tr>
+      <tr><td><strong>Status SEFAZ</strong></td><td>Filtra por: Autorizada, Pendente, Cancelada, Denegada</td><td>Para ver apenas notas canceladas ou pendentes de autorização</td></tr>
+      <tr><td><strong>Status Manifestação</strong></td><td>Filtra por: Pendente, Ciência, Confirmação, Desconhecimento</td><td>Para encontrar notas que ainda não foram manifestadas</td></tr>
+      <tr><td><strong>Status Risco</strong></td><td>Filtra por: Crítico, Alto, Atenção, Baixo</td><td>Para trabalhar primeiro as notas com maior risco</td></tr>
+      <tr><td><strong>Período</strong></td><td>Data de emissão entre duas datas</td><td>Para consultar um mês ou período específico</td></tr>
+      <tr><td><strong>Sem pedido WinThor</strong></td><td>Mostra apenas notas sem número de pedido no ERP</td><td>Para identificar compras não registradas no WinThor</td></tr>
+      <tr><td><strong>Apenas canceladas</strong></td><td>Exibe somente notas com status Cancelada</td><td>Para conferir cancelamentos recentes</td></tr>
+    </tbody>
+  </table>
+
+  <ol class="passos">
+    <li><div class="passo-conteudo">Preencha um ou mais filtros conforme sua necessidade.</div></li>
+    <li><div class="passo-conteudo">Clique no botão <span class="btn btn-azul">Filtrar</span> para aplicar.</div></li>
+    <li><div class="passo-conteudo">A tabela abaixo atualizará automaticamente com os resultados.</div></li>
+    <li><div class="passo-conteudo">Para limpar os filtros, apague os campos e clique <span class="btn btn-azul">Filtrar</span> novamente.</div></li>
+  </ol>
+</div>
+
+<div class="pagina">
+  <h3>2.3 Entendendo a tabela de NF-es</h3>
+  <div class="tela-visual">
+    <div class="tela-barra"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>&nbsp;Tabela Principal — NF-e Recebidas</div>
+    <div class="tela-body" style="padding:0">
+      <table class="tela-tabela">
+        <thead><tr><th>Risco</th><th>Chave/Nº</th><th>Emitente</th><th>Data</th><th>Valor</th><th>SEFAZ</th><th>Manifestação</th><th>WinThor</th><th>Fornecedor</th><th>Score</th><th>Ações</th></tr></thead>
+        <tbody>
+          <tr class="tr-sel">
+            <td><span class="badge badge-laranja">ALTO</span></td>
+            <td style="font-size:9px;font-family:monospace">43240512…001234</td>
+            <td>Fornecedor ABC</td>
+            <td>12/05/26</td>
+            <td>R$ 4.850</td>
+            <td><span class="badge badge-verde">AUTORIZADA</span></td>
+            <td><span class="badge badge-laranja">PENDENTE</span></td>
+            <td><span class="badge badge-verde">✓ WinThor</span></td>
+            <td><span class="badge badge-verde">#1042</span></td>
+            <td style="color:#d97706;font-weight:700">65</td>
+            <td><span class="btn btn-azul" style="font-size:9px">Detalhe</span> <span class="btn btn-laranja" style="font-size:9px">Manifestar</span></td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-vermelho">CRÍTICO</span></td>
+            <td style="font-size:9px;font-family:monospace">35240912…005678</td>
+            <td>Transportes XYZ</td>
+            <td>10/05/26</td>
+            <td>R$ 12.300</td>
+            <td><span class="badge badge-verde">AUTORIZADA</span></td>
+            <td><span class="badge badge-laranja">PENDENTE</span></td>
+            <td><span class="badge badge-laranja">Pendente</span></td>
+            <td><span class="badge badge-vermelho">Não cadastrado</span></td>
+            <td style="color:#dc2626;font-weight:700">88</td>
+            <td><span class="btn btn-azul" style="font-size:9px">Detalhe</span> <span class="btn btn-laranja" style="font-size:9px">Manifestar</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <table>
+    <thead><tr><th>Coluna</th><th>O que mostra</th><th>Valores possíveis</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Risco</strong></td><td>Classificação de risco calculada pelo sistema</td><td><span class="badge badge-vermelho">CRÍTICO</span> <span class="badge badge-laranja">ALTO</span> <span class="badge badge-azul">ATENÇÃO</span> <span class="badge badge-verde">BAIXO</span></td></tr>
+      <tr><td><strong>Chave</strong></td><td>Código identificador da nota (44 dígitos, exibido reduzido)</td><td>Formato: 8 primeiros + … + 6 últimos dígitos</td></tr>
+      <tr><td><strong>Nº / Série</strong></td><td>Número e série da nota fiscal</td><td>Ex: 001234 / 1</td></tr>
+      <tr><td><strong>Emitente</strong></td><td>Nome/razão social do fornecedor que emitiu a nota</td><td>Texto livre</td></tr>
+      <tr><td><strong>Data de Emissão</strong></td><td>Data em que a nota foi emitida pelo fornecedor</td><td>DD/MM/AA</td></tr>
+      <tr><td><strong>Valor Total</strong></td><td>Valor total da nota em reais</td><td>R$ X.XXX,XX</td></tr>
+      <tr><td><strong>SEFAZ</strong></td><td>Situação da nota na Receita Federal</td><td><span class="badge badge-verde">AUTORIZADA</span> <span class="badge badge-vermelho">CANCELADA</span> <span class="badge badge-laranja">DENEGADA</span> <span class="badge badge-azul">PENDENTE</span></td></tr>
+      <tr><td><strong>Manifestação</strong></td><td>Situação da sua declaração perante a SEFAZ</td><td><span class="badge badge-laranja">PENDENTE</span> <span class="badge badge-verde">CIÊNCIA</span> <span class="badge badge-verde">CONFIRMAÇÃO</span> <span class="badge badge-verde">DESCONHECIMENTO</span></td></tr>
+      <tr><td><strong>WinThor</strong></td><td>Se a nota tem pedido de compra correspondente no ERP</td><td><span class="badge badge-verde">✓ WinThor</span> ou <span class="badge badge-laranja">Pendente</span></td></tr>
+      <tr><td><strong>Fornecedor</strong></td><td>Se o CNPJ emitente está cadastrado no PCFORNEC do WinThor</td><td><span class="badge badge-verde">#1042</span> (cadastrado) ou <span class="badge badge-vermelho">Não cadastrado</span></td></tr>
+      <tr><td><strong>Score</strong></td><td>Pontuação de risco (quanto maior, mais atenção requer)</td><td>0–100. Verde &lt;26, Azul 26–50, Laranja 51–75, Vermelho ≥76</td></tr>
+      <tr><td><strong>Ações</strong></td><td>Botões de ação para cada nota</td><td><span class="btn btn-azul">Detalhe</span> e <span class="btn btn-laranja">Manifestar</span> (se pendente)</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="pagina">
+  <h3>2.4 Consultando os detalhes de uma NF-e (Painel Lateral)</h3>
+
+  <ol class="passos">
+    <li><div class="passo-conteudo">Na linha da nota desejada, clique no botão <span class="btn btn-azul">Detalhe</span>.</div></li>
+    <li><div class="passo-conteudo">Um <strong>painel lateral</strong> deslizará da direita com as informações completas da nota.</div></li>
+    <li><div class="passo-conteudo">O painel está organizado em <strong>4 níveis expansíveis</strong>. Clique em cada título para abrir ou fechar.</div></li>
+  </ol>
+
+  <div class="nivel-badge"><span class="numero-nivel">1</span> Nível 1 — Resumo da Nota</div>
+  <table>
+    <thead><tr><th>Campo</th><th>Descrição</th></tr></thead>
+    <tbody>
+      <tr><td>Chave de Acesso</td><td>44 dígitos que identificam unicamente esta nota na SEFAZ</td></tr>
+      <tr><td>Número / Série / Modelo</td><td>Identificação numérica da nota fiscal (emitida pelo fornecedor)</td></tr>
+      <tr><td>Data de Emissão</td><td>Quando o fornecedor emitiu a nota</td></tr>
+      <tr><td>Data de Entrada</td><td>Quando a nota entrou na base do sistema</td></tr>
+      <tr><td>Valor Total</td><td>Valor total da nota em R$</td></tr>
+      <tr><td>Protocolo SEFAZ</td><td>Número do protocolo de autorização emitido pela SEFAZ</td></tr>
+      <tr><td>Ambiente</td><td>Produção (nota real) ou Homologação (teste)</td></tr>
+      <tr><td>Status WinThor</td><td>Se a nota tem pedido correspondente no ERP</td></tr>
+      <tr><td><strong>Emitente</strong> — Nome</td><td>Razão social do fornecedor</td></tr>
+      <tr><td><strong>Emitente</strong> — CNPJ</td><td>CNPJ do fornecedor emitente</td></tr>
+      <tr><td><strong>Emitente</strong> — IE / UF / Município</td><td>Inscrição Estadual e localização do fornecedor</td></tr>
+      <tr><td><strong>Emitente</strong> — Endereço / Telefone</td><td>Endereço e contato extraídos do XML da nota</td></tr>
+      <tr><td><strong>Destinatário</strong> — CNPJ</td><td>CNPJ do destinatário (empresa Rodrigues Colchões)</td></tr>
+      <tr><td><strong>Destinatário</strong> — Filial</td><td>Código da filial que recebe a mercadoria</td></tr>
+      <tr><td><strong>Score de Risco</strong></td><td>Pontuação + classificação + lista de regras que geraram os pontos</td></tr>
+    </tbody>
+  </table>
+
+  <div class="nivel-badge"><span class="numero-nivel">2</span> Nível 2 — Produtos / Itens da Nota</div>
+  <p style="margin-bottom:10px">Exibe todos os produtos presentes na NF-e, extraídos diretamente do XML, mesmo que não estejam cadastrados no WinThor.</p>
+  <table>
+    <thead><tr><th>#</th><th>Cód. Forn.</th><th>EAN</th><th>Descrição</th><th>Un</th><th>Qtd</th><th>Vl.Unit.</th><th>Total</th><th>CFOP</th><th>CST</th><th>ICMS%</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>RC-001</td><td>7891234567890</td><td>COLCHÃO CASAL MOLAS 138X188</td><td>UN</td><td>10</td><td>R$320,00</td><td>R$3.200,00</td><td>6102</td><td>00</td><td>12%</td></tr>
+      <tr><td>2</td><td>RC-002</td><td>7891234567891</td><td>TRAVESSEIRO LÁTEX STANDARD</td><td>UN</td><td>24</td><td>R$68,75</td><td>R$1.650,00</td><td>6102</td><td>00</td><td>12%</td></tr>
+    </tbody>
+  </table>
+
+  <div class="nivel-badge"><span class="numero-nivel">3</span> Nível 3 — XML da Nota</div>
+  <p>Exibe o XML completo da NF-e em formato legível (fundo escuro). Útil para conferência técnica ou auditoria.</p>
+
+  <div class="nivel-badge"><span class="numero-nivel">4</span> Nível 4 — Histórico de Manifestações</div>
+  <p>Lista todas as manifestações já registradas para esta nota: tipo de evento, data, transmitido por, e protocolo SEFAZ.</p>
+
+  <div class="alerta alerta-info" style="margin-top:18px">
+    <span class="icone">ℹ️</span>
+    <div>Para <strong>fechar o painel lateral</strong>, clique no <strong>X</strong> no canto superior direito do painel ou clique fora dele.</div>
+  </div>
+</div>
+
+<div class="pagina">
+  <h3>2.5 Como manifestar uma NF-e</h3>
+
+  <div class="alerta alerta-critico">
+    <span class="icone">🚨</span>
+    <div><strong>Ação irreversível:</strong> A manifestação é um ato oficial registrado na SEFAZ. Após confirmar, não é possível desfazer. Verifique todos os dados antes de prosseguir.</div>
+  </div>
+
+  <ol class="passos">
+    <li><div class="passo-conteudo">Localize a nota com status <span class="badge badge-laranja">PENDENTE</span> na coluna Manifestação.</div></li>
+    <li><div class="passo-conteudo">Clique no botão <span class="btn btn-laranja">Manifestar</span> na linha da nota.<br><em>Apenas notas com manifestação pendente exibem este botão.</em></div></li>
+    <li><div class="passo-conteudo">O modal de manifestação será aberto. Selecione o <strong>Tipo de Evento</strong>:</div></li>
+  </ol>
+
+  <table>
+    <thead><tr><th>Tipo de Evento</th><th>Quando usar</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Ciência da Operação</strong></td><td>Você sabe que a nota existe, mas ainda não confirmou o recebimento da mercadoria</td></tr>
+      <tr><td><strong>Confirmação da Operação</strong></td><td>Mercadoria foi recebida e a nota está correta — confirme o recebimento</td></tr>
+      <tr><td><strong>Desconhecimento da Operação</strong></td><td>A empresa não reconhece esta operação — use com cautela (auditoria)</td></tr>
+      <tr><td><strong>Operação não Realizada</strong></td><td>A operação não foi realizada (devolução, cancelamento já efetivado)</td></tr>
+    </tbody>
+  </table>
+
+  <ol class="passos">
+    <li><div class="passo-conteudo">Se o <strong>Score de Risco for ≥ 51</strong> (risco Alto ou Crítico), o sistema exigirá uma <strong>justificativa obrigatória</strong>. Descreva o motivo no campo de texto.</div></li>
+    <li><div class="passo-conteudo">Revise o resumo da nota exibido no modal (emitente, valor, data).</div></li>
+    <li><div class="passo-conteudo">Clique em <span class="btn btn-laranja">Manifestar</span> para confirmar.<br>Ou clique em <span class="btn btn-cinza">Cancelar</span> para fechar sem manifestar.</div></li>
+    <li><div class="passo-conteudo">Após a confirmação, a coluna Manifestação na tabela atualizará para o novo status (<span class="badge badge-verde">CONFIRMAÇÃO</span>, etc.).</div></li>
+  </ol>
+
+  <div class="modal-preview">
+    <div class="modal-header">Manifestar NF-e — 43240512345678901234567890123456789012345</div>
+    <div class="modal-body">
+      <div style="background:#fef3c7;border:1px solid #fde68a;border-radius:6px;padding:10px 12px;margin-bottom:14px;font-size:11px;color:#92400e">
+        ⚠️ <strong>Score de Risco: 65 — ALTO.</strong> Informe a justificativa abaixo.
+      </div>
+      <div class="modal-campo">
+        <label>Tipo de Evento *</label>
+        <span class="field-val">Confirmação da Operação ▾</span>
+      </div>
+      <div class="modal-campo">
+        <label>Justificativa * (obrigatória para risco Alto/Crítico)</label>
+        <span class="field-val" style="min-height:50px;color:#94a3b8">Mercadoria recebida e conferida em 12/05/2026. Nota está correta.</span>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <span class="btn btn-cinza">Cancelar</span>
+      <span class="btn btn-laranja">Manifestar</span>
+    </div>
+  </div>
+
+  <h3>2.6 Como cadastrar um fornecedor não registrado</h3>
+
+  <p style="margin-bottom:12px">Quando a coluna <strong>Fornecedor</strong> exibe <span class="badge badge-vermelho">Não cadastrado</span>, o CNPJ emitente da nota não está no WinThor (PCFORNEC). É possível cadastrá-lo diretamente pelo sistema.</p>
+
+  <ol class="passos">
+    <li><div class="passo-conteudo">Localize a nota com <span class="badge badge-vermelho">Não cadastrado</span> na coluna Fornecedor.</div></li>
+    <li><div class="passo-conteudo">Clique no botão <span class="btn btn-vermelho" style="font-size:11px">Cadastrar</span> que aparece ao lado do badge.</div></li>
+    <li><div class="passo-conteudo">O modal de cadastro abrirá com os dados <strong>pré-preenchidos automaticamente</strong>, extraídos do XML da nota.</div></li>
+    <li><div class="passo-conteudo">Confira os campos:
+      <ul style="margin-top:6px;padding-left:20px;font-size:12px">
+        <li>CNPJ (não editável)</li>
+        <li>Razão Social / Nome Fantasia</li>
+        <li>Inscrição Estadual (IE)</li>
+        <li>CNAE</li>
+        <li>Endereço, Bairro, Cidade, Estado, CEP</li>
+        <li>Telefone</li>
+        <li><strong>Simples Nacional</strong> (S/N) — verifique e ajuste se necessário</li>
+      </ul>
+    </div></li>
+    <li><div class="passo-conteudo">Clique em <span class="btn btn-verde">Cadastrar no WinThor</span> para confirmar.</div></li>
+    <li><div class="passo-conteudo">Após o cadastro, a coluna Fornecedor atualizará para <span class="badge badge-verde">#XXXX</span> com o código atribuído.</div></li>
+  </ol>
+
+  <div class="alerta alerta-info">
+    <span class="icone">ℹ️</span>
+    <div>O tipo do fornecedor é definido automaticamente como <strong>"C — Mercadoria (NF-e)"</strong>. Após o cadastro, acesse o WinThor se precisar complementar campos adicionais.</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     SEÇÃO 3 — CT-e RECEBIDOS
+════════════════════════════════════════════ -->
+<div class="pagina">
+  <div class="secao-header">
+    <div class="secao-num">3</div>
+    <div>
+      <h2>CT-e Recebidos</h2>
+      <div class="secao-sub">Conhecimentos de Transporte Eletrônico emitidos por transportadoras</div>
+    </div>
+  </div>
+
+  <div class="objetivo">
+    <strong>Objetivo desta tela</strong>
+    Consultar e analisar os Conhecimentos de Transporte Eletrônico (CT-e) emitidos pelas transportadoras. Permite verificar quais NF-es estão vinculadas ao frete, analisar riscos e cadastrar a transportadora no WinThor caso não esteja registrada.
+  </div>
+
+  <div class="caminho">
+    <strong>Menu Fiscal</strong> <span>›</span> <strong>CT-e Recebidos</strong>
+  </div>
+
+  <h3>3.1 Indicadores no topo da página</h3>
+  <div class="kpi-row">
+    <div class="kpi-card">
+      <div class="kpi-val">84</div>
+      <div class="kpi-label">Total CT-e</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-val">R$ 48.200</div>
+      <div class="kpi-label">Valor Frete</div>
+    </div>
+    <div class="kpi-card alerta-val">
+      <div class="kpi-val">7</div>
+      <div class="kpi-label">Sem NF-e Vinculada ⚠️</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-val">2</div>
+      <div class="kpi-label">Cancelados</div>
+    </div>
+  </div>
+
+  <div class="alerta alerta-aviso">
+    <span class="icone">⚠️</span>
+    <div>Se o cartão <strong>Sem NF-e Vinculada</strong> estiver em laranja/vermelho, existem CT-es de frete sem nota de mercadoria correspondente. Verifique se há notas em trânsito ou erros de digitação.</div>
+  </div>
+
+  <h3>3.2 Como filtrar os CT-es</h3>
+  <div class="tela-visual">
+    <div class="tela-barra"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>&nbsp;Filtros — CT-e Recebidos</div>
+    <div class="tela-body">
+      <div class="tela-row">
+        <div class="tela-campo">🔍 Transportadora (nome ou CNPJ)</div>
+        <div class="tela-campo">Status SEFAZ ▾</div>
+        <div class="tela-campo">📅 Data início</div>
+        <div class="tela-campo">📅 Data fim</div>
+        <span class="btn btn-azul">Filtrar</span>
+      </div>
+      <div class="tela-row" style="font-size:11px; color:#64748b;">
+        <label>☐ Apenas sem NF-e vinculada</label>&nbsp;&nbsp;
+        <span class="btn btn-cinza" style="font-size:10px;">⬇ Exportar CSV</span>
+      </div>
+    </div>
+  </div>
+
+  <table>
+    <thead><tr><th>Campo de Filtro</th><th>O que faz</th><th>Quando usar</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Busca por transportadora</strong></td><td>Pesquisa por nome ou CNPJ da transportadora emitente</td><td>Quando você sabe qual transportadora buscar</td></tr>
+      <tr><td><strong>Status SEFAZ</strong></td><td>Filtra por: Autorizada, Pendente, Cancelada, Denegada</td><td>Para ver apenas CT-es com problemas de status</td></tr>
+      <tr><td><strong>Período</strong></td><td>Data de emissão entre duas datas</td><td>Para consultar fretes de um período específico</td></tr>
+      <tr><td><strong>Apenas sem NF-e vinculada</strong></td><td>Filtra CT-es que não têm nenhuma NF-e associada</td><td>Para identificar fretes "soltos" sem mercadoria correspondente</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="pagina-sem-break">
+  <h3>3.3 Entendendo a tabela de CT-es</h3>
+  <div class="tela-visual">
+    <div class="tela-barra"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>&nbsp;Tabela Principal — CT-e Recebidos</div>
+    <div class="tela-body" style="padding:0">
+      <table class="tela-tabela">
+        <thead><tr><th>Risco</th><th>Chave</th><th>Transportadora</th><th>CNPJ</th><th>Data</th><th>Vl.Frete</th><th>SEFAZ</th><th>NF-es</th><th>Fornecedor</th><th>Score</th><th>Ações</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="badge badge-azul">ATENÇÃO</span></td>
+            <td style="font-size:9px;font-family:monospace">57250512…009876</td>
+            <td>Transportes Rápido</td>
+            <td style="font-size:9px">12.345.678/0001-99</td>
+            <td>11/05/26</td>
+            <td>R$ 1.200</td>
+            <td><span class="badge badge-verde">AUTORIZADA</span></td>
+            <td><span class="badge badge-azul">3 NF-e</span></td>
+            <td><span class="badge badge-verde">#502</span></td>
+            <td style="color:#2563eb;font-weight:700">38</td>
+            <td><span class="btn btn-azul" style="font-size:9px">Detalhe + NF-es</span></td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-laranja">ALTO</span></td>
+            <td style="font-size:9px;font-family:monospace">57250508…004321</td>
+            <td>Logística Total Ltda</td>
+            <td style="font-size:9px">98.765.432/0001-11</td>
+            <td>08/05/26</td>
+            <td>R$ 3.450</td>
+            <td><span class="badge badge-verde">AUTORIZADA</span></td>
+            <td><span class="badge badge-laranja">Sem NF-e</span></td>
+            <td><span class="badge badge-vermelho">Não cadastrado</span></td>
+            <td style="color:#d97706;font-weight:700">58</td>
+            <td><span class="btn btn-azul" style="font-size:9px">Detalhe + NF-es</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <table>
+    <thead><tr><th>Coluna</th><th>O que mostra</th><th>Valores possíveis</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Risco</strong></td><td>Classificação de risco calculada</td><td><span class="badge badge-vermelho">CRÍTICO</span> <span class="badge badge-laranja">ALTO</span> <span class="badge badge-azul">ATENÇÃO</span> <span class="badge badge-verde">BAIXO</span></td></tr>
+      <tr><td><strong>Chave</strong></td><td>Identificador único do CT-e (44 dígitos)</td><td>Exibido reduzido: 8 + … + 6</td></tr>
+      <tr><td><strong>Nº / Série</strong></td><td>Número e série do conhecimento de transporte</td><td>Ex: 009876 / 1</td></tr>
+      <tr><td><strong>Transportadora</strong></td><td>Razão social da empresa de transporte</td><td>Texto</td></tr>
+      <tr><td><strong>CNPJ Emitente</strong></td><td>CNPJ da transportadora</td><td>XX.XXX.XXX/XXXX-XX</td></tr>
+      <tr><td><strong>Data de Emissão</strong></td><td>Data em que o CT-e foi emitido</td><td>DD/MM/AA</td></tr>
+      <tr><td><strong>Vl. Frete</strong></td><td>Valor do frete cobrado</td><td>R$ X.XXX,XX</td></tr>
+      <tr><td><strong>SEFAZ</strong></td><td>Situação do CT-e</td><td><span class="badge badge-verde">AUTORIZADA</span> <span class="badge badge-vermelho">CANCELADA</span></td></tr>
+      <tr><td><strong>NF-es Vinculadas</strong></td><td>Quantidade de notas de mercadoria vinculadas ao frete</td><td><span class="badge badge-azul">3 NF-e</span> ou <span class="badge badge-laranja">Sem NF-e</span></td></tr>
+      <tr><td><strong>Fornecedor</strong></td><td>Se a transportadora está cadastrada no WinThor</td><td><span class="badge badge-verde">#502</span> ou <span class="badge badge-vermelho">Não cadastrado</span></td></tr>
+      <tr><td><strong>Score</strong></td><td>Pontuação de risco (mesma lógica do NF-e)</td><td>0–100</td></tr>
+      <tr><td><strong>Ações</strong></td><td>Único botão disponível</td><td><span class="btn btn-azul">Detalhe + NF-es</span></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="pagina">
+  <h3>3.4 Consultando os detalhes de um CT-e (Painel Lateral)</h3>
+
+  <ol class="passos">
+    <li><div class="passo-conteudo">Na linha do CT-e desejado, clique no botão <span class="btn btn-azul">Detalhe + NF-es</span>.</div></li>
+    <li><div class="passo-conteudo">O painel lateral deslizará da direita com 4 níveis de informação.</div></li>
+  </ol>
+
+  <div class="nivel-badge"><span class="numero-nivel">1</span> Nível 1 — Resumo do CT-e</div>
+  <table>
+    <thead><tr><th>Campo</th><th>Descrição</th></tr></thead>
+    <tbody>
+      <tr><td>Chave de Acesso</td><td>44 dígitos identificadores do CT-e</td></tr>
+      <tr><td>Número / Série / Modelo</td><td>Identificação numérica do conhecimento de transporte</td></tr>
+      <tr><td>Data de Emissão</td><td>Quando a transportadora emitiu o CT-e</td></tr>
+      <tr><td>Data de Entrada</td><td>Quando entrou na base do sistema</td></tr>
+      <tr><td>Valor do Frete</td><td>Valor total cobrado pelo transporte</td></tr>
+      <tr><td>Protocolo SEFAZ</td><td>Número de autorização da SEFAZ</td></tr>
+      <tr><td><strong>Transportadora</strong> — Nome</td><td>Razão social da transportadora emitente</td></tr>
+      <tr><td><strong>Transportadora</strong> — CNPJ</td><td>CNPJ da transportadora</td></tr>
+      <tr><td><strong>Transportadora</strong> — UF / Município</td><td>Localização da transportadora</td></tr>
+      <tr><td><strong>Tomador</strong> — CNPJ</td><td>CNPJ do tomador do frete (empresa Rodrigues Colchões)</td></tr>
+      <tr><td><strong>Tomador</strong> — Filial</td><td>Código da filial que contratou o frete</td></tr>
+      <tr><td>Score de Risco</td><td>Pontuação e classificação de risco do CT-e</td></tr>
+    </tbody>
+  </table>
+
+  <div class="nivel-badge"><span class="numero-nivel">2</span> Nível 2 — NF-es Vinculadas ao CT-e</div>
+  <p style="margin-bottom:10px">Lista todas as Notas Fiscais de mercadoria que este CT-e transportou. Esta é a informação mais importante do CT-e.</p>
+
+  <div class="tela-visual">
+    <div class="tela-barra"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>&nbsp;NF-es Vinculadas ao CT-e 57250512…009876</div>
+    <div class="tela-body" style="padding:0">
+      <table class="tela-tabela">
+        <thead><tr><th>Chave NF-e</th><th>Nº/Série</th><th>Emitente</th><th>Data Emissão</th><th>Valor Total</th><th>SEFAZ</th><th>Manifestação</th></tr></thead>
+        <tbody>
+          <tr><td style="font-size:9px;font-family:monospace">43240512…001234</td><td>001234/1</td><td>Fornecedor ABC</td><td>12/05/26</td><td>R$3.200,00</td><td><span class="badge badge-verde" style="font-size:9px">AUTORIZADA</span></td><td><span class="badge badge-verde" style="font-size:9px">CONFIRMAÇÃO</span></td></tr>
+          <tr><td style="font-size:9px;font-family:monospace">43240512…001235</td><td>001235/1</td><td>Fornecedor ABC</td><td>12/05/26</td><td>R$1.650,00</td><td><span class="badge badge-verde" style="font-size:9px">AUTORIZADA</span></td><td><span class="badge badge-laranja" style="font-size:9px">PENDENTE</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="alerta alerta-aviso">
+    <span class="icone">⚠️</span>
+    <div>Se aparecer a mensagem <strong>"Nenhuma NF-e vinculada encontrada neste CT-e"</strong> em laranja, o CT-e está sem nota de mercadoria. Verifique se as notas foram emitidas pelo fornecedor ou se há erro no CT-e.</div>
+  </div>
+
+  <div class="nivel-badge"><span class="numero-nivel">3</span> Nível 3 — Divergências</div>
+  <p>Se houver divergências identificadas pelo sistema (ex: valor do frete incompatível com as notas transportadas), aparecem listadas aqui com descrição e ação recomendada.</p>
+
+  <div class="nivel-badge"><span class="numero-nivel">4</span> Nível 4 — XML do CT-e</div>
+  <p>XML completo do CT-e para conferência técnica ou auditoria (quando disponível).</p>
+
+  <h3>3.5 Como cadastrar uma transportadora não registrada</h3>
+
+  <ol class="passos">
+    <li><div class="passo-conteudo">Localize o CT-e com <span class="badge badge-vermelho">Não cadastrado</span> na coluna Fornecedor.</div></li>
+    <li><div class="passo-conteudo">Clique no botão <span class="btn btn-vermelho" style="font-size:11px">Cadastrar</span> que aparece ao lado do badge.</div></li>
+    <li><div class="passo-conteudo">O modal abrirá com os dados da transportadora pré-preenchidos.</div></li>
+    <li><div class="passo-conteudo">Confira e ajuste se necessário: CNPJ, Razão Social, IE, UF, Simples Nacional.</div></li>
+    <li><div class="passo-conteudo">
+      <div class="alerta alerta-aviso" style="margin:0">
+        <span class="icone">⚠️</span>
+        <div><strong>Atenção:</strong> O CT-e <em>não contém endereço</em> da transportadora. Após o cadastro, acesse o WinThor para complementar o endereço completo na ficha do fornecedor.</div>
+      </div>
+    </div></li>
+    <li><div class="passo-conteudo">Clique em <span class="btn btn-verde">Cadastrar no WinThor</span>.</div></li>
+    <li><div class="passo-conteudo">A coluna Fornecedor atualizará para <span class="badge badge-verde">#XXXX</span>.</div></li>
+  </ol>
+
+  <div class="alerta alerta-info">
+    <span class="icone">ℹ️</span>
+    <div>O tipo do fornecedor é definido automaticamente como <strong>"T — Transportadora (CT-e)"</strong>.</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     SEÇÃO 4 — NFS-e TOMADAS
+════════════════════════════════════════════ -->
+<div class="pagina">
+  <div class="secao-header">
+    <div class="secao-num">4</div>
+    <div>
+      <h2>NFS-e Tomadas — Pendentes de Lançamento</h2>
+      <div class="secao-sub">Notas Fiscais de Serviço tomadas (serviços contratados)</div>
+    </div>
+  </div>
+
+  <div class="objetivo">
+    <strong>Objetivo desta tela</strong>
+    Controlar as Notas Fiscais de Serviço eletrônicas emitidas por prestadores de serviço para a empresa (serviços tomados/contratados). A tela sincroniza automaticamente com o Ambiente Nacional de NFS-e (ADN) do Governo Federal, valida quais notas já foram lançadas no WinThor e permite lançar diretamente as pendentes.
+  </div>
+
+  <div class="caminho">
+    <strong>Menu Fiscal</strong> <span>›</span> <strong>NFS-e Tomadas</strong>
+  </div>
+
+  <h3>4.1 Visão geral da tela</h3>
+
+  <div class="tela-visual">
+    <div class="tela-barra"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>&nbsp;NFS-e Tomadas — Pendentes de Lançamento</div>
+    <div class="tela-body">
+      <div class="tela-row" style="margin-bottom:12px">
+        <span class="btn btn-verde" style="font-size:11px">🔄 Sincronizar Nacional (ADN)</span>
+        <span class="btn btn-laranja" style="font-size:11px">📥 WinThor PCLANC</span>
+        <span class="btn btn-roxo" style="font-size:11px">✅ Validar WinThor</span>
+      </div>
+      <div class="tela-row">
+        <div class="tela-campo">Status ▾</div>
+        <div class="tela-campo">Consta no WinThor ▾</div>
+        <div class="tela-campo">📅 Competência</div>
+        <div class="tela-campo">🔍 Prestador / Nº NFS-e</div>
+        <span class="btn btn-azul">Buscar</span>
+      </div>
+    </div>
+  </div>
+
+  <h3>4.2 Os três botões principais — quando usar cada um</h3>
+
+  <table>
+    <thead><tr><th>Botão</th><th>O que faz</th><th>Quando usar</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><span class="btn btn-verde">🔄 Sincronizar Nacional (ADN)</span></td>
+        <td>Consulta o Ambiente Nacional do Governo Federal e baixa novas NFS-e emitidas para a empresa. Usa o certificado digital A1 configurado.</td>
+        <td>No início do dia ou quando suspeitar que há notas novas ainda não aparecendo na lista. <em>A tela faz isso automaticamente na primeira abertura.</em></td>
+      </tr>
+      <tr>
+        <td><span class="btn btn-laranja">📥 WinThor PCLANC</span></td>
+        <td>Importa do WinThor os lançamentos de contas a pagar de serviços (tabela PCLANC) para cruzar com as NFS-e.</td>
+        <td>Quando quiser atualizar as informações do WinThor na tela, especialmente após lançamentos feitos diretamente no ERP.</td>
+      </tr>
+      <tr>
+        <td><span class="btn btn-roxo">✅ Validar WinThor</span></td>
+        <td>Verifica quais NFS-e já foram lançadas nas tabelas PCLANC e PCNFENT do WinThor e atualiza o status "Consta no WinThor" de cada nota.</td>
+        <td>Após importar dados ou antes de fazer os lançamentos, para saber exatamente quais ainda precisam ser lançadas. <em>Executa automaticamente ao trocar o mês de competência.</em></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="alerta alerta-aviso">
+    <span class="icone">⚠️</span>
+    <div>Se aparecer uma faixa amarela informando <strong>"Certificado digital A1 não encontrado"</strong>, o botão Sincronizar ADN ficará desativado. Acesse <strong>Fiscal → Certificados</strong> para configurar o certificado digital antes de usar esta função.</div>
+  </div>
+</div>
+
+<div class="pagina-sem-break">
+  <h3>4.3 Como filtrar as NFS-e Tomadas</h3>
+
+  <table>
+    <thead><tr><th>Campo de Filtro</th><th>O que faz</th><th>Quando usar</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Status</strong></td><td>Filtra por: Todos, Ativa, Cancelada</td><td>Para ver apenas notas ativas ou verificar cancelamentos</td></tr>
+      <tr><td><strong>Consta no WinThor</strong></td><td>Filtra por: Todas / ✅ Consta / ❌ Não consta / ⏳ Não validado</td><td><em>Principal filtro do dia a dia:</em> selecione ❌ Não consta para ver exatamente o que precisa ser lançado</td></tr>
+      <tr><td><strong>Competência</strong></td><td>Mês de referência das notas (padrão: mês atual)</td><td>Para consultar meses anteriores ou verificar fechamentos</td></tr>
+      <tr><td><strong>Busca livre</strong></td><td>Pesquisa por nome do prestador ou número da NFS-e</td><td>Quando você sabe qual nota ou prestador procurar</td></tr>
+    </tbody>
+  </table>
+
+  <h3>4.4 Entendendo a tabela de NFS-e Tomadas</h3>
+
+  <div class="tela-visual">
+    <div class="tela-barra"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>&nbsp;Tabela — NFS-e Tomadas</div>
+    <div class="tela-body" style="padding:0">
+      <table class="tela-tabela">
+        <thead><tr><th>Nº NFS-e</th><th>Prestador</th><th>CNPJ</th><th>Competência</th><th>Valor</th><th>ISS</th><th>WinThor</th><th>Emissão</th><th>Ações</th></tr></thead>
+        <tbody>
+          <tr>
+            <td style="font-family:monospace">00001234</td>
+            <td>TI Solutions Ltda</td>
+            <td style="font-family:monospace;font-size:9px">12.345.678/0001-90</td>
+            <td>2026-05</td>
+            <td>R$ 5.000,00</td>
+            <td>R$ 125,00</td>
+            <td><span class="badge badge-verde" style="font-size:9px">✅ Consta</span></td>
+            <td>05/05/26</td>
+            <td><span class="btn btn-azul" style="font-size:9px">Detalhes</span></td>
+          </tr>
+          <tr>
+            <td style="font-family:monospace">00001235</td>
+            <td>Limpeza Rápida S/A</td>
+            <td style="font-family:monospace;font-size:9px">98.765.432/0001-00</td>
+            <td>2026-05</td>
+            <td>R$ 1.800,00</td>
+            <td>R$ 45,00</td>
+            <td><span class="badge badge-vermelho" style="font-size:9px">❌ Não consta</span></td>
+            <td>03/05/26</td>
+            <td><span class="btn btn-azul" style="font-size:9px">Detalhes</span> <span class="btn btn-roxo" style="font-size:9px">Lançar</span></td>
+          </tr>
+          <tr>
+            <td style="font-family:monospace">00001236</td>
+            <td>Consultoria Alfa</td>
+            <td style="font-family:monospace;font-size:9px">11.222.333/0001-44</td>
+            <td>2026-05</td>
+            <td>R$ 3.200,00</td>
+            <td>R$ 80,00</td>
+            <td><span class="badge badge-cinza" style="font-size:9px">⏳ Não validado</span></td>
+            <td>01/05/26</td>
+            <td><span class="btn btn-azul" style="font-size:9px">Detalhes</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <table>
+    <thead><tr><th>Coluna</th><th>O que mostra</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Nº NFS-e</strong></td><td>Número da nota fiscal de serviço emitida pelo prestador</td></tr>
+      <tr><td><strong>Prestador</strong></td><td>Nome/razão social da empresa que prestou o serviço</td></tr>
+      <tr><td><strong>CNPJ</strong></td><td>CNPJ do prestador de serviço</td></tr>
+      <tr><td><strong>Competência</strong></td><td>Mês de referência do serviço (formato AAAA-MM)</td></tr>
+      <tr><td><strong>Valor</strong></td><td>Valor total do serviço prestado em R$</td></tr>
+      <tr><td><strong>ISS</strong></td><td>Valor do Imposto Sobre Serviços (ISS) em R$</td></tr>
+      <tr><td><strong>WinThor</strong></td><td>
+        <span class="badge badge-verde">✅ Consta</span> — nota já lançada no ERP<br>
+        <span class="badge badge-vermelho">❌ Não consta</span> — nota pendente de lançamento<br>
+        <span class="badge badge-cinza">⏳ Não validado</span> — ainda não verificado, clique em Validar
+      </td></tr>
+      <tr><td><strong>Emissão</strong></td><td>Data em que a nota foi emitida pelo prestador</td></tr>
+      <tr><td><strong>Ações</strong></td><td><span class="btn btn-azul">Detalhes</span> e <span class="btn btn-roxo">Lançar</span> (apenas se não consta no WinThor)</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="pagina">
+  <h3>4.5 Fluxo completo do dia a dia — passo a passo</h3>
+
+  <ol class="passos">
+    <li><div class="passo-conteudo"><strong>Abrir a tela</strong> — Acesse <strong>Fiscal → NFS-e Tomadas</strong>. Se a lista estiver vazia, o sistema sincronizará automaticamente com o ADN.</div></li>
+    <li><div class="passo-conteudo"><strong>Sincronizar notas novas</strong> — Clique em <span class="btn btn-verde">🔄 Sincronizar Nacional (ADN)</span> para buscar novas NFS-e do Governo Federal. Aguarde a mensagem "Sincronizando..." desaparecer.</div></li>
+    <li><div class="passo-conteudo"><strong>Importar dados do WinThor</strong> — Clique em <span class="btn btn-laranja">📥 WinThor PCLANC</span> para atualizar os lançamentos já feitos no ERP. Aguarde a mensagem "Importando..." desaparecer.</div></li>
+    <li><div class="passo-conteudo"><strong>Validar</strong> — Clique em <span class="btn btn-roxo">✅ Validar WinThor</span>. O sistema verificará cada nota e atualizará o status "Consta no WinThor". Aguarde a mensagem "⏳ Verificando..." desaparecer.</div></li>
+    <li><div class="passo-conteudo"><strong>Filtrar pendentes</strong> — No campo "Consta no WinThor", selecione <strong>❌ Não consta</strong>. A tabela mostrará apenas as notas que precisam ser lançadas.</div></li>
+    <li><div class="passo-conteudo"><strong>Revisar cada nota</strong> — Clique em <span class="btn btn-azul">Detalhes</span> para ver todas as informações da nota antes de lançar.</div></li>
+    <li><div class="passo-conteudo"><strong>Lançar no WinThor</strong> — Clique em <span class="btn btn-roxo">Lançar</span> (na linha) ou no botão <span class="btn btn-roxo">Lançar no WinThor</span> dentro do modal de detalhes. O sistema criará o lançamento automaticamente.</div></li>
+    <li><div class="passo-conteudo"><strong>Confirmar</strong> — Após o lançamento, a coluna WinThor passará de <span class="badge badge-vermelho">❌ Não consta</span> para <span class="badge badge-verde">✅ Consta</span>.</div></li>
+  </ol>
+
+  <h3>4.6 Modal de Detalhes da NFS-e</h3>
+
+  <ol class="passos">
+    <li><div class="passo-conteudo">Clique em <span class="btn btn-azul">Detalhes</span> na linha da nota. Um modal se abrirá.</div></li>
+    <li><div class="passo-conteudo">O topo do modal exibe o <strong>status WinThor em destaque</strong> com cor:
+      <ul style="margin-top:8px;padding-left:20px;font-size:12px">
+        <li><strong style="color:#16a34a">Verde</strong>: "✅ Consta no WinThor" — nota já lançada</li>
+        <li><strong style="color:#dc2626">Vermelho</strong>: "❌ NÃO consta no WinThor — lançar no ERP" — nota pendente</li>
+        <li><strong style="color:#94a3b8">Cinza</strong>: "⏳ Ainda não validado — clique em Validar no WinThor"</li>
+      </ul>
+    </div></li>
+    <li><div class="passo-conteudo">Confira os dados da nota no grid de campos.</div></li>
+    <li><div class="passo-conteudo">Se disponível, a <strong>Descrição do Serviço</strong> é exibida em um box cinza abaixo.</div></li>
+    <li><div class="passo-conteudo">Se a nota ainda não foi lançada, o botão <span class="btn btn-roxo">Lançar no WinThor</span> aparece no rodapé do modal. Clique para lançar.</div></li>
+  </ol>
+
+  <div class="modal-preview">
+    <div class="modal-header">Detalhes da NFS-e — Nº 00001235</div>
+    <div class="modal-body">
+      <div style="background:#fee2e2;border:1px solid #fecaca;border-radius:6px;padding:10px 12px;margin-bottom:14px;font-size:12px;color:#991b1b;text-align:center;font-weight:700">
+        ❌ NÃO consta no WinThor — lançar no ERP
+      </div>
+      <div class="campo-grid" style="margin:0 0 10px;">
+        <div class="campo-item"><div class="ci-nome">Nº NFS-e</div><div class="ci-desc">00001235</div></div>
+        <div class="campo-item"><div class="ci-nome">Prestador</div><div class="ci-desc">Limpeza Rápida S/A</div></div>
+        <div class="campo-item"><div class="ci-nome">CNPJ Prestador</div><div class="ci-desc">98.765.432/0001-00</div></div>
+        <div class="campo-item"><div class="ci-nome">Competência</div><div class="ci-desc">2026-05</div></div>
+        <div class="campo-item"><div class="ci-nome">Valor Serviço</div><div class="ci-desc">R$ 1.800,00</div></div>
+        <div class="campo-item"><div class="ci-nome">Valor ISS</div><div class="ci-desc">R$ 45,00 (2,5%)</div></div>
+        <div class="campo-item"><div class="ci-nome">Data Emissão</div><div class="ci-desc">03/05/2026</div></div>
+        <div class="campo-item"><div class="ci-nome">Origem</div><div class="ci-desc">ADN — Gov.br</div></div>
+      </div>
+      <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:8px 12px;font-size:11px;color:#64748b">
+        <strong>Descrição:</strong> Serviços mensais de limpeza e conservação da sede e filiais — Contrato 2026/045
+      </div>
+    </div>
+    <div class="modal-footer">
+      <span class="btn btn-cinza">Fechar</span>
+      <span class="btn btn-roxo">Lançar no WinThor</span>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     SEÇÃO 5 — REFERÊNCIA RÁPIDA
+════════════════════════════════════════════ -->
+<div class="pagina">
+  <div class="secao-header">
+    <div class="secao-num">5</div>
+    <div>
+      <h2>Referência Rápida — Legendas e Status</h2>
+      <div class="secao-sub">Resumo de todos os status, cores e termos utilizados no módulo</div>
+    </div>
+  </div>
+
+  <h3>5.1 Status SEFAZ (NF-e e CT-e)</h3>
+  <table>
+    <thead><tr><th>Badge</th><th>Significado</th><th>O que fazer</th></tr></thead>
+    <tbody>
+      <tr><td><span class="badge badge-verde">AUTORIZADA</span></td><td>Documento aprovado pela SEFAZ. Situação normal.</td><td>Prosseguir com manifestação se for NF-e pendente</td></tr>
+      <tr><td><span class="badge badge-vermelho">CANCELADA</span></td><td>Documento cancelado pelo emitente na SEFAZ</td><td>Verificar se há nota substituta; não manifestar a cancelada</td></tr>
+      <tr><td><span class="badge badge-laranja">DENEGADA</span></td><td>Documento recusado pela SEFAZ (emitente em situação irregular)</td><td>Contatar o fornecedor/transportadora para regularização</td></tr>
+      <tr><td><span class="badge badge-azul">PENDENTE</span></td><td>Documento ainda não retornou status da SEFAZ</td><td>Aguardar atualização automática ou verificar com o emitente</td></tr>
+    </tbody>
+  </table>
+
+  <h3>5.2 Status de Manifestação (NF-e)</h3>
+  <table>
+    <thead><tr><th>Badge</th><th>Significado</th><th>Quando ocorre</th></tr></thead>
+    <tbody>
+      <tr><td><span class="badge badge-laranja">PENDENTE</span></td><td>Nenhuma manifestação registrada ainda</td><td>Situação inicial de toda NF-e autorizada</td></tr>
+      <tr><td><span class="badge badge-verde">CIÊNCIA</span></td><td>Empresa ciente da nota, mas ainda sem confirmar recebimento</td><td>Após selecionar "Ciência da Operação"</td></tr>
+      <tr><td><span class="badge badge-verde">CONFIRMAÇÃO</span></td><td>Empresa confirmou o recebimento da mercadoria</td><td>Após selecionar "Confirmação da Operação"</td></tr>
+      <tr><td><span class="badge badge-azul">DESCONHECIMENTO</span></td><td>Empresa não reconhece a operação</td><td>Após selecionar "Desconhecimento da Operação"</td></tr>
+    </tbody>
+  </table>
+
+  <h3>5.3 Score de Risco</h3>
+  <table>
+    <thead><tr><th>Classificação</th><th>Faixa de Pontuação</th><th>Cor</th><th>O que pode indicar</th></tr></thead>
+    <tbody>
+      <tr><td><span class="badge badge-verde">BAIXO</span></td><td>0 a 25 pontos</td><td>Verde</td><td>Nota sem irregularidades identificadas</td></tr>
+      <tr><td><span class="badge badge-azul">ATENÇÃO</span></td><td>26 a 50 pontos</td><td>Azul</td><td>Pequenas divergências; requer atenção</td></tr>
+      <tr><td><span class="badge badge-laranja">ALTO</span></td><td>51 a 75 pontos</td><td>Laranja</td><td>Divergências relevantes; justificativa obrigatória ao manifestar</td></tr>
+      <tr><td><span class="badge badge-vermelho">CRÍTICO</span></td><td>76 a 100 pontos</td><td>Vermelho</td><td>Irregularidade grave; acionar supervisor antes de manifestar</td></tr>
+    </tbody>
+  </table>
+
+  <h3>5.4 Status WinThor (NF-e / CT-e)</h3>
+  <table>
+    <thead><tr><th>Badge</th><th>Significado</th></tr></thead>
+    <tbody>
+      <tr><td><span class="badge badge-verde">✓ WinThor</span></td><td>Nota possui pedido de compra correspondente no ERP WinThor</td></tr>
+      <tr><td><span class="badge badge-laranja">Pendente</span></td><td>Nota sem pedido de compra identificado no WinThor</td></tr>
+    </tbody>
+  </table>
+
+  <h3>5.5 Status Fornecedor / Transportadora</h3>
+  <table>
+    <thead><tr><th>Badge</th><th>Significado</th></tr></thead>
+    <tbody>
+      <tr><td><span class="badge badge-verde">#1042</span></td><td>CNPJ cadastrado no WinThor — o número exibido é o código do fornecedor</td></tr>
+      <tr><td><span class="badge badge-vermelho">Não cadastrado</span></td><td>CNPJ não encontrado no WinThor (PCFORNEC). Use o botão Cadastrar para registrá-lo.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>5.6 Status WinThor — NFS-e Tomadas</h3>
+  <table>
+    <thead><tr><th>Badge</th><th>Significado</th><th>Ação necessária</th></tr></thead>
+    <tbody>
+      <tr><td><span class="badge badge-verde">✅ Consta</span></td><td>NFS-e já foi lançada no WinThor (PCLANC/PCNFENT)</td><td>Nenhuma ação necessária</td></tr>
+      <tr><td><span class="badge badge-vermelho">❌ Não consta</span></td><td>NFS-e ainda não foi lançada no ERP</td><td>Clicar em Lançar ou lançar manualmente no WinThor</td></tr>
+      <tr><td><span class="badge badge-cinza">⏳ Não validado</span></td><td>Ainda não foi verificado se consta no WinThor</td><td>Clicar no botão Validar WinThor</td></tr>
+    </tbody>
+  </table>
+
+  <h3>5.7 Glossário Rápido</h3>
+  <div class="campo-grid">
+    <div class="campo-item"><div class="ci-nome">NF-e</div><div class="ci-desc">Nota Fiscal Eletrônica de mercadorias</div></div>
+    <div class="campo-item"><div class="ci-nome">CT-e</div><div class="ci-desc">Conhecimento de Transporte Eletrônico (frete)</div></div>
+    <div class="campo-item"><div class="ci-nome">NFS-e</div><div class="ci-desc">Nota Fiscal de Serviços Eletrônica</div></div>
+    <div class="campo-item"><div class="ci-nome">SEFAZ</div><div class="ci-desc">Secretaria da Fazenda (autoriza documentos fiscais)</div></div>
+    <div class="campo-item"><div class="ci-nome">ADN</div><div class="ci-desc">Ambiente Nacional de NFS-e (Gov.br)</div></div>
+    <div class="campo-item"><div class="ci-nome">WinThor</div><div class="ci-desc">ERP / sistema de gestão da empresa</div></div>
+    <div class="campo-item"><div class="ci-nome">PCFORNEC</div><div class="ci-desc">Tabela de fornecedores no WinThor</div></div>
+    <div class="campo-item"><div class="ci-nome">PCLANC</div><div class="ci-desc">Tabela de lançamentos financeiros no WinThor</div></div>
+    <div class="campo-item"><div class="ci-nome">PCNFENT</div><div class="ci-desc">Tabela de entradas de NF no WinThor</div></div>
+    <div class="campo-item"><div class="ci-nome">XML</div><div class="ci-desc">Arquivo eletrônico da nota fiscal emitido pela SEFAZ</div></div>
+    <div class="campo-item"><div class="ci-nome">Chave de Acesso</div><div class="ci-desc">44 dígitos que identificam unicamente um documento fiscal</div></div>
+    <div class="campo-item"><div class="ci-nome">Score de Risco</div><div class="ci-desc">Pontuação de irregularidades calculada automaticamente</div></div>
+    <div class="campo-item"><div class="ci-nome">Manifestação</div><div class="ci-desc">Declaração oficial sobre uma NF-e perante a SEFAZ</div></div>
+    <div class="campo-item"><div class="ci-nome">ISS</div><div class="ci-desc">Imposto Sobre Serviços (incide nas NFS-e)</div></div>
+    <div class="campo-item"><div class="ci-nome">CFOP</div><div class="ci-desc">Código da operação fiscal (ex: 6102 = venda de mercadoria)</div></div>
+    <div class="campo-item"><div class="ci-nome">CST / CSOSN</div><div class="ci-desc">Código de situação tributária do ICMS</div></div>
+  </div>
+
+  <div style="margin-top:40px;padding-top:20px;border-top:2px solid var(--azul2);display:flex;justify-content:space-between;align-items:center;">
+    <div>
+      <div style="font-weight:700;color:var(--azul);font-size:14px">Torre de Controle — Rodrigues Colchões</div>
+      <div style="color:var(--cinza3);font-size:11px;margin-top:3px">Manual de Treinamento · Módulo Fiscal · Versão 1.0 · Maio 2026</div>
+    </div>
+    <div style="text-align:right;font-size:11px;color:var(--cinza3)">
+      Dúvidas? Contate o administrador do sistema.<br>
+      <strong style="color:var(--azul2)">cleitong12@gmail.com</strong>
+    </div>
+  </div>
+</div>
+
+<!-- BOTÃO DE IMPRESSÃO (não aparece no PDF) -->
+<div class="no-print" style="position:fixed;bottom:24px;right:24px;z-index:999">
+  <button onclick="window.print()" style="background:#1e3a5f;color:#fff;border:none;border-radius:8px;padding:12px 24px;font-size:14px;font-weight:600;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,0.2)">
+    🖨️ Salvar como PDF
+  </button>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,429 @@
+Falha ao persistir colecao nfseEmitidas no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseTomadas no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseServicos no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseEmitidas no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseTomadas no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseServicos no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseTomadores no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseLotes no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseRecorrentes no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseEmitidas no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseTomadas no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseServicos no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseEmitidas no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseTomadas no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseEmitidas no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseTomadas no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseEmitidas no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseEmitidas no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseTomadas no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseEmitidas no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseTomadas no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseServicos no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseTomadores no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseEmitidas no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseTomadas no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseServicos no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseEmitidas no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseEmitidas no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseTomadas no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseEmitidas no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseTomadas no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseEmitidas no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseEmitidas no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseTomadas no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseServicos no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseEmitidas no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseTomadas no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseEmitidas no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseEmitidas no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseTomadas no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseServicos no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseTomadores no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseLotes no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseEmitidas no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseTomadas no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseEmitidas no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseTomadas no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseServicos no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseEmitidas no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseTomadas no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao operacionalAlertas no Oracle. Error: NJS-500: connection to Oracle Database was closed or broken
+NJS-501: connection to host 201.157.196.196 port 1521 terminated unexpectedly. (CONNECTION_ID=fl4gpYibQZjV2XeOS0rJrg==)
+read ECONNRESET
+    at NTTCP.checkErr (C:\TorreControle\backend\node_modules\oracledb\lib\thin\sqlnet\ntTcp.js:336:29)
+    at NTTCP.receive (C:\TorreControle\backend\node_modules\oracledb\lib\thin\sqlnet\ntTcp.js:472:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async NetworkSession._recvPacket (C:\TorreControle\backend\node_modules\oracledb\lib\thin\sqlnet\networkSession.js:434:22)
+    at async NetworkSession.recvPacket (C:\TorreControle\backend\node_modules\oracledb\lib\thin\sqlnet\networkSession.js:537:12)
+    at async ReadPacket.waitForPackets (C:\TorreControle\backend\node_modules\oracledb\lib\thin\protocol\packet.js:303:18)
+    at async Protocol._decodeMessage (C:\TorreControle\backend\node_modules\oracledb\lib\thin\protocol\protocol.js:71:5)
+    at async Protocol._processMessage (C:\TorreControle\backend\node_modules\oracledb\lib\thin\protocol\protocol.js:165:9)
+    at async ThinConnectionImpl._execute (C:\TorreControle\backend\node_modules\oracledb\lib\thin\connection.js:225:7)
+    at async ThinConnectionImpl.execute (C:\TorreControle\backend\node_modules\oracledb\lib\thin\connection.js:1109:14) {
+  code: 'NJS-500',
+  isRecoverable: true
+}
+Falha ao persistir colecao nfseServicos no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseTomadores no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseLotes no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseRecorrentes no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseAdnDocumentos no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseEmitidas no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseEmitidas no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseTomadas no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}
+Falha ao persistir colecao nfseServicos no Oracle. Error: NJS-040: connection request timeout. Request exceeded "queueTimeout" of 5000
+    at Timeout.<anonymous> (C:\TorreControle\backend\node_modules\oracledb\lib\pool.js:448:25)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  code: 'NJS-040',
+  isRecoverable: false
+}

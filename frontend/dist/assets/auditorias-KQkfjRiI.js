@@ -1,0 +1,1 @@
+import{a,w as i}from"./index-Cw1PFMX8.js";async function s(){return a("/auditorias")}async function e(t){return i("/auditorias",t)}async function o(){return a("/auditorias/templates")}export{o as a,e as c,s as g};

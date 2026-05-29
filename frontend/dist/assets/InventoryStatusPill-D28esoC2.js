@@ -1,0 +1,1 @@
+import{j as t,p as o}from"./index-Cw1PFMX8.js";import{I as r,a as n}from"./inventario-BpLjRzR_.js";const e=({status:s,className:a})=>t.jsx("span",{className:o("status-badge",r[s],a),children:n[s]});export{e as I};

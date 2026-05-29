@@ -1,0 +1,1 @@
+import{a as o,w as t}from"./index-Cw1PFMX8.js";async function a(n){return o(`/os-transition-log?osId=${encodeURIComponent(n)}`)}async function i(){return o("/os-transition-log")}async function r(n){return t("/os-transition-log",n)}export{r as a,a as b,i as l};

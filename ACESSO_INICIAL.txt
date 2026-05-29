@@ -1,0 +1,6 @@
+﻿Torre de Controle - acesso inicial
+URL: http://127.0.0.1:3344
+Usuario sugerido: teste@admin.com
+Senha: TorreControle-564c96e0f30f!
+
+Altere AUTH_STATIC_PASSWORD em C:\TorreControle\.env depois do primeiro acesso.
