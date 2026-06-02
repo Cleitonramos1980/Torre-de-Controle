@@ -661,7 +661,7 @@ export async function nfseNacionalRoutes(app) {
                         cert: certData.cert,
                         key: certData.key,
                         headers: { Accept: "application/json" },
-                        timeout: 20000,
+                        timeout: 65000,
                     };
                     const r = httpsReq(opts, res => {
                         const chunks = [];
@@ -669,7 +669,7 @@ export async function nfseNacionalRoutes(app) {
                         res.on("end", () => resolve({ status: res.statusCode, raw: Buffer.concat(chunks).toString("utf8") }));
                     });
                     r.on("error", reject);
-                    r.on("timeout", () => { r.destroy(); reject(new Error("Timeout NSU")); });
+                    r.on("timeout", () => { r.destroy(); reject(new Error("Timeout NSU (65s)")); });
                     r.end();
                 });
                 if (resp.status !== 200) return null;
@@ -761,16 +761,26 @@ export async function nfseNacionalRoutes(app) {
 
                     const descServ = xmlTagVal(xml, "xDescServ") || xmlTagVal(xml, "infoCompl")?.trim() || "";
 
-                    const vServPrestSec = xmlSection(xml, "vServPrest") || xmlSection(xml, "ValServico");
+                    // Suporte ao formato nacional SPED (http://www.sped.fazenda.gov.br/nfse)
+                    // e ao formato ABRASF legado. Campos de valor ficam em seções diferentes.
+                    const valoresSec = xmlSection(xml, "valores") || xmlSection(xml, "vServPrest") || xmlSection(xml, "ValServico");
                     const vServico = Number(
-                        xmlTagVal(vServPrestSec, "vServ") ||
+                        xmlTagVal(valoresSec, "vServico") ||
+                        xmlTagVal(valoresSec, "vServ") ||
+                        xmlTagVal(xml, "vServico") ||
                         xmlTagVal(xml, "vReceb") ||
                         xmlTagVal(xml, "vTotServico") ||
                         xmlTagVal(xml, "vLiq") ||
                         xmlTagVal(xml, "vServ") ||
                         0
                     );
-                    const vISS = Number(xmlTagVal(xml, "vISSQN") || xmlTagVal(xml, "vISS") || xmlTagVal(xml, "vTotalRet") || 0);
+                    const vISS = Number(
+                        xmlTagVal(valoresSec, "vISSQN") ||
+                        xmlTagVal(xml, "vISSQN") ||
+                        xmlTagVal(xml, "vISS") ||
+                        xmlTagVal(xml, "vTotalRet") ||
+                        0
+                    );
 
                     if (existente && forceUpdate) {
                         existente.numeroNfse = nNFSe || existente.numeroNfse;
@@ -828,6 +838,17 @@ export async function nfseNacionalRoutes(app) {
         for (const cnpjLoop of listaCnpjs) {
             const estadoCnpj = db.nfseAdnSyncState.porCnpj[cnpjLoop] || { ultimoNSU: 0 };
 
+            // Auto-detecta maior NSU já importado para este CNPJ para evitar re-download
+            // Útil quando o estado em memória foi zerado (restart, resetarNSU) mas os docs já existem
+            if (!body.resetarNSU && !estadoCnpj.ultimoNSU) {
+                const maxNsuImportado = (db.nfseTomadas || [])
+                    .reduce((max, d) => d.nsuAdn > max ? d.nsuAdn : max, 0);
+                if (maxNsuImportado > 0) {
+                    estadoCnpj.ultimoNSU = maxNsuImportado;
+                    app.log.info({ msg: "ADN_NSU_AUTO_DETECT", cnpj: cnpjLoop, maxNsuImportado });
+                }
+            }
+
             // Rate-limit por CNPJ: pular em cooldown (salvo se forcar ou resetarNSU)
             if (!body.forcar && !body.resetarNSU && estadoCnpj.noMoreDocs && estadoCnpj.noMoreDocsAt) {
                 const elapsed = agora - estadoCnpj.noMoreDocsAt;
@@ -858,7 +879,7 @@ export async function nfseNacionalRoutes(app) {
                         cert: certData.cert,
                         key: certData.key,
                         headers: { Accept: "application/json" },
-                        timeout: 30000,
+                        timeout: 65000,
                     };
                     const r = httpsReq(options, res => {
                         const chunks = [];
@@ -866,6 +887,8 @@ export async function nfseNacionalRoutes(app) {
                         res.on("end", () => {
                             const raw = Buffer.concat(chunks).toString("utf8");
                             app.log.info({ msg: "ADN_RAW_STATUS", cnpj: cnpjLoop, statusCode: res.statusCode, bodyLen: raw.length, bodySample: raw.slice(0, 800) });
+                            // 429 = rate limit — tratar como erro recuperável
+                            if (res.statusCode === 429) { reject(new Error("ADN_RATE_LIMIT_429")); return; }
                             if (res.statusCode !== 200 && res.statusCode !== 404 && res.statusCode !== 400) { reject(new Error(`ADN HTTP ${res.statusCode}: ${raw.slice(0, 400)}`)); return; }
                             try {
                                 const parsed = JSON.parse(raw);
@@ -878,13 +901,19 @@ export async function nfseNacionalRoutes(app) {
                         });
                     });
                     r.on("error", reject);
-                    r.on("timeout", () => { r.destroy(); reject(new Error("Timeout ADN (30s)")); });
+                    r.on("timeout", () => { r.destroy(); reject(new Error("Timeout ADN (65s)")); });
                     r.end();
                 });
             } catch (e) {
                 app.log.error({ msg: "SYNC_ADN_CNPJ_ERRO", cnpj: cnpjLoop, erro: e.message });
-                errosTotal.push(`CNPJ ${cnpjLoop}: ${e.message}`);
-                resultadosPorCnpj.push({ cnpj: cnpjLoop, novos: 0, erros: 1, erro: e.message });
+                // 429 = rate limit temporário → cooldown, mas NÃO marca noMoreDocs
+                if (e.message === "ADN_RATE_LIMIT_429") {
+                    db.nfseAdnSyncState.porCnpj[cnpjLoop] = { ...estadoCnpj, ultimaSync: now };
+                    resultadosPorCnpj.push({ cnpj: cnpjLoop, novos: 0, erros: 0, cooldown: true, erro: "Rate limit ADN (429) — tente após 60s" });
+                } else {
+                    errosTotal.push(`CNPJ ${cnpjLoop}: ${e.message}`);
+                    resultadosPorCnpj.push({ cnpj: cnpjLoop, novos: 0, erros: 1, erro: e.message });
+                }
                 continue;
             }
 
@@ -931,13 +960,14 @@ export async function nfseNacionalRoutes(app) {
             errosTotal.push(...errosLote);
 
             // Atualiza NSU do CNPJ
+            // ADN Nacional retorna NSU por documento — não retorna ultNSU/maxNSU no cabeçalho
             const nsusLote = (Array.isArray(docs) ? docs : []).map(d => Number(d.NSU || d.nSU || d.NSUDoc || 0)).filter(n => n > 0);
-            const ultNsuRetornado = Number(adnData.ultNSU || adnData.ultimoNSU || adnData.retDistDFeInt?.ultNSU || 0);
+            const ultNsuRetornado = Number(adnData.ultNSU || adnData.UltNSU || adnData.ultimoNSU || adnData.retDistDFeInt?.ultNSU || 0);
             const novoNSU = nsusLote.length > 0 ? Math.max(...nsusLote) : (ultNsuRetornado || ultimoNSUCnpj);
-            const maxNsuRetornado = Number(adnData.maxNSU || adnData.nsuMax || adnData.retDistDFeInt?.maxNSU || 0);
-            // Só considera "sem mais docs" quando o ADN explicitamente retornou maxNSU E chegamos nele
-            // Se o lote voltou < 50 docs MAS sem maxNSU, deixamos semMais=false para tentar de novo
-            const semMais = maxNsuRetornado > 0 && novoNSU >= maxNsuRetornado;
+            const maxNsuRetornado = Number(adnData.maxNSU || adnData.MaxNSU || adnData.nsuMax || adnData.retDistDFeInt?.maxNSU || 0);
+            // Lote com < 50 docs = última página (ADN não retorna maxNSU no header)
+            const semMais = docs.length < 50 ||
+                            (maxNsuRetornado > 0 && novoNSU >= maxNsuRetornado);
             db.nfseAdnSyncState.porCnpj[cnpjLoop] = {
                 ultimoNSU: novoNSU,
                 maxNSU: maxNsuRetornado,
@@ -945,8 +975,8 @@ export async function nfseNacionalRoutes(app) {
                 noMoreDocs: semMais,
                 noMoreDocsAt: semMais ? agora : (estadoCnpj.noMoreDocsAt || null),
             };
-            app.log.info({ msg: "ADN_NSU_UPDATE", cnpj: cnpjLoop, ultimoNSU: novoNSU, maxNSU: maxNsuRetornado, semMais, novos: novosLote });
-            resultadosPorCnpj.push({ cnpj: cnpjLoop, novos: novosLote, erros: errosLote.length, ultimoNSU: novoNSU, maxNSU: maxNsuRetornado });
+            app.log.info({ msg: "ADN_NSU_UPDATE", cnpj: cnpjLoop, ultimoNSU: novoNSU, maxNSU: maxNsuRetornado, semMais, novos: novosLote, qtdDocs: docs.length });
+            resultadosPorCnpj.push({ cnpj: cnpjLoop, novos: novosLote, erros: errosLote.length, ultimoNSU: novoNSU, maxNSU: maxNsuRetornado, qtdDocs: docs.length, semMaisDocumentos: semMais });
         }
 
         // Compatibilidade legada: manter ultimoNSU global como máximo entre todos os CNPJs
