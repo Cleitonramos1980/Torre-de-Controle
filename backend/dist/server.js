@@ -33,6 +33,8 @@ import { automationRoutes } from "./routes/automation.js";
 import { fiscalRoutes } from "./routes/fiscal.js";
 import { fiscalRadarRoutes, ensureFiscalRadarTables } from "./routes/fiscalRadar.js";
 import { nfseNacionalRoutes, ensureNfseTables } from "./routes/nfseNacional.js";
+import { redeRelatorioRoutes } from "./routes/redeRelatorio.js";
+import { agendarDownloadDiario } from "./services/redePortalScraper.js";
 import { monitoramentoRoutes } from "./routes/monitoramento.js";
 import { checklistPortariaRoutes } from "./routes/checklistPortaria.js";
 import { engenhariaRoutes, runPreventivosJob } from "./routes/engenharia.js";
@@ -188,6 +190,7 @@ await fiscalRadarRoutes(app);
 await nfseNacionalRoutes(app);
 await monitoramentoRoutes(app);
 await checklistPortariaRoutes(app);
+await redeRelatorioRoutes(app);
 await engenhariaRoutes(app);
 async function start() {
     try {
@@ -281,6 +284,9 @@ async function start() {
     }
     await persistCollection("usuarios");
     await app.listen({ host: "0.0.0.0", port: env.PORT });
+    const hora   = parseInt(process.env.REDE_PORTAL_CRON_HORA   || "8", 10);
+    const minuto = parseInt(process.env.REDE_PORTAL_CRON_MINUTO || "5", 10);
+    agendarDownloadDiario(hora, app.log, minuto);
 }
 start().catch((err) => {
     app.log.error(err);

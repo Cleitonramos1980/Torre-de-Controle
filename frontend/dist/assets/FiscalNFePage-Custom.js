@@ -782,6 +782,7 @@ export default function FiscalNFePage() {
     const setF = (k, v) => setFiltros(p => ({ ...p, [k]: v }));
 
     const [sincronizando, setSincronizando] = React.useState(false);
+    const [sincronizandoSefaz, setSincronizandoSefaz] = React.useState(false);
     const [msgSync, setMsgSync] = React.useState("");
 
     const sincronizar = async () => {
@@ -791,6 +792,15 @@ export default function FiscalNFePage() {
             setMsgSync(r.mensagem || `Sincronizado: ${r.importados ?? 0} notas lançadas, ${r.pendentes ?? 0} pendentes de entrada.`);
             carregar(filtros, 1);
         } catch (e) { setErro(`Erro ao sincronizar: ${e.message}`); } finally { setSincronizando(false); }
+    };
+
+    const sincronizarSefaz = async () => {
+        setSincronizandoSefaz(true); setMsgSync(""); setErro("");
+        try {
+            const r = await apiFetch("/api/fiscal/sync/sefaz", { method: "POST", body: JSON.stringify({ maxLotes: 30 }) });
+            setMsgSync(r.mensagem || `SEFAZ: ${r.novosDocs ?? 0} notas novas, ${r.pendentesWinthor ?? 0} pendentes de entrada.`);
+            carregar(filtros, 1);
+        } catch (e) { setErro(`Erro ao sincronizar SEFAZ: ${e.message}`); } finally { setSincronizandoSefaz(false); }
     };
 
     const exportarCsv = async () => {
@@ -820,7 +830,8 @@ export default function FiscalNFePage() {
                 h("p", { key: "s", style: { fontSize: "13px", color: "#6b7280", margin: 0 }, children: "Notas emitidas no SEFAZ para o CNPJ da empresa e ainda não dadas entrada no WinThor. Clique para expandir." }),
             ]}),
             hs("div", { key: "btns", style: { display: "flex", gap: "8px", flexWrap: "wrap" }, children: [
-                h(Button, { key: "sync", onClick: sincronizar, disabled: sincronizando, style: { fontSize: "12px", background: "#2563eb", color: "#fff", border: "none" }, children: sincronizando ? "Sincronizando..." : "Sincronizar WinThor" }),
+                h(Button, { key: "sefaz", onClick: sincronizarSefaz, disabled: sincronizandoSefaz || sincronizando, style: { fontSize: "12px", background: "#16a34a", color: "#fff", border: "none" }, title: "Baixar NF-e diretamente do SEFAZ (usa certificado digital da PCFILIAL)", children: sincronizandoSefaz ? "Consultando SEFAZ..." : "⬇ Sincronizar SEFAZ" }),
+                h(Button, { key: "sync", onClick: sincronizar, disabled: sincronizando || sincronizandoSefaz, style: { fontSize: "12px", background: "#2563eb", color: "#fff", border: "none" }, title: "Importar notas já lançadas no WinThor (PCNFENT)", children: sincronizando ? "Sincronizando..." : "Sincronizar WinThor" }),
                 h(Button, { key: "exp", variant: "outline", onClick: exportarCsv, disabled: exportando, style: { fontSize: "12px" }, children: exportando ? "Exportando..." : "Exportar CSV" }),
             ]}),
         ]}),

@@ -994,7 +994,11 @@ export async function fiscalRoutes(app) {
                                 AND d.XMLNFE IS NOT NULL
                               ORDER BY d.ROWID DESC
                               FETCH FIRST 300 ROWS ONLY`;
-            const resDocEl = await executeOracle(sqlDocEl, {}, { outFormat: 4002 }).catch(() => ({ rows: [] }));
+            const resDocEl = await executeOracle(sqlDocEl, {}).catch(errDocEl => {
+                req.log.warn({ err: errDocEl?.message, code: errDocEl?.errorNum }, "sync/nfe: PCDOCELETRONICO query falhou");
+                return { rows: [] };
+            });
+            req.log.info({ pcdocRows: resDocEl.rows?.length ?? 0 }, "sync/nfe: PCDOCELETRONICO linhas encontradas");
             for (const row of (resDocEl.rows ?? [])) {
                 try {
                     const xmlStr = typeof row.XMLNFE === "string" ? row.XMLNFE : String(row.XMLNFE ?? "");
@@ -1065,6 +1069,7 @@ export async function fiscalRoutes(app) {
             }
         } catch (_errDocEl) { /* PCDOCELETRONICO not available or schema diff — skip */ }
 
+        req.log.info({ importados, ignorados, pendentes, pcnfentTotal: rows.length }, "sync/nfe: concluído");
         registrarLogAuditoria({ acao: "SYNC_NFE_MANUAL", entidade: "SYNC", usuario, ip, resultado: "OK", motivo: `${importados} importados, ${ignorados} ignorados, ${pendentes} pendentes` });
         await persistCollections(FISCAL_PERSIST_KEYS).catch(() => {});
 
@@ -1619,12 +1624,16 @@ export async function fiscalRoutes(app) {
         const agora = new Date().toISOString();
         const resultadoGlobal = { cnpjsConsultados: 0, totalLotes: 0, totalDocs: 0, novosDocs: 0, pendentesWinthor: 0, erros: [] };
 
+        req.log.info({ cnpjs: cnpjsParaConsultar.map(c => c.cnpj), maxLotes }, "sync/sefaz: iniciando consulta");
+
         for (const cnpjEntry of cnpjsParaConsultar) {
             const cnpj = cnpjEntry.cnpj.replace(/\D/g, "");
 
             // Busca NSU atual deste CNPJ no controle
             const nsuEntry = db.fiscalControleNsu.find(n => n.cnpj.replace(/\D/g, "") === cnpj && n.tipoDfe === "NFE");
             const ultNSUInicial = nsuEntry?.ultimoNsu ?? 0;
+
+            req.log.info({ cnpj, ultNSUInicial }, "sync/sefaz: consultando CNPJ");
 
             const chavesNFeSefaz = [];
             const docsNovos = [];
@@ -1659,22 +1668,39 @@ export async function fiscalRoutes(app) {
                             if (!dados?.chNFe || dados.chNFe.length !== 44) continue;
                             chavesNFeSefaz.push(dados.chNFe);
 
-                            // Evitar duplicatas
-                            if (db.fiscalDocumentos.some(d => d.chaveAcesso === dados.chNFe)) continue;
+                            // Se já existe doc SEFAZ com esta chave, pula (evita dup SEFAZ)
+                            if (db.fiscalDocumentos.some(d => d.chaveAcesso === dados.chNFe && d.origem === "SEFAZ")) continue;
 
+                            // Se existe doc WinThor com mesma chave, enriquece com dados SEFAZ
+                            const docExistente = db.fiscalDocumentos.find(d => d.chaveAcesso === dados.chNFe);
+                            if (docExistente) {
+                                if (xml) docExistente.xmlComprimido = xml.slice(0, 100000);
+                                docExistente.schemaSefaz = schema || docExistente.schemaSefaz;
+                                docExistente.nsuSefaz = ultNSU;
+                                docExistente.origem = "SEFAZ+WINTHOR";
+                                docExistente.atualizadoEm = agora;
+                                if (dados.nProt) docExistente.protocoloAutorizacao = dados.nProt;
+                                if (dados.cSitNFe === "100") docExistente.statusSefaz = "AUTORIZADA";
+                                else if (dados.cSitNFe === "101" || dados.cSitNFe === "135") docExistente.statusSefaz = "CANCELADA";
+                                docsNovos.push(docExistente);
+                                continue;
+                            }
+
+                            // Novo doc SEFAZ (não existe no WinThor)
+                            const tipoDfe = dados.tipo === "evento" ? "EVENTO" : "NFE";
                             const docSefaz = {
                                 id: nextId("FDC", db.fiscalDocumentos.length),
-                                tipoDfe: "NFE",
+                                tipoDfe,
                                 chaveAcesso: dados.chNFe,
                                 numero: dados.nNF || "",
                                 serie: dados.serie || "",
-                                modelo: "55",
+                                modelo: dados.mod || "55",
                                 dhEmissao: dados.dhEmi || agora,
                                 dataEntrada: null,
                                 emitente: { nome: dados.xNome || "", cnpj: dados.CNPJ || "" },
                                 destinatario: { cnpj },
                                 valorTotal: dados.vNF || 0,
-                                statusSefaz: dados.cSitNFe === "100" ? "AUTORIZADA" : dados.cSitNFe === "101" ? "CANCELADA" : "PENDENTE",
+                                statusSefaz: dados.cSitNFe === "100" ? "AUTORIZADA" : (dados.cSitNFe === "101" || dados.cSitNFe === "135") ? "CANCELADA" : "PENDENTE",
                                 protocoloAutorizacao: dados.nProt || null,
                                 statusManifestacao: "PENDENTE",
                                 statusWinthor: "NAO_ENCONTRADO",
@@ -1685,9 +1711,11 @@ export async function fiscalRoutes(app) {
                                 criadoEm: agora,
                                 atualizadoEm: agora,
                                 origem: "SEFAZ",
-                                xmlComprimido: xml ? xml.slice(0, 50000) : null,
+                                xmlComprimido: xml ? xml.slice(0, 100000) : null,
                                 schemaSefaz: schema || "",
                                 nsuSefaz: ultNSU,
+                                tpEvento: dados.tpEvento || null,
+                                xEvento: dados.xEvento || null,
                             };
 
                             const { score, classificacao, regrasAplicadas } = calcularScoreRisco(docSefaz);
@@ -1700,7 +1728,7 @@ export async function fiscalRoutes(app) {
                                 id: nextId("FRS", db.fiscalRiscos.length),
                                 chaveAcesso: dados.chNFe,
                                 idDocumento: docSefaz.id,
-                                tipoDfe: "NFE",
+                                tipoDfe,
                                 score, classificacao, regrasAplicadas,
                                 calculadoEm: agora,
                             });
@@ -1718,6 +1746,8 @@ export async function fiscalRoutes(app) {
                 resultadoGlobal.totalDocs += resultado.totalDocs;
                 resultadoGlobal.novosDocs += docsNovos.length;
 
+                req.log.info({ cnpj, lotes: resultado.lotes, totalDocs: resultado.totalDocs, novos: docsNovos.length, ultNSUFinal: resultado.ultNSUFinal, maxNSU: resultado.maxNSU }, "sync/sefaz: CNPJ concluído com sucesso");
+
                 // Identifica quais chaves nÃ£o estÃ£o no WinThor
                 const pendentes = await identificarNaoEntradas(chavesNFeSefaz);
                 resultadoGlobal.pendentesWinthor += pendentes.length;
@@ -1732,6 +1762,7 @@ export async function fiscalRoutes(app) {
 
             } catch (err) {
                 const msg = err?.message ?? String(err);
+                req.log.error({ cnpj, erro: msg, stack: err?.stack?.split("\n").slice(0, 5).join(" | ") }, "sync/sefaz: erro ao consultar CNPJ");
                 resultadoGlobal.erros.push({ cnpj, erro: msg });
                 registrarLogAuditoria({ acao: "SYNC_SEFAZ_ERRO", entidade: "SYNC", cnpj, usuario, ip, resultado: "ERRO", erro: msg });
             }

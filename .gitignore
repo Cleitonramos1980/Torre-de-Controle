@@ -67,3 +67,24 @@ $RECYCLE.BIN/
 # ─── Checksums e arquivos de instalação ───────────────────────────────────────
 checksums.sha256
 manifest.json
+
+# ─── Scripts de teste locais (contêm dados sensíveis hardcodados) ─────────────
+backend/test-*.mjs
+backend/test-*.ps1
+backend/test-*.js
+backend/tmp_*.mjs
+backend/q.mjs
+backend/mktoken.mjs
+backend/mktoken.js
+backend/check_excel_tmp.mjs
+backend/validar_nfse_winthor.mjs
+backend/estudar_lancamento_nfse.mjs
+backend/estuda-*.cjs
+
+# ─── Arquivos de erro/saída de processo ────────────────────────────────────────
+backend/server.err
+backend/server.log
+*.err
+be-out*.log
+be-err*.log
+backend/backend.log.err
