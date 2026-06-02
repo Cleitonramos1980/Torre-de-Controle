@@ -3693,4 +3693,286 @@ export async function fiscalRoutes(app) {
             mensagem: `Pedido de compra ${numped} criado com ${itens.length} item(ns)`,
         };
     });
+
+    // GET /api/fiscal/nfe/:chave/filial-dest
+    // Busca codigo, bairro, uf da pcfilial pelo CNPJ destinatário do XML da NF-e
+    app.get("/api/fiscal/nfe/:chave/filial-dest", async (req, reply) => {
+        if (!isOracleEnabled()) return reply.code(503).send({ error: "Oracle não disponível" });
+        const { chave } = req.params;
+        if (!chave) return reply.code(400).send({ error: "chave obrigatória" });
+        // Extrai CNPJ do destinatário do XML armazenado no PCDOCELETRONICO via PCNFENT
+        const sql = `SELECT pf.CODIGO, pf.BAIRRO, pf.UF
+                     FROM PCNFENT pn
+                     JOIN PCFILIAL pf ON TO_CHAR(pf.CODIGO) = TO_CHAR(pn.CODFILIAL)
+                     WHERE pn.CHAVENFE = :chave AND ROWNUM = 1`;
+        const rows = await executeOracle(sql, { chave }, { outFormat: 4002 }).then(r => r.rows).catch(() => []);
+        if (!rows || rows.length === 0) return reply.code(404).send({ error: "Filial não encontrada" });
+        const r = rows[0];
+        return { codigo: r.CODIGO, bairro: r.BAIRRO || "", uf: r.UF || "" };
+    });
+
+    // GET /api/fiscal/filial-por-cnpj?cnpj=xxx
+    app.get("/api/fiscal/filial-por-cnpj", async (req, reply) => {
+        if (!isOracleEnabled()) return reply.code(503).send({ error: "Oracle não disponível" });
+        const cnpj = String(req.query.cnpj || "").replace(/\D/g, "");
+        if (!cnpj) return reply.code(400).send({ error: "cnpj obrigatório" });
+        const rows = await executeOracle(
+            `SELECT CODIGO, BAIRRO, UF FROM PCFILIAL WHERE REGEXP_REPLACE(CGC, '[^0-9]', '') = :cnpj AND ROWNUM = 1`,
+            { cnpj }, { outFormat: 4002 }
+        ).then(r => r.rows).catch(() => []);
+        if (!rows || rows.length === 0) return reply.code(404).send({ error: "Filial não encontrada" });
+        const r = rows[0];
+        return { codigo: r.CODIGO, bairro: r.BAIRRO || "", uf: r.UF || "" };
+    });
+
+    // GET /api/fiscal/nfe/:chave/simular-entrada
+    app.get("/api/fiscal/nfe/:chave/simular-entrada", async (req, reply) => {
+        if (!isOracleEnabled()) return reply.code(503).send({ error: "Oracle não disponível" });
+        const { chave } = req.params;
+        if (!chave || chave.replace(/\D/g, "").length !== 44) return reply.code(400).send({ error: "chave NF-e inválida (44 dígitos)" });
+        const chaveLimpa = chave.replace(/\D/g, "");
+
+        const xmlRows = await executeOracle(
+            `SELECT XMLDOC FROM PCDOCELETRONICO WHERE REGEXP_REPLACE(CHAVEDFE, '[^0-9]', '') = :chave AND ROWNUM = 1`,
+            { chave: chaveLimpa }, { outFormat: 4002 }
+        ).then(r => r.rows).catch(() => []);
+        if (!xmlRows || xmlRows.length === 0) return reply.code(404).send({ error: "NF-e não encontrada no PCDOCELETRONICO" });
+
+        let xml = xmlRows[0].XMLDOC;
+        if (xml && typeof xml.getData === "function") xml = (await xml.getData()).toString("utf8");
+        else xml = String(xml || "");
+
+        const secEmit = extrairSecaoXml(xml, "emit");
+        const cnpjEmit = extrairTagXml(secEmit, "CNPJ");
+        const xNomeEmit = extrairTagXml(secEmit, "xNome");
+        const xMunEmit = extrairTagXml(secEmit, "xMun") || "";
+        const ufEmit = extrairTagXml(secEmit, "UF") || "";
+        const numnota = extrairTagXml(xml, "nNF");
+        const serie = extrairTagXml(xml, "serie");
+        const dhEmi = extrairTagXml(xml, "dhEmi") || extrairTagXml(xml, "dEmi") || "";
+        const dtEmi = dhEmi ? dhEmi.substring(0, 10) : "";
+        const finNFe = extrairTagXml(xml, "finNFe") || "1";
+
+        const fornRows = await executeOracle(
+            `SELECT CODFORNEC, FORNECEDOR, CGC FROM PCFORNEC WHERE REGEXP_REPLACE(CGC, '[^0-9]', '') = :cnpj AND ROWNUM = 1`,
+            { cnpj: cnpjEmit }, { outFormat: 4002 }
+        ).then(r => r.rows).catch(() => []);
+        const fornExiste = fornRows && fornRows.length > 0;
+        const forn = fornExiste ? fornRows[0] : null;
+
+        const secDest = extrairSecaoXml(xml, "dest");
+        const cnpjDest = extrairTagXml(secDest, "CNPJ");
+        const filialRows = await executeOracle(
+            `SELECT CODIGO, BAIRRO, UF FROM PCFILIAL WHERE REGEXP_REPLACE(CGC, '[^0-9]', '') = :cnpj AND ROWNUM = 1`,
+            { cnpj: cnpjDest }, { outFormat: 4002 }
+        ).then(r => r.rows).catch(() => []);
+        const filialDest = filialRows && filialRows.length > 0 ? filialRows[0] : null;
+        const codFilial = filialDest ? String(filialDest.CODIGO) : "";
+
+        const itensRegex = /<det\s[^>]*nItem="(\d+)"[^>]*>([\s\S]*?)<\/det>/g;
+        const itens = [];
+        let mdet;
+        while ((mdet = itensRegex.exec(xml)) !== null) {
+            const nItem = mdet[1];
+            const secItem = mdet[2];
+            const secProd = extrairSecaoXml(secItem, "prod");
+            const secImposto = extrairSecaoXml(secItem, "imposto") || "";
+            const secICMSGrp = extrairSecaoXml(secImposto, "ICMS") || "";
+            const secIPIGrp = extrairSecaoXml(secImposto, "IPI") || "";
+            const secPISGrp = extrairSecaoXml(secImposto, "PIS") || "";
+            const secCOFINSGrp = extrairSecaoXml(secImposto, "COFINS") || "";
+            itens.push({
+                seq: parseInt(nItem),
+                cProd: extrairTagXml(secProd, "cProd"),
+                xProd: extrairTagXml(secProd, "xProd"),
+                ncm: extrairTagXml(secProd, "NCM"),
+                cfop: extrairTagXml(secProd, "CFOP"),
+                uCom: extrairTagXml(secProd, "uCom"),
+                qCom: parseFloat(extrairTagXml(secProd, "qCom") || "0"),
+                vUnCom: parseFloat(extrairTagXml(secProd, "vUnCom") || "0"),
+                vProd: parseFloat(extrairTagXml(secProd, "vProd") || "0"),
+                vDesc: parseFloat(extrairTagXml(secProd, "vDesc") || "0"),
+                cstIcms: extrairTagXml(secICMSGrp, "CST") || extrairTagXml(secICMSGrp, "CSOSN") || "",
+                vIcms: parseFloat(extrairTagXml(secICMSGrp, "vICMS") || "0"),
+                bcIcms: parseFloat(extrairTagXml(secICMSGrp, "vBC") || "0"),
+                cstIpi: extrairTagXml(secIPIGrp, "CST") || "",
+                vIpi: parseFloat(extrairTagXml(secIPIGrp, "vIPI") || "0"),
+                bcIpi: parseFloat(extrairTagXml(secIPIGrp, "vBC") || "0"),
+                cstPis: extrairTagXml(secPISGrp, "CST") || "",
+                vPis: parseFloat(extrairTagXml(secPISGrp, "vPIS") || "0"),
+                cstCofins: extrairTagXml(secCOFINSGrp, "CST") || "",
+                vCofins: parseFloat(extrairTagXml(secCOFINSGrp, "vCOFINS") || "0"),
+            });
+        }
+
+        const prodChecks = await Promise.all(itens.map(async (item) => {
+            const rows = await executeOracle(
+                `SELECT CODPROD, DESCRICAO, CODNCM, SITUACAO FROM PCPRODCIAP WHERE CODNCM = :ncm AND UPPER(DESCRICAO) LIKE UPPER(:desc) AND ROWNUM = 1`,
+                { ncm: item.ncm, desc: `%${(item.xProd || "").substring(0, 15)}%` },
+                { outFormat: 4002 }
+            ).then(r => r.rows).catch(() => []);
+            return rows && rows.length > 0 ? rows[0] : null;
+        }));
+
+        const nfEntRows = await executeOracle(
+            `SELECT NUMTRANSENT, NUMNOTA, CODFORNEC FROM PCNFENT WHERE REGEXP_REPLACE(CHAVENFE, '[^0-9]', '') = :chave AND ROWNUM = 1`,
+            { chave: chaveLimpa }, { outFormat: 4002 }
+        ).then(r => r.rows).catch(() => []);
+        const nfEntExiste = nfEntRows && nfEntRows.length > 0;
+
+        const secTotal = extrairSecaoXml(xml, "total") || "";
+        const secICMSTot = extrairSecaoXml(secTotal, "ICMSTot") || "";
+        const vNF = parseFloat(extrairTagXml(secICMSTot, "vNF") || "0");
+        const vIPI = parseFloat(extrairTagXml(secICMSTot, "vIPI") || "0");
+
+        const passos = [
+            {
+                ordem: 1, tabela: "PCFORNEC", titulo: "Cadastro do Fornecedor",
+                status: fornExiste ? "EXISTE" : "NOVO",
+                campos: [
+                    { campo: "CODFORNEC", valor: forn ? forn.CODFORNEC : "(próximo disponível)", origem: "WinThor SEQUENCE", obrigatorio: true },
+                    { campo: "FORNECEDOR", valor: xNomeEmit, origem: "XML emit/xNome", obrigatorio: true },
+                    { campo: "CGC", valor: cnpjEmit, origem: "XML emit/CNPJ", obrigatorio: true },
+                    { campo: "MUNICIPIO", valor: xMunEmit, origem: "XML emit/xMun", obrigatorio: false },
+                    { campo: "UF", valor: ufEmit, origem: "XML emit/UF", obrigatorio: false },
+                ]
+            },
+            {
+                ordem: 2, tabela: "PCPRODCIAP", titulo: "Cadastro de Produtos",
+                itens: itens.map((item, idx) => {
+                    const prod = prodChecks[idx];
+                    return {
+                        seq: item.seq, xProd: item.xProd, ncm: item.ncm,
+                        status: prod ? "EXISTE" : "NOVO",
+                        codprodExistente: prod ? prod.CODPROD : null,
+                        campos: [
+                            { campo: "CODPROD", valor: prod ? prod.CODPROD : "(próximo disponível)", origem: prod ? "PCPRODCIAP" : "SEQUENCE", obrigatorio: true },
+                            { campo: "DESCRICAO", valor: item.xProd, origem: "XML det/prod/xProd", obrigatorio: true },
+                            { campo: "EMBALAGEM", valor: item.uCom, origem: "XML det/prod/uCom", obrigatorio: true },
+                            { campo: "CODNCM", valor: item.ncm, origem: "XML det/prod/NCM", obrigatorio: true },
+                            { campo: "CODFISCAL", valor: item.cfop, origem: "XML det/prod/CFOP", obrigatorio: true },
+                            { campo: "SITTRIBUT", valor: item.cstIcms, origem: "XML det/imposto/ICMS/CST", obrigatorio: true },
+                            { campo: "SITTRIBUTIPI", valor: item.cstIpi || "50", origem: "XML det/imposto/IPI/CST", obrigatorio: false },
+                            { campo: "CODSITTRIBPISCOFINS", valor: item.cstPis || "70", origem: "XML det/imposto/PIS/CST", obrigatorio: false },
+                            { campo: "TIPOMERC", valor: "CI", origem: "Padrão consumo interno", obrigatorio: true },
+                            { campo: "ORIGMERCTRIB", valor: "0", origem: "Padrão nacional", obrigatorio: true },
+                            { campo: "CONTROLAESTOQUE", valor: "N", origem: "Padrão CIAP", obrigatorio: true },
+                            { campo: "INDESCALARELEVANTE", valor: "N", origem: "Padrão", obrigatorio: false },
+                            { campo: "GERACREDITOCIAP", valor: "S", origem: "Padrão CIAP", obrigatorio: false },
+                            { campo: "SITUACAO", valor: "ATIVO", origem: "Padrão", obrigatorio: true },
+                        ]
+                    };
+                })
+            },
+            {
+                ordem: 3, tabela: "PCNFENT", titulo: "Cabeçalho da Nota de Entrada",
+                status: nfEntExiste ? "EXISTE" : "NOVO",
+                campos: [
+                    { campo: "NUMTRANSENT", valor: nfEntExiste ? nfEntRows[0].NUMTRANSENT : "(próximo disponível)", origem: "SEQUENCE PCNFENT", obrigatorio: true },
+                    { campo: "NUMNOTA", valor: numnota, origem: "XML ide/nNF", obrigatorio: true },
+                    { campo: "SERIE", valor: serie, origem: "XML ide/serie", obrigatorio: true },
+                    { campo: "MODELO", valor: "55", origem: "NF-e padrão", obrigatorio: true },
+                    { campo: "CHAVENFE", valor: chaveLimpa, origem: "Chave de acesso NF-e (44 dígitos)", obrigatorio: true },
+                    { campo: "DTEMISSAO", valor: dtEmi, origem: "XML ide/dhEmi", obrigatorio: true },
+                    { campo: "DTENT", valor: new Date().toISOString().substring(0, 10), origem: "Data de processamento", obrigatorio: true },
+                    { campo: "CODFORNEC", valor: forn ? forn.CODFORNEC : "(após cadastro PCFORNEC)", origem: "PCFORNEC.CODFORNEC", obrigatorio: true },
+                    { campo: "CGC", valor: cnpjEmit, origem: "XML emit/CNPJ", obrigatorio: true },
+                    { campo: "CGCFILIAL", valor: cnpjDest, origem: "XML dest/CNPJ", obrigatorio: true },
+                    { campo: "CODFILIAL", valor: codFilial, origem: "PCFILIAL via CNPJ dest", obrigatorio: true },
+                    { campo: "VLTOTAL", valor: vNF, origem: "XML total/ICMSTot/vNF", obrigatorio: true },
+                    { campo: "VLTOTALIPI", valor: vIPI, origem: "XML total/ICMSTot/vIPI", obrigatorio: false },
+                    { campo: "SITUACAONFE", valor: "100", origem: "SEFAZ autorizada", obrigatorio: true },
+                    { campo: "FINALIDADENFE", valor: finNFe, origem: "XML ide/finNFe (1=Normal)", obrigatorio: true },
+                    { campo: "AMBIENTE", valor: "1", origem: "Produção", obrigatorio: true },
+                ]
+            },
+            {
+                ordem: 4, tabela: "PCMOVCIAP", titulo: "Itens do Movimento",
+                itens: itens.map((item, idx) => {
+                    const prod = prodChecks[idx];
+                    return {
+                        seq: item.seq, xProd: item.xProd,
+                        campos: [
+                            { campo: "NUMTRANSENT", valor: nfEntExiste ? nfEntRows[0].NUMTRANSENT : "(FK → PCNFENT após passo 3)", origem: "PCNFENT.NUMTRANSENT", obrigatorio: true },
+                            { campo: "CODPROD", valor: prod ? prod.CODPROD : "(FK → PCPRODCIAP após passo 2)", origem: "PCPRODCIAP.CODPROD", obrigatorio: true },
+                            { campo: "NUMSEQ", valor: item.seq, origem: "XML det/@nItem", obrigatorio: true },
+                            { campo: "DESCRICAONFE", valor: item.xProd, origem: "XML det/prod/xProd", obrigatorio: false },
+                            { campo: "NCM", valor: item.ncm, origem: "XML det/prod/NCM", obrigatorio: false },
+                            { campo: "CODFISCAL", valor: item.cfop, origem: "XML det/prod/CFOP", obrigatorio: true },
+                            { campo: "QTCONT", valor: item.qCom, origem: "XML det/prod/qCom", obrigatorio: true },
+                            { campo: "PUNITCONT", valor: item.vUnCom, origem: "XML det/prod/vUnCom", obrigatorio: true },
+                            { campo: "VLITEM", valor: item.vProd, origem: "XML det/prod/vProd", obrigatorio: true },
+                            { campo: "VLDESCONTO", valor: item.vDesc, origem: "XML det/prod/vDesc", obrigatorio: false },
+                            { campo: "SITTRIBUT", valor: item.cstIcms, origem: "XML det/imposto/ICMS/CST", obrigatorio: true },
+                            { campo: "VLICMS", valor: item.vIcms, origem: "XML det/imposto/ICMS/vICMS", obrigatorio: false },
+                            { campo: "BASEICMS", valor: item.bcIcms, origem: "XML det/imposto/ICMS/vBC", obrigatorio: false },
+                            { campo: "VLIPI", valor: item.vIpi, origem: "XML det/imposto/IPI/vIPI", obrigatorio: false },
+                            { campo: "VLBASEIPI", valor: item.bcIpi, origem: "XML det/imposto/IPI/vBC", obrigatorio: false },
+                            { campo: "VLST", valor: 0, origem: "XML det/imposto/ICMS/vST", obrigatorio: false },
+                            { campo: "VLPIS", valor: item.vPis, origem: "XML det/imposto/PIS/vPIS", obrigatorio: false },
+                            { campo: "VLCOFINS", valor: item.vCofins, origem: "XML det/imposto/COFINS/vCOFINS", obrigatorio: false },
+                            { campo: "CODFORNEC", valor: forn ? forn.CODFORNEC : "(FK → PCFORNEC)", origem: "PCFORNEC.CODFORNEC", obrigatorio: true },
+                            { campo: "NUMNOTA", valor: numnota, origem: "XML ide/nNF", obrigatorio: true },
+                            { campo: "CODFILIAL", valor: codFilial, origem: "PCFILIAL via CNPJ dest", obrigatorio: true },
+                            { campo: "TIPOMERC", valor: "CI", origem: "Padrão consumo interno", obrigatorio: true },
+                            { campo: "DTMOV", valor: dtEmi || new Date().toISOString().substring(0, 10), origem: "XML ide/dhEmi", obrigatorio: true },
+                            { campo: "GERACREDITOCIAP", valor: "S", origem: "Padrão CIAP", obrigatorio: false },
+                        ]
+                    };
+                })
+            }
+        ];
+
+        return {
+            chave: chaveLimpa, numero: numnota, serie,
+            emitente: xNomeEmit, cnpjEmitente: cnpjEmit,
+            filialDestino: filialDest ? `${filialDest.CODIGO} - ${filialDest.BAIRRO} (${filialDest.UF})` : cnpjDest,
+            dtEmissao: dtEmi, qtdItens: itens.length, vltotal: vNF,
+            nfEntradaExiste: nfEntExiste,
+            passos
+        };
+    });
+
+    // TEMP: diagnóstico estrutura tabelas CIAP
+    app.get("/api/fiscal/diag/ciap-estrutura", async (req, reply) => {
+        if (!isOracleEnabled()) return reply.code(503).send({ error: "Oracle não disponível" });
+
+        const colsCiap = await executeOracle(
+            `SELECT COLUMN_NAME, DATA_TYPE, DATA_LENGTH, NULLABLE FROM ALL_TAB_COLUMNS WHERE TABLE_NAME='PCPRODCIAP' ORDER BY COLUMN_ID`,
+            {}, { outFormat: 4002 }
+        ).then(r => r.rows).catch(() => []);
+
+        const colsNfent = await executeOracle(
+            `SELECT COLUMN_NAME, DATA_TYPE, DATA_LENGTH, NULLABLE FROM ALL_TAB_COLUMNS WHERE TABLE_NAME='PCNFENT' ORDER BY COLUMN_ID`,
+            {}, { outFormat: 4002 }
+        ).then(r => r.rows).catch(() => []);
+
+        const colsMov = await executeOracle(
+            `SELECT COLUMN_NAME, DATA_TYPE, DATA_LENGTH, NULLABLE FROM ALL_TAB_COLUMNS WHERE TABLE_NAME='PCMOVCIAP' ORDER BY COLUMN_ID`,
+            {}, { outFormat: 4002 }
+        ).then(r => r.rows).catch(() => []);
+
+        // Amostra de 2 registros de cada tabela
+        const smplCiap = await executeOracle(
+            `SELECT CODPROD,DESCRICAO,TIPOMERC,CODFISCAL,SITTRIBUT,SITTRIBUTIPI,CODSITTRIBPISCOFINS,ORIGMERCTRIB,CONTROLAESTOQUE,INDESCALARELEVANTE,GERACREDITOCIAP,SITUACAO,CODFORNEC,CODFILIAL FROM PCPRODCIAP WHERE ROWNUM<=3`,
+            {}, { outFormat: 4002 }
+        ).then(r => r.rows).catch(() => []);
+
+        const smplNfent = await executeOracle(
+            `SELECT NUMTRANSENT,CODCONT,ESPECIE,NUMNOTA,SERIE,MODELO,CODFORNEC,CODFISCAL,CODFILIAL,FORNECEDOR,VLTOTAL,SITUACAONFE,FINALIDADENFE,TIPODESCARGA,HISTORICO,AMBIENTE,AMBIENTENFE,PROTOCOLONFE FROM PCNFENT WHERE ROWNUM<=3`,
+            {}, { outFormat: 4002 }
+        ).then(r => r.rows).catch(() => []);
+
+        const smplMov = await executeOracle(
+            `SELECT NUMTRANSENT,NUMSEQ,CODPROD,CODFISCAL,CODFILIAL,DTMOV,TIPOMERC,QTCONT,PUNITCONT,VLITEM,VLDESCONTO,SITTRIBUT,BASEICMS,VLICMS,VLST,VLIPI,VLBASEIPI,VLPIS,VLCOFINS,CODFORNEC,QTMESESCREDCIAP,GERACREDITOCIAP,UNIDADECOMERCIAL,NUMSEQENT,SEQUENCIA FROM PCMOVCIAP WHERE ROWNUM<=3`,
+            {}, { outFormat: 4002 }
+        ).then(r => r.rows).catch(() => []);
+
+        return {
+            PCPRODCIAP: { colunas: colsCiap, amostra: smplCiap },
+            PCNFENT: { colunas: colsNfent, amostra: smplNfent },
+            PCMOVCIAP: { colunas: colsMov, amostra: smplMov },
+        };
+    });
+
 }

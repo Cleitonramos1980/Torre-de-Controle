@@ -728,10 +728,28 @@ function PainelItensNFe({ doc, loading, erro, onCadastrarProduto, valorTotalNota
 }
 
 function LinhaExpandidaNFe({ chave, doc, loading, erro, colSpan, codfornec, onCadastrarProduto, valorTotalNota }) {
+    const [filial, setFilial] = React.useState(null);
+    React.useEffect(() => {
+        const cnpj = String(doc?.destinatario?.cnpj || "").replace(/\D/g, "");
+        if (!cnpj) return;
+        fetch(`/api/fiscal/filial-por-cnpj?cnpj=${cnpj}`, { headers: { Authorization: `Bearer ${getToken()}` } })
+            .then(r => r.ok ? r.json() : null)
+            .then(d => { if (d && d.codigo) setFilial(d); })
+            .catch(() => {});
+    }, [doc?.destinatario?.cnpj]);
+
     return h("tr", { children:
         h("td", { colSpan, style: { padding: 0, background: "#f0f7ff", borderBottom: "2px solid #3b82f6", borderTop: "none" }, children:
             hs("div", { style: { padding: "12px 16px 16px 44px" }, children: [
-                h("div", { key: "hdr", style: { fontSize: "11px", fontWeight: 700, color: "#1d4ed8", marginBottom: "8px", textTransform: "uppercase", letterSpacing: "0.04em" }, children: "Itens da Nota" }),
+                hs("div", { key: "hdr", style: { display: "flex", alignItems: "center", gap: "16px", marginBottom: "8px" }, children: [
+                    h("span", { style: { fontSize: "11px", fontWeight: 700, color: "#1d4ed8", textTransform: "uppercase", letterSpacing: "0.04em" }, children: "Itens da Nota" }),
+                    chave && h("span", { style: { fontSize: "11px", fontFamily: "monospace", color: "#374151", background: "#e0e7ff", border: "1px solid #c7d2fe", borderRadius: "4px", padding: "2px 8px", userSelect: "all", letterSpacing: "0.04em" }, children: chave }),
+                    filial && hs("span", { style: { display: "inline-flex", alignItems: "center", gap: "6px", fontSize: "11px", background: "#f0fdf4", border: "1px solid #86efac", borderRadius: "4px", padding: "2px 8px", color: "#166534" }, children: [
+                        h("span", { style: { fontWeight: 700 }, children: `Filial ${filial.codigo}` }),
+                        filial.bairro && h("span", { children: `· ${filial.bairro}` }),
+                        filial.uf && h("span", { children: `· ${filial.uf}` }),
+                    ]}),
+                ]}),
                 h(PainelItensNFe, { key: "itens", doc, loading, erro, onCadastrarProduto, valorTotalNota }),
             ]})
         })

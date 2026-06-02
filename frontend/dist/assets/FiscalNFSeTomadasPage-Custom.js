@@ -4,6 +4,29 @@ const h = React.createElement;
 const hs = React.createElement;
 
 function getToken() { try { return JSON.parse(localStorage.getItem("sgq.authSession") || "{}").token || ""; } catch { return ""; } }
+const _filialCache = {};
+function useFilial(cnpj) {
+    const cnpjLimpo = String(cnpj || "").replace(/\D/g, "");
+    const [filial, setFilial] = React.useState(_filialCache[cnpjLimpo] || null);
+    React.useEffect(() => {
+        if (!cnpjLimpo) return;
+        if (_filialCache[cnpjLimpo]) { setFilial(_filialCache[cnpjLimpo]); return; }
+        fetch(`/api/fiscal/filial-por-cnpj?cnpj=${cnpjLimpo}`, { headers: { Authorization: `Bearer ${getToken()}` } })
+            .then(r => r.ok ? r.json() : null)
+            .then(d => { if (d && d.codigo) { _filialCache[cnpjLimpo] = d; setFilial(d); } })
+            .catch(() => {});
+    }, [cnpjLimpo]);
+    return filial;
+}
+function FilialBadge({ cnpj }) {
+    const f = useFilial(cnpj);
+    if (!f) return h("span", { style: { color: "#9ca3af", fontSize: "11px" } }, "—");
+    return hs("span", { style: { fontSize: "11px", color: "#166534" } }, [
+        h("b", { key: "c" }, f.codigo),
+        f.bairro ? h("span", { key: "b" }, ` · ${f.bairro}`) : null,
+        f.uf ? h("span", { key: "u" }, ` · ${f.uf}`) : null,
+    ]);
+}
 async function apiFetch(path, opts) {
     const res = await fetch(path, { ...opts, headers: { "Content-Type": "application/json", Authorization: `Bearer ${getToken()}`, ...(opts?.headers || {}) } });
     const json = await res.json().catch(() => ({}));
@@ -803,7 +826,7 @@ export function FiscalNFSeTomadasPage() {
                             hs("table", { style: { width: "100%", borderCollapse: "collapse", fontSize: "13px" } }, [
                                 h("thead", { key: "th" },
                                     h("tr", { style: { borderBottom: "2px solid #e5e7eb", background: "#f9fafb" } },
-                                        ["Nº NFS-e", "Prestador", "CNPJ", "Competência", "Valor", "ISS", "WinThor", "Emissão", "Ações"].map(c =>
+                                        ["Nº NFS-e", "Filial", "Prestador", "CNPJ", "Competência", "Valor", "ISS", "WinThor", "Emissão", "Ações"].map(c =>
                                             h("th", { key: c, style: { padding: "8px 12px", textAlign: "left", fontWeight: 600, whiteSpace: "nowrap", fontSize: "12px" } }, c)
                                         )
                                     )
@@ -820,6 +843,7 @@ export function FiscalNFSeTomadasPage() {
                                             },
                                         },
                                             h("td", { style: { padding: "6px 12px", fontFamily: "monospace", fontSize: "12px" } }, doc.numeroNfse || "—"),
+                                            h("td", { style: { padding: "6px 12px", whiteSpace: "nowrap" } }, h(FilialBadge, { cnpj: doc.cnpjTomador })),
                                             h("td", { style: { padding: "6px 12px", maxWidth: "160px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" } }, doc.nomePrestador || "—"),
                                             h("td", { style: { padding: "6px 12px", fontFamily: "monospace", fontSize: "11px" } }, formatCnpj(doc.cnpjPrestador)),
                                             h("td", { style: { padding: "6px 12px" } }, doc.competencia || "—"),
