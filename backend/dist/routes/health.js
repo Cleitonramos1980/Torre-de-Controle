@@ -40,8 +40,8 @@ export async function healthRoutes(app) {
     });
     // POST /api/module-flags/:moduleKey — ativa/desativa manutenção de um módulo (requer ADMIN)
     app.post("/api/module-flags/:moduleKey", async (req, reply) => {
-        const { papel } = (req.authUser || {});
-        if (papel !== "ADMIN") return reply.code(403).send({ error: "Requer papel ADMIN" });
+        const { perfil } = (req.authUser || {});
+        if (perfil !== "ADMIN") return reply.code(403).send({ error: "Requer papel ADMIN" });
         const { moduleKey } = req.params;
         const { maintenance, enabled } = req.body ?? {};
         const flags = readModuleFlags();

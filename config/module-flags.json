@@ -1,12 +1,52 @@
 {
-  "fiscal": { "maintenance": false, "enabled": true, "label": "Fiscal / NF-e" },
-  "portaria": { "maintenance": false, "enabled": true, "label": "Portaria & Visitantes" },
-  "sac": { "maintenance": false, "enabled": true, "label": "SAC / Qualidade" },
-  "engenharia": { "maintenance": false, "enabled": true, "label": "Engenharia / CMMS" },
-  "recebiveis-cartao": { "maintenance": false, "enabled": true, "label": "Recebiveis" },
-  "inventario": { "maintenance": false, "enabled": true, "label": "Inventario" },
-  "sesmt": { "maintenance": false, "enabled": true, "label": "SESMT" },
-  "assistencia": { "maintenance": false, "enabled": true, "label": "Assistencia Tecnica" },
-  "administracao": { "maintenance": false, "enabled": true, "label": "Administracao" },
-  "monitoramento": { "maintenance": false, "enabled": true, "label": "Monitoramento" }
+  "fiscal": {
+    "maintenance": false,
+    "enabled": true,
+    "label": "Fiscal / NF-e"
+  },
+  "portaria": {
+    "maintenance": false,
+    "enabled": true,
+    "label": "Portaria & Visitantes"
+  },
+  "sac": {
+    "maintenance": false,
+    "enabled": true,
+    "label": "SAC / Qualidade"
+  },
+  "engenharia": {
+    "maintenance": false,
+    "enabled": true,
+    "label": "Engenharia / CMMS"
+  },
+  "recebiveis-cartao": {
+    "maintenance": false,
+    "enabled": true,
+    "label": "Recebiveis"
+  },
+  "inventario": {
+    "maintenance": false,
+    "enabled": true,
+    "label": "Inventario"
+  },
+  "sesmt": {
+    "maintenance": false,
+    "enabled": true,
+    "label": "SESMT"
+  },
+  "assistencia": {
+    "maintenance": false,
+    "enabled": true,
+    "label": "Assistencia Tecnica"
+  },
+  "administracao": {
+    "maintenance": false,
+    "enabled": true,
+    "label": "Administracao"
+  },
+  "monitoramento": {
+    "maintenance": false,
+    "enabled": true,
+    "label": "Monitoramento"
+  }
 }
