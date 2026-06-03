@@ -37,77 +37,95 @@ function normalize(rows) {
     });
 }
 export async function getClientes(filters) {
-    const rows = await queryRows(`SELECT CODCLI, NOME, CGCENT, TELEFONES, CIDADE, UF
+    try {
+        const rows = await queryRows(`SELECT CODCLI, NOME, CGCENT, TELEFONES, CIDADE, UF
        FROM VW_SGQ_CLIENTE
       WHERE (:nome IS NULL OR UPPER(NOME) LIKE '%' || UPPER(:nome) || '%')
         AND (:cgcent IS NULL OR CGCENT LIKE '%' || :cgcent || '%')
         AND (:telefone IS NULL OR TELEFONES LIKE '%' || :telefone || '%')
       FETCH FIRST 100 ROWS ONLY`, {
-        nome: filters.nome || null,
-        cgcent: filters.cgcent || null,
-        telefone: filters.telefone || null,
-    });
-    return rows.length ? normalize(rows) : fallback.clientes;
+            nome: filters.nome || null,
+            cgcent: filters.cgcent || null,
+            telefone: filters.telefone || null,
+        });
+        return rows.length ? normalize(rows) : fallback.clientes;
+    } catch {
+        return fallback.clientes;
+    }
 }
 export async function getPedidos(codcli) {
-    const rows = await queryRows(`SELECT NUMPED, NUMNF, CODCLI, DT_PEDIDO, VLR_PEDIDO, STATUS, CANAL
+    try {
+        const rows = await queryRows(`SELECT NUMPED, NUMNF, CODCLI, DT_PEDIDO, VLR_PEDIDO, STATUS, CANAL
        FROM VW_SGQ_PEDIDO
       WHERE (:codcli IS NULL OR CODCLI = :codcli)
       FETCH FIRST 200 ROWS ONLY`, { codcli: codcli || null });
-    if (rows.length)
-        return normalize(rows).map((r) => ({ ...r, dtPedido: String(r.dtPedido).slice(0, 10) }));
-    return codcli ? fallback.pedidos.filter((p) => p.codcli === codcli) : fallback.pedidos;
+        if (rows.length)
+            return normalize(rows).map((r) => ({ ...r, dtPedido: String(r.dtPedido).slice(0, 10) }));
+        return codcli ? fallback.pedidos.filter((p) => p.codcli === codcli) : fallback.pedidos;
+    } catch {
+        return codcli ? fallback.pedidos.filter((p) => p.codcli === codcli) : fallback.pedidos;
+    }
 }
 export async function getNfVenda(filters) {
-    const rows = await queryRows(`SELECT NUMNF, SERIE, CHAVE_NFE, DT_EMISSAO, CODCLI, NUMPED, VLR_TOTAL
+    try {
+        const rows = await queryRows(`SELECT NUMNF, SERIE, CHAVE_NFE, DT_EMISSAO, CODCLI, NUMPED, VLR_TOTAL
        FROM VW_SGQ_NF_VENDA
       WHERE (:codcli IS NULL OR CODCLI = :codcli)
         AND (:numnf IS NULL OR NUMNF = :numnf)
       FETCH FIRST 200 ROWS ONLY`, { codcli: filters.codcli || null, numnf: filters.numnf || null });
-    if (rows.length)
-        return normalize(rows).map((r) => ({ ...r, dtEmissao: String(r.dtEmissao).slice(0, 10) }));
-    return fallback.nfVenda;
+        if (rows.length)
+            return normalize(rows).map((r) => ({ ...r, dtEmissao: String(r.dtEmissao).slice(0, 10) }));
+        return fallback.nfVenda;
+    } catch { return fallback.nfVenda; }
 }
 export async function getNfTroca(filters) {
-    const rows = await queryRows(`SELECT NUMNF, SERIE, CHAVE_NFE, DT_EMISSAO, CODCLI, REFERENCIA_TROCA, VLR_TOTAL
+    try {
+        const rows = await queryRows(`SELECT NUMNF, SERIE, CHAVE_NFE, DT_EMISSAO, CODCLI, REFERENCIA_TROCA, VLR_TOTAL
        FROM VW_SGQ_NF_TROCA
       WHERE (:codcli IS NULL OR CODCLI = :codcli)
         AND (:numnf IS NULL OR NUMNF = :numnf)
       FETCH FIRST 200 ROWS ONLY`, { codcli: filters.codcli || null, numnf: filters.numnf || null });
-    if (rows.length)
-        return normalize(rows).map((r) => ({ ...r, dtEmissao: String(r.dtEmissao).slice(0, 10) }));
-    return fallback.nfTroca;
+        if (rows.length)
+            return normalize(rows).map((r) => ({ ...r, dtEmissao: String(r.dtEmissao).slice(0, 10) }));
+        return fallback.nfTroca;
+    } catch { return fallback.nfTroca; }
 }
 export async function getPedidoItens(numped) {
-    const rows = await queryRows(`SELECT NUMPED, NUMNF, CODPROD, DESCRICAO, UN, QTD, VLR_UNIT, VLR_TOTAL
+    try {
+        const rows = await queryRows(`SELECT NUMPED, NUMNF, CODPROD, DESCRICAO, UN, QTD, VLR_UNIT, VLR_TOTAL
        FROM VW_SGQ_PEDIDO_ITENS
       WHERE (:numped IS NULL OR NUMPED = :numped)
       FETCH FIRST 500 ROWS ONLY`, { numped: numped || null });
-    if (rows.length)
-        return normalize(rows);
-    return numped ? fallback.itens.filter((i) => i.numped === numped) : fallback.itens;
+        if (rows.length)
+            return normalize(rows);
+        return numped ? fallback.itens.filter((i) => i.numped === numped) : fallback.itens;
+    } catch { return numped ? fallback.itens.filter((i) => i.numped === numped) : fallback.itens; }
 }
 export async function getMateriais(filters) {
-    const rows = await queryRows(`SELECT CODMAT, DESCRICAO, UN, CATEGORIA, ESTOQUE_DISPONIVEL
+    try {
+        const rows = await queryRows(`SELECT CODMAT, DESCRICAO, UN, CATEGORIA, ESTOQUE_DISPONIVEL
        FROM VW_SGQ_MATERIAL
       WHERE (:codigo IS NULL OR CODMAT LIKE '%' || :codigo || '%')
         AND (:descricao IS NULL OR UPPER(DESCRICAO) LIKE '%' || UPPER(:descricao) || '%')
         AND (:categoria IS NULL OR CATEGORIA = :categoria)
       FETCH FIRST 500 ROWS ONLY`, {
-        codigo: filters.codigo || null,
-        descricao: filters.descricao || null,
-        categoria: filters.categoria || null,
-    });
-    return rows.length ? normalize(rows) : fallback.materiais;
+            codigo: filters.codigo || null,
+            descricao: filters.descricao || null,
+            categoria: filters.categoria || null,
+        });
+        return rows.length ? normalize(rows) : fallback.materiais;
+    } catch { return fallback.materiais; }
 }
 export async function getEstoquePlanta(codmat) {
-    const rows = await queryRows(`SELECT CODMAT, PLANTA, QTD_DISPONIVEL
+    try {
+        const rows = await queryRows(`SELECT CODMAT, PLANTA, QTD_DISPONIVEL
        FROM VW_SGQ_ESTOQUE_PLANTA
       WHERE (:codmat IS NULL OR CODMAT = :codmat)
       FETCH FIRST 500 ROWS ONLY`, { codmat: codmat || null });
-    if (rows.length)
-        return normalize(rows);
-    return codmat ? fallback.estoquePlanta.filter((e) => e.codmat === codmat) : fallback.estoquePlanta;
+        if (rows.length)
+            return normalize(rows);
+        return codmat ? fallback.estoquePlanta.filter((e) => e.codmat === codmat) : fallback.estoquePlanta;
+    } catch { return codmat ? fallback.estoquePlanta.filter((e) => e.codmat === codmat) : fallback.estoquePlanta; }
 }
 function toDateOnly(value) {
     if (!value)

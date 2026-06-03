@@ -34,9 +34,11 @@ function isAllowedAttachment(fileName, mimeType) {
 export async function sacRoutes(app) {
     app.get("/api/sac/dashboard", async () => sacRepo.dashboard());
     app.get("/api/sac/atendimentos", async () => sacRepo.list());
-    app.get("/api/sac/atendimentos/:id", async (req) => {
+    app.get("/api/sac/atendimentos/:id", async (req, reply) => {
         const { id } = z.object({ id: z.string() }).parse(req.params);
-        return sacRepo.getById(id);
+        const atendimento = sacRepo.getById(id);
+        if (!atendimento) return reply.code(404).send({ error: "Atendimento não encontrado" });
+        return atendimento;
     });
     app.post("/api/sac/atendimentos", async (req) => {
         const body = z.object({
