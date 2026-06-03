@@ -78,6 +78,7 @@ app.addHook("preHandler", async (request, reply) => {
     const publicPaths = new Set([
         "/api/health",
         "/api/health/oracle",
+        "/api/module-flags",
         "/api/auth/login",
         "/api/sac/avaliacoes/public",
         "/api/sac/avaliacoes/public/responder",
