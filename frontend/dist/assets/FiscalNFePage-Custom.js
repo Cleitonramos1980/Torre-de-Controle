@@ -63,6 +63,8 @@ function PainelNFe({ chave, onClose, fornecStatus, onFornecCadastrado }) {
     const [loading, setLoading] = React.useState(true);
     const [erro, setErro] = React.useState(null);
     const [modalProduto, setModalProduto] = React.useState(null);
+    const [modalEscolhaTipo, setModalEscolhaTipo] = React.useState(null);
+    const [modalCiap, setModalCiap] = React.useState(null);
     const [modalPedido, setModalPedido] = React.useState(false);
     const [modalFornecPanel, setModalFornecPanel] = React.useState(false);
     const [fornecCadastradoLocal, setFornecCadastradoLocal] = React.useState(null);
@@ -85,7 +87,9 @@ function PainelNFe({ chave, onClose, fornecStatus, onFornecCadastrado }) {
     const fornecJaCadastrado = fornecCadastradoLocal?.cadastrado ?? fornecStatus?.[cnpjEmit]?.cadastrado ?? false;
 
     return h("div", { style: { position: "fixed", inset: 0, zIndex: 1000, display: "flex" }, children: [
+        modalEscolhaTipo ? h(ModalEscolhaTipoCadastro, { key: "mescolha", item: modalEscolhaTipo, onClose: () => setModalEscolhaTipo(null), onEscolha: (tipo, item) => { setModalEscolhaTipo(null); if (tipo === "203") setModalProduto(item); else setModalCiap(item); } }) : null,
         modalProduto ? h(ModalCadastroProduto, { key: "mprod", item: modalProduto, chaveAcesso: chave, codfornec: codfornecWinthor, onClose: () => setModalProduto(null), onCadastrado: (res) => { setModalProduto(null); } }) : null,
+        modalCiap ? h(ModalCadastroProdutoCiap, { key: "mciap", item: modalCiap, chaveAcesso: chave, codfornec: codfornecWinthor, onClose: () => setModalCiap(null), onCadastrado: () => setModalCiap(null) }) : null,
         modalPedido ? h(ModalCriarPedido, { key: "mped", doc, chaveAcesso: chave, codfornec: codfornecWinthor, onClose: () => setModalPedido(false), onCriado: (res) => { setModalPedido(false); setDoc(p => p ? { ...p, pedidoCompra: String(res.numped) } : p); } }) : null,
         modalFornecPanel ? h(ModalCadastroFornecNfe, { key: "mfp", nfe: doc ? { ...doc, chaveAcesso: chave } : { chaveAcesso: chave }, onClose: () => setModalFornecPanel(false), onCadastrado: (res) => { setModalFornecPanel(false); setFornecCadastradoLocal({ cadastrado: true, codfornec: res.codfornec }); if (onFornecCadastrado) onFornecCadastrado(cnpjEmit, res); } }) : null,
         h("div", { key: "ov", onClick: onClose, style: { flex: 1, background: "rgba(0,0,0,0.45)" } }),
@@ -199,7 +203,7 @@ function PainelNFe({ chave, onClose, fornecStatus, onFornecCadastrado }) {
                                             h("td", { key: "cst", style: { padding: "6px 8px", fontFamily: "monospace", fontSize: "11px" }, children: it.cst || "—" }),
                                             h("td", { key: "pi", style: { padding: "6px 8px", textAlign: "right" }, children: it.percIcms ? `${it.percIcms}%` : "—" }),
                                             h("td", { key: "ac", style: { padding: "4px 8px", whiteSpace: "nowrap" }, children:
-                                                h("button", { onClick: () => setModalProduto(it), style: { fontSize: "11px", padding: "3px 10px", borderRadius: "5px", border: "1px solid #2563eb", background: "#eff6ff", color: "#1d4ed8", cursor: "pointer", fontWeight: 600, whiteSpace: "nowrap" }, children: "Cadastrar" })
+                                                h("button", { onClick: () => setModalEscolhaTipo(it), style: { fontSize: "11px", padding: "3px 10px", borderRadius: "5px", border: "1px solid #2563eb", background: "#eff6ff", color: "#1d4ed8", cursor: "pointer", fontWeight: 600, whiteSpace: "nowrap" }, children: "Cadastrar" })
                                             }),
                                         ]})
                                     )}),
@@ -540,6 +544,252 @@ function ModalCadastroProduto({ item, chaveAcesso, codfornec, onClose, onCadastr
     });
 }
 
+// ── MODAL ESCOLHA TIPO CADASTRO PRODUTO ──
+// Passo de decisão: Fluxo 203 (PCPRODUT) ou Fluxo 3401 (PCPRODCIAP)
+function ModalEscolhaTipoCadastro({ item, onClose, onEscolha }) {
+    const [tipo, setTipo] = React.useState(null);
+    const [erro, setErro] = React.useState("");
+
+    const opcoes = [
+        {
+            id: "203",
+            titulo: "Produto Normal",
+            subtitulo: "Fluxo 203 — PCPRODUT",
+            descricao: "Utilize esta opção para cadastrar produtos ou mercadorias normais no cadastro padrão de produtos do WinThor.",
+            bg: "#eff6ff", border: "#2563eb", iconBg: "#dbeafe", iconColor: "#1e40af", icone: "📦",
+        },
+        {
+            id: "3401",
+            titulo: "Produto CIAP / Ativo Imobilizado",
+            subtitulo: "Fluxo 3401 — PCPRODCIAP",
+            descricao: "Utilize esta opção para cadastrar bens do ativo imobilizado ou produtos sujeitos ao controle CIAP (Crédito do ICMS sobre Ativo Permanente).",
+            bg: "#f0fdf4", border: "#16a34a", iconBg: "#dcfce7", iconColor: "#166534", icone: "🏭",
+        },
+    ];
+
+    const continuar = () => {
+        if (!tipo) { setErro("Selecione o tipo de cadastro do produto antes de continuar."); return; }
+        onEscolha(tipo, item);
+    };
+
+    const msgTipo = tipo === "203"
+        ? h("div", { key: "mt", style: { background: "#dbeafe", color: "#1e40af", padding: "8px 12px", borderRadius: "6px", fontSize: "12px", fontWeight: 600 }, children: "Fluxo 203 selecionado. O produto será cadastrado na PCPRODUT." })
+        : tipo === "3401"
+            ? h("div", { key: "mt", style: { background: "#dcfce7", color: "#166534", padding: "8px 12px", borderRadius: "6px", fontSize: "12px", fontWeight: 600 }, children: "Fluxo 3401 selecionado. O produto será cadastrado na PCPRODCIAP." })
+            : null;
+
+    return h("div", { style: { position: "fixed", inset: 0, background: "rgba(0,0,0,.55)", zIndex: 1300, display: "flex", alignItems: "center", justifyContent: "center" }, onClick: onClose, children:
+        h("div", { style: { background: "#fff", borderRadius: "12px", padding: "28px", width: "560px", maxWidth: "97vw", boxShadow: "0 8px 32px rgba(0,0,0,.22)" }, onClick: e => e.stopPropagation(), children:
+            hs("div", { style: { display: "flex", flexDirection: "column", gap: "16px" }, children: [
+                hs("div", { key: "hdr", style: { display: "flex", justifyContent: "space-between", alignItems: "flex-start" }, children: [
+                    hs("div", { key: "t", children: [
+                        h("h2", { key: "h", style: { fontSize: "17px", fontWeight: 700, margin: "0 0 4px" }, children: "Escolha o tipo de cadastro do produto" }),
+                        h("p", { key: "s", style: { fontSize: "12px", color: "#6b7280", margin: 0 }, children: item ? `Item: ${item.codProd || "—"} — ${(item.descricao || "").slice(0, 50)}` : "" }),
+                    ]}),
+                    h("button", { key: "x", onClick: onClose, style: { border: "none", background: "none", fontSize: "22px", cursor: "pointer", color: "#9ca3af", lineHeight: 1 }, children: "×" }),
+                ]}),
+
+                h("div", { key: "cards", style: { display: "flex", flexDirection: "column", gap: "10px" }, children:
+                    opcoes.map(op => {
+                        const sel = tipo === op.id;
+                        return hs("div", {
+                            key: op.id,
+                            onClick: () => { setTipo(op.id); setErro(""); },
+                            style: {
+                                display: "flex", alignItems: "flex-start", gap: "14px",
+                                padding: "14px 16px", borderRadius: "10px", cursor: "pointer",
+                                border: `2px solid ${sel ? op.border : "#e5e7eb"}`,
+                                background: sel ? op.bg : "#fff",
+                                transition: "all 0.12s",
+                            },
+                            children: [
+                                h("div", { key: "ic", style: { width: "38px", height: "38px", borderRadius: "8px", background: op.iconBg, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "20px", flexShrink: 0 }, children: op.icone }),
+                                hs("div", { key: "tx", style: { flex: 1 }, children: [
+                                    hs("div", { key: "r1", style: { display: "flex", alignItems: "center", gap: "8px", marginBottom: "2px" }, children: [
+                                        h("span", { key: "tt", style: { fontSize: "14px", fontWeight: 700, color: "#111827" }, children: op.titulo }),
+                                        h("span", { key: "st", style: { fontSize: "11px", fontWeight: 700, background: op.iconBg, color: op.iconColor, padding: "1px 7px", borderRadius: "9999px" }, children: op.subtitulo }),
+                                    ]}),
+                                    h("p", { key: "ds", style: { fontSize: "12px", color: "#6b7280", margin: 0, lineHeight: 1.5 }, children: op.descricao }),
+                                ]}),
+                                sel ? h("div", { key: "ck", style: { width: "20px", height: "20px", borderRadius: "50%", background: op.border, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: "2px" }, children: h("span", { style: { color: "#fff", fontSize: "12px", fontWeight: 700 }, children: "✓" }) }) : null,
+                            ],
+                        });
+                    })
+                }),
+
+                msgTipo,
+                erro ? h("p", { key: "er", style: { fontSize: "13px", color: "#dc2626", margin: 0 }, children: erro }) : null,
+
+                hs("div", { key: "btns", style: { display: "flex", justifyContent: "flex-end", gap: "8px", paddingTop: "4px" }, children: [
+                    h(Button, { key: "c", variant: "outline", onClick: onClose, children: "Cancelar" }),
+                    h(Button, { key: "ok", onClick: continuar, style: tipo ? {} : { opacity: 0.5 }, children: "Continuar →" }),
+                ]}),
+            ]})
+        })
+    });
+}
+
+// ── MODAL CADASTRO PRODUTO CIAP — NF-e (Fluxo 3401 / PCPRODCIAP) ──
+function ModalCadastroProdutoCiap({ item, chaveAcesso, codfornec, onClose, onCadastrado }) {
+    const [salvando, setSalvando] = React.useState(false);
+    const [erro, setErro] = React.useState("");
+    const [aviso, setAviso] = React.useState("");
+
+    const ncmItem = String(item?.ncm || item?.nbm || "").replace(/\D/g, "").slice(0, 8);
+    const cfopItem = String(item?.cfop || "").replace(/\D/g, "").slice(0, 4);
+    const cstIcmsItem = String(item?.cstIcms || item?.cst || "").slice(0, 3);
+    const cstIpiItem = String(item?.cstIpi || "49").slice(0, 2);
+    const cstPisItem = String(item?.cstPis || item?.cstCofins || "98").slice(0, 3);
+
+    const [form, setForm] = React.useState({
+        descricao:           String(item?.descricao || "").trim().toUpperCase().slice(0, 100),
+        embalagem:           String(item?.unidade || "UN").trim().toUpperCase().slice(0, 12),
+        codncm:              ncmItem,
+        codfiscal:           cfopItem,
+        sittribut:           cstIcmsItem,
+        sittributipi:        cstIpiItem,
+        codsittribpiscofins: cstPisItem,
+        tipomerc:            "CI",
+        origmerctrib:        "0",
+        controlaestoque:     "S",
+        codfab:              String(item?.codProd || "").trim().slice(0, 30),
+    });
+    const setF = (k, v) => setForm(p => ({ ...p, [k]: v }));
+
+    const cadastrar = async () => {
+        if (!form.descricao.trim()) { setErro("Descrição é obrigatória."); return; }
+        if (!codfornec) { setErro("Fornecedor não cadastrado no WinThor. Cadastre o fornecedor primeiro."); return; }
+        setSalvando(true); setErro(""); setAviso("");
+        try {
+            const res = await apiFetch("/api/fiscal/produtos/cadastrar-ciap", {
+                method: "POST",
+                body: JSON.stringify({
+                    chaveAcesso,
+                    descricao:           form.descricao.trim().toUpperCase(),
+                    embalagem:           form.embalagem.trim().toUpperCase(),
+                    codncm:              form.codncm || null,
+                    codfiscal:           form.codfiscal || null,
+                    sittribut:           form.sittribut || null,
+                    sittributipi:        form.sittributipi || null,
+                    codsittribpiscofins: form.codsittribpiscofins || null,
+                    codfornec:           codfornec ? Number(codfornec) : null,
+                    tipomerc:            form.tipomerc || "CI",
+                    origmerctrib:        form.origmerctrib || "0",
+                    controlaestoque:     form.controlaestoque || "S",
+                    codfab:              form.codfab || null,
+                    situacao:            "ATIVO",
+                }),
+            });
+            if (res.ja_cadastrado) {
+                setAviso(`Produto CIAP já existe — cód. ${res.codprod}: ${res.descricao}`);
+                setSalvando(false); return;
+            }
+            onCadastrado(res);
+        } catch (e) { setErro(e.message); } finally { setSalvando(false); }
+    };
+
+    const lbStyle = { fontSize: "12px", fontWeight: 600, color: "#374151", display: "block", marginBottom: "4px" };
+    const inStyle = { width: "100%", padding: "7px 10px", borderRadius: "6px", border: "1px solid #d1d5db", fontSize: "13px", boxSizing: "border-box" };
+
+    return h("div", { style: { position: "fixed", inset: 0, background: "rgba(0,0,0,.55)", zIndex: 1400, display: "flex", alignItems: "center", justifyContent: "center" }, onClick: onClose, children:
+        h("div", { style: { background: "#fff", borderRadius: "10px", padding: "28px", width: "620px", maxWidth: "97vw", maxHeight: "92vh", overflowY: "auto", boxShadow: "0 8px 32px rgba(0,0,0,.22)" }, onClick: e => e.stopPropagation(), children:
+            hs("div", { style: { display: "flex", flexDirection: "column", gap: "14px" }, children: [
+                hs("div", { key: "hdr", style: { display: "flex", justifyContent: "space-between", alignItems: "flex-start" }, children: [
+                    hs("div", { key: "t", children: [
+                        h("h2", { key: "h", style: { fontSize: "16px", fontWeight: 700, margin: "0 0 2px" }, children: "Cadastrar Produto CIAP / Ativo Imobilizado" }),
+                        hs("div", { key: "badge-row", style: { display: "flex", gap: "6px", alignItems: "center" }, children: [
+                            h("span", { key: "b1", style: { fontSize: "11px", fontWeight: 700, background: "#dcfce7", color: "#166534", padding: "1px 7px", borderRadius: "9999px" }, children: "Fluxo 3401" }),
+                            h("span", { key: "b2", style: { fontSize: "11px", fontWeight: 700, background: "#f3f4f6", color: "#374151", padding: "1px 7px", borderRadius: "9999px" }, children: "PCPRODCIAP" }),
+                        ]}),
+                    ]}),
+                    h("button", { key: "x", onClick: onClose, style: { border: "none", background: "none", fontSize: "22px", cursor: "pointer", color: "#9ca3af", lineHeight: 1 }, children: "×" }),
+                ]}),
+
+                h("div", { key: "inf", style: { background: "#f0fdf4", border: "1px solid #86efac", borderRadius: "8px", padding: "10px 12px", fontSize: "12px", color: "#166534" }, children:
+                    hs("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4px 16px" }, children: [
+                        hs("span", { key: "a", children: [h("b", { key: "l", children: "Cód. Forn.: " }), item?.codProd || "—"] }),
+                        hs("span", { key: "b", children: [h("b", { key: "l", children: "NCM: " }), ncmItem || "—"] }),
+                        hs("span", { key: "c", children: [h("b", { key: "l", children: "CFOP: " }), cfopItem || "—"] }),
+                        hs("span", { key: "d", children: [h("b", { key: "l", children: "CST ICMS: " }), cstIcmsItem || "—"] }),
+                        hs("span", { key: "e", children: [h("b", { key: "l", children: "Qtd: " }), fmtN(item?.quantidade)] }),
+                        hs("span", { key: "f", children: [h("b", { key: "l", children: "Vl. Unit.: " }), fmt(item?.valorUnitario)] }),
+                    ]}),
+                }),
+
+                !codfornec ? h("div", { key: "wfornec", style: { background: "#fef3c7", color: "#92400e", padding: "10px 12px", borderRadius: "6px", fontSize: "12px", fontWeight: 500 }, children: "Atenção: o fornecedor desta NF-e não está cadastrado no WinThor. Cadastre o fornecedor antes de cadastrar produtos CIAP." }) : null,
+
+                hs("div", { key: "fdesc", children: [
+                    h("label", { key: "l", style: lbStyle, children: `Descrição (máx 100 caracteres) — ${form.descricao.length}/100` }),
+                    h("input", { key: "i", type: "text", maxLength: 100, value: form.descricao, onChange: e => setF("descricao", e.target.value.toUpperCase()), style: inStyle }),
+                ]}),
+
+                hs("div", { key: "row1", style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }, children: [
+                    hs("div", { key: "femb", children: [
+                        h("label", { key: "l", style: lbStyle, children: "Embalagem / Unidade" }),
+                        h("input", { key: "i", type: "text", maxLength: 12, value: form.embalagem, onChange: e => setF("embalagem", e.target.value.toUpperCase()), style: inStyle }),
+                    ]}),
+                    hs("div", { key: "fncm", children: [
+                        h("label", { key: "l", style: lbStyle, children: "NCM (8 dígitos)" }),
+                        h("input", { key: "i", type: "text", maxLength: 8, value: form.codncm, onChange: e => setF("codncm", e.target.value.replace(/\D/g, "")), style: inStyle, placeholder: "ex: 94042100" }),
+                    ]}),
+                ]}),
+
+                hs("div", { key: "row2", style: { display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "8px" }, children: [
+                    hs("div", { key: "fcfop", children: [
+                        h("label", { key: "l", style: lbStyle, children: "CFOP" }),
+                        h("input", { key: "i", type: "text", maxLength: 4, value: form.codfiscal, onChange: e => setF("codfiscal", e.target.value.replace(/\D/g, "")), style: inStyle, placeholder: "ex: 2205" }),
+                    ]}),
+                    hs("div", { key: "fcst", children: [
+                        h("label", { key: "l", style: lbStyle, children: "CST ICMS" }),
+                        h("input", { key: "i", type: "text", maxLength: 3, value: form.sittribut, onChange: e => setF("sittribut", e.target.value), style: inStyle, placeholder: "ex: 30" }),
+                    ]}),
+                    hs("div", { key: "fipi", children: [
+                        h("label", { key: "l", style: lbStyle, children: "CST IPI" }),
+                        h("input", { key: "i", type: "text", maxLength: 2, value: form.sittributipi, onChange: e => setF("sittributipi", e.target.value), style: inStyle, placeholder: "ex: 49" }),
+                    ]}),
+                ]}),
+
+                hs("div", { key: "row3", style: { display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "8px" }, children: [
+                    hs("div", { key: "fpis", children: [
+                        h("label", { key: "l", style: lbStyle, children: "CST PIS/COFINS" }),
+                        h("input", { key: "i", type: "text", maxLength: 3, value: form.codsittribpiscofins, onChange: e => setF("codsittribpiscofins", e.target.value), style: inStyle, placeholder: "ex: 98" }),
+                    ]}),
+                    hs("div", { key: "ftipo", children: [
+                        h("label", { key: "l", style: lbStyle, children: "Tipo Mercadoria" }),
+                        h("select", { key: "s", value: form.tipomerc, onChange: e => setF("tipomerc", e.target.value), style: inStyle, children: [
+                            h("option", { key: "ci", value: "CI", children: "CI — Consumo Interno" }),
+                            h("option", { key: "im", value: "IM", children: "IM — Imobilizado" }),
+                            h("option", { key: "ou", value: "OU", children: "OU — Outro" }),
+                        ]}),
+                    ]}),
+                    hs("div", { key: "fctrl", children: [
+                        h("label", { key: "l", style: lbStyle, children: "Controla Estoque" }),
+                        h("select", { key: "s", value: form.controlaestoque, onChange: e => setF("controlaestoque", e.target.value), style: inStyle, children: [
+                            h("option", { key: "s2", value: "S", children: "S — Sim" }),
+                            h("option", { key: "n", value: "N", children: "N — Não" }),
+                        ]}),
+                    ]}),
+                ]}),
+
+                hs("div", { key: "fcodfab", children: [
+                    h("label", { key: "l", style: lbStyle, children: "Código do Produto no Fornecedor (CODFAB — cProd do XML)" }),
+                    h("input", { key: "i", type: "text", maxLength: 30, value: form.codfab, onChange: e => setF("codfab", e.target.value), style: inStyle, placeholder: "Código conforme XML do fornecedor" }),
+                ]}),
+
+                h("div", { key: "nota", style: { background: "#f9fafb", border: "1px solid #e5e7eb", borderRadius: "6px", padding: "8px 12px", fontSize: "11px", color: "#6b7280" }, children: "O produto será gravado na PCPRODCIAP (Fluxo 3401). Campos INDESCALARELEVANTE='S', SITUACAO='ATIVO' e ORIGMERCTRIB='0' serão definidos automaticamente." }),
+
+                aviso ? h("div", { key: "av", style: { background: "#fef9c3", color: "#713f12", padding: "10px 12px", borderRadius: "6px", fontSize: "13px", fontWeight: 500 }, children: aviso }) : null,
+                erro  ? h("p",   { key: "er", style: { fontSize: "13px", color: "#dc2626", margin: 0 }, children: erro }) : null,
+
+                hs("div", { key: "btns", style: { display: "flex", justifyContent: "flex-end", gap: "8px", paddingTop: "4px" }, children: [
+                    h(Button, { key: "c", variant: "outline", onClick: onClose, children: "Cancelar" }),
+                    h(Button, { key: "s", onClick: cadastrar, disabled: salvando || !codfornec, children: salvando ? "Cadastrando…" : "Cadastrar CIAP no WinThor" }),
+                ]}),
+            ]})
+        })
+    });
+}
+
 // ── MODAL CRIAR PEDIDO DE COMPRA — NF-e ──
 function ModalCriarPedido({ doc, chaveAcesso, codfornec, onClose, onCriado }) {
     const [salvando, setSalvando] = React.useState(false);
@@ -768,6 +1018,8 @@ export default function FiscalNFePage() {
     const [fornecStatus, setFornecStatus] = React.useState({});
     const [modalFornec, setModalFornec] = React.useState(null);
     const [modalProduto, setModalProduto] = React.useState(null);
+    const [modalEscolhaTipoPg, setModalEscolhaTipoPg] = React.useState(null);
+    const [modalCiapPg, setModalCiapPg] = React.useState(null);
     const [expandedChave, setExpandedChave] = React.useState(null);
     const [expandedDoc, setExpandedDoc] = React.useState(null);
     const [expandedLoading, setExpandedLoading] = React.useState(false);
@@ -839,7 +1091,9 @@ export default function FiscalNFePage() {
     return hs("div", { style: { padding: "24px", maxWidth: "1400px", margin: "0 auto" }, children: [
         manifestarNfe ? h(ModalManif, { key: "modal", nfe: manifestarNfe, onClose: () => setManifestarNfe(null), onSalvar: () => { setManifestarNfe(null); carregar(filtros, pagina); } }) : null,
         modalFornec ? h(ModalCadastroFornecNfe, { key: "mfornec", nfe: modalFornec, onClose: () => setModalFornec(null), onCadastrado: (res) => { setModalFornec(null); const cnpj = String(modalFornec.emitente?.cnpj || modalFornec.cnpjEmitente || "").replace(/\D/g,""); if (cnpj) setFornecStatus(prev => ({ ...prev, [cnpj]: { cadastrado: true, codfornec: res.codfornec, nome: res.nome } })); } }) : null,
+        modalEscolhaTipoPg ? h(ModalEscolhaTipoCadastro, { key: "mescolhapg", item: modalEscolhaTipoPg.item, onClose: () => setModalEscolhaTipoPg(null), onEscolha: (tipo, item) => { setModalEscolhaTipoPg(null); if (tipo === "203") setModalProduto({ ...modalEscolhaTipoPg, item }); else setModalCiapPg({ ...modalEscolhaTipoPg, item }); } }) : null,
         modalProduto ? h(ModalCadastroProduto, { key: "mprod", item: modalProduto.item, chaveAcesso: modalProduto.chave, codfornec: modalProduto.codfornec, onClose: () => setModalProduto(null), onCadastrado: () => setModalProduto(null) }) : null,
+        modalCiapPg ? h(ModalCadastroProdutoCiap, { key: "mciappg", item: modalCiapPg.item, chaveAcesso: modalCiapPg.chave, codfornec: modalCiapPg.codfornec, onClose: () => setModalCiapPg(null), onCadastrado: () => setModalCiapPg(null) }) : null,
 
         // Header
         hs("div", { key: "hdr", style: { display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "20px", flexWrap: "wrap", gap: "12px" }, children: [
@@ -1013,7 +1267,7 @@ export default function FiscalNFePage() {
                                                 colSpan: 12,
                                                 codfornec: codfornecRow,
                                                 valorTotalNota: nfe.valorTotal ?? nfe.valor,
-                                                onCadastrarProduto: (it) => setModalProduto({ item: it, chave, codfornec: codfornecRow }),
+                                                onCadastrarProduto: (it) => setModalEscolhaTipoPg({ item: it, chave, codfornec: codfornecRow }),
                                             });
 
                                             return [mainRow, subRow];

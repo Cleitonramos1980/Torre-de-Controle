@@ -3361,6 +3361,125 @@ export async function fiscalRoutes(app) {
         };
     });
 
+    // POST /api/fiscal/produtos/cadastrar-ciap
+    // Cadastra produto CIAP / Ativo Imobilizado na PCPRODCIAP (Rotina 3401)
+    // Estrutura real validada: apenas CODPROD é NOT NULL (PK); demais colunas são nullable.
+    // CODFISCAL é NUMBER(10) — o CFOP deve ser convertido para número.
+    // INDESCALARELEVANTE = "S" conforme padrão existente na base.
+    app.post("/api/fiscal/produtos/cadastrar-ciap", async (req, reply) => {
+        if (!isOracleEnabled()) return reply.code(503).send({ error: "Oracle não disponível" });
+
+        const {
+            chaveAcesso,
+            descricao: descricaoRaw,
+            embalagem: embalagemRaw,
+            codncm,
+            codfiscal,
+            sittribut,
+            sittributipi,
+            codsittribpiscofins,
+            codfornec,
+            tipomerc,
+            origmerctrib,
+            controlaestoque,
+            codfab,
+            situacao,
+        } = req.body ?? {};
+
+        if (!descricaoRaw) return reply.code(400).send({ error: "descricao é obrigatório" });
+
+        const descricao = String(descricaoRaw).trim().toUpperCase().slice(0, 250);
+        const embalagem = embalagemRaw ? String(embalagemRaw).trim().toUpperCase().slice(0, 12) : "UN";
+
+        // Verifica duplicidade por descrição exata
+        // Nota: :desc é palavra reservada Oracle (ORDER BY DESC) — usar :descricao
+        const rowsExiste = await executeOracle(
+            `SELECT CODPROD, DESCRICAO FROM PCPRODCIAP WHERE UPPER(DESCRICAO) = :descricao AND ROWNUM = 1`,
+            { descricao }
+        ).then(r => r.rows || []).catch(() => []);
+        if (rowsExiste && rowsExiste.length > 0) {
+            return {
+                ok: false, ja_cadastrado: true,
+                codprod: rowsExiste[0].CODPROD,
+                descricao: rowsExiste[0].DESCRICAO,
+                mensagem: `Produto CIAP já existe — código ${rowsExiste[0].CODPROD}: ${rowsExiste[0].DESCRICAO}`,
+            };
+        }
+
+        // Gera próximo CODPROD da PCPRODCIAP
+        const rowsProx = await executeOracle(
+            `SELECT NVL(MAX(CODPROD),0)+1 AS PROX FROM PCPRODCIAP`,
+            {}, { outFormat: 4002 }
+        ).then(r => r.rows).catch(() => []);
+        if (!rowsProx || rowsProx.length === 0) return reply.code(500).send({ error: "Falha ao gerar código do produto CIAP" });
+        const codprod = rowsProx[0].PROX;
+
+        // Normalização — CODFISCAL é NUMBER(10) no Oracle
+        const ncmLimpo         = codncm ? String(codncm).replace(/\D/g, "").slice(0, 15) : null;
+        const codfiscalNum     = codfiscal ? (Number(String(codfiscal).replace(/\D/g, "")) || null) : null;
+        const sittributVal     = sittribut ? String(sittribut).slice(0, 3) : null;
+        const sittributipiVal  = sittributipi ? String(sittributipi).slice(0, 2) : null;
+        const codsittribVal    = codsittribpiscofins ? String(codsittribpiscofins).slice(0, 3) : null;
+        const codfornecNum     = codfornec ? Number(codfornec) : null;
+        const tipomercVal      = tipomerc ? String(tipomerc).slice(0, 2) : "CI";
+        const origmerctribVal  = origmerctrib ? String(origmerctrib).slice(0, 3) : "0";
+        const controlaestoqueV = controlaestoque ? String(controlaestoque).slice(0, 1) : "S";
+        const codfabVal        = codfab ? String(codfab).trim().slice(0, 30) : null;
+        const situacaoVal      = situacao ? String(situacao).slice(0, 10) : "ATIVO";
+
+        await executeOracle(`
+            INSERT INTO PCPRODCIAP (
+                CODPROD, DESCRICAO, EMBALAGEM,
+                CODNCM, CODNCMEX,
+                CODFISCAL, SITTRIBUT, SITTRIBUTIPI, CODSITTRIBPISCOFINS,
+                TIPOMERC, ORIGMERCTRIB, CONTROLAESTOQUE,
+                INDESCALARELEVANTE, CODFORNEC, CODFAB,
+                SITUACAO
+            ) VALUES (
+                :codprod, :descricao, :embalagem,
+                :codncm, :codncmex,
+                :codfiscal, :sittribut, :sittributipi, :codsittrib,
+                :tipomerc, :origmerctrib, :controlaestoque,
+                'S', :codfornec, :codfab,
+                :situacao
+            )`,
+            {
+                codprod,
+                descricao,
+                embalagem,
+                codncm:         ncmLimpo,
+                codncmex:       ncmLimpo,
+                codfiscal:      codfiscalNum,
+                sittribut:      sittributVal,
+                sittributipi:   sittributipiVal,
+                codsittrib:     codsittribVal,
+                tipomerc:       tipomercVal,
+                origmerctrib:   origmerctribVal,
+                controlaestoque: controlaestoqueV,
+                codfornec:      codfornecNum,
+                codfab:         codfabVal,
+                situacao:       situacaoVal,
+            },
+            { autoCommit: true }
+        );
+
+        registrarLogAuditoria({
+            acao: "CADASTRAR_PRODUTO_CIAP",
+            entidade: "PRODUTO_CIAP",
+            idEntidade: String(codprod),
+            chaveAcesso: chaveAcesso || null,
+            tipoDfe: "NFE",
+            usuario: getUsuarioReq(req),
+            ip: getIpReq(req),
+            valorDepois: { codprod, descricao, embalagem, codncm: ncmLimpo, codfiscal: codfiscalNum, tipomerc: tipomercVal },
+        });
+
+        return {
+            ok: true, codprod, descricao, embalagem,
+            mensagem: `Produto CIAP cadastrado com sucesso no fluxo 3401 — PCPRODCIAP. Código: ${codprod}`,
+        };
+    });
+
     // =========================================================
     // TRIBUTAÇÃO — Filiais, Figuras, PIS/COFINS
     // =========================================================
