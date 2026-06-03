@@ -15,10 +15,11 @@ async function apiFetch(path, opts = {}) {
 const TIPO_LABELS = { "210200": "Ciência da Operação", "210210": "Confirmação da Operação", "210220": "Operação não Realizada", "210240": "Desconhecimento da Operação" };
 const STATUS_COLORS = { PENDENTE: "#fef3c7", TRANSMITIDA: "#dcfce7", REJEITADA: "#fee2e2", AGUARDANDO_APROVACAO: "#dbeafe" };
 const STATUS_TEXT = { PENDENTE: "#92400e", TRANSMITIDA: "#166534", REJEITADA: "#991b1b", AGUARDANDO_APROVACAO: "#1e40af" };
-const RISCO_COLOR = { BAIXO: "#22c55e", ATENCAO: "#f59e0b", ALTO: "#ef4444", CRITICO: "#7c3aed" };
+const RISCO_COLOR = { BAIXO: "#16a34a", ATENCAO: "#d97706", ALTO: "#c2410c", CRITICO: "#991b1b" };
+const RISCO_BG    = { BAIXO: "#dcfce7", ATENCAO: "#fef3c7", ALTO: "#ffedd5", CRITICO: "#fee2e2" };
 
-function Badge({ color, text }) {
-    return h("span", { style: { fontSize: "11px", fontWeight: 600, background: color + "22", color, padding: "2px 8px", borderRadius: "9999px", border: `1px solid ${color}44` }, children: text });
+function Badge({ color, bg, text }) {
+    return h("span", { style: { fontSize: "11px", fontWeight: 700, background: bg || "#f3f4f6", color: color || "#374151", padding: "2px 8px", borderRadius: "9999px" }, children: text });
 }
 
 function fmtDate(iso) { if (!iso) return "—"; return new Date(iso).toLocaleString("pt-BR"); }
@@ -91,7 +92,7 @@ export default function FiscalManifestacaoPage() {
         tab === "pendentes" && h(TabelaPendentes, { docs: filtrar(pendentes), onManifestar: doc => { setModal(doc); setTipoManif("210210"); setJustificativa(""); setErro(""); } }),
         tab === "transmitidas" && h(TabelaTransmitidas, { docs: filtrar(transmitidas) }),
         tab === "aguardando" && h(TabelaAguardando, { docs: filtrar(aguardando), onAprovar: carregar }),
-        modal && hs("div", { style: { position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 9999 }, children: [
+        modal && hs("div", { style: { position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 }, children: [
             h(Card, { style: { width: "520px", maxHeight: "90vh", overflowY: "auto" }, children: h(CardContent, { style: { padding: "24px" }, children: hs("div", { children: [
                 hs("div", { style: { marginBottom: "16px" }, children: [
                     h("h2", { style: { fontSize: "17px", fontWeight: 700, margin: 0 }, children: "Manifestar NF-e" }),
@@ -125,7 +126,7 @@ function TabelaPendentes({ docs, onManifestar }) {
         hs("div", { style: { flex: 1 }, children: [
             hs("div", { style: { display: "flex", gap: "8px", alignItems: "center", marginBottom: "4px" }, children: [
                 h("span", { style: { fontWeight: 700, fontSize: "14px" }, children: `NF-e ${d.numero || "—"} / ${d.serie || "—"}` }),
-                d.scoreRisco != null && h("span", { style: { fontSize: "11px", fontWeight: 700, color: RISCO_COLOR[d.classificacaoRisco] || "#64748b" }, children: `Risco: ${d.scoreRisco}` }),
+                d.scoreRisco != null && h(Badge, { color: RISCO_COLOR[d.classificacaoRisco] || "#374151", bg: RISCO_BG[d.classificacaoRisco] || "#f3f4f6", text: `Risco: ${d.scoreRisco}` }),
             ] }),
             h("p", { style: { fontSize: "12px", color: "hsl(var(--muted-foreground))" }, children: `${d.emitente?.nome || "—"} · Valor: R$ ${(d.valorTotal || 0).toLocaleString("pt-BR", { minimumFractionDigits: 2 })} · Emissão: ${fmtDate(d.dhEmissao)}` }),
             h("p", { style: { fontSize: "11px", fontFamily: "monospace", color: "hsl(var(--muted-foreground))", marginTop: "2px" }, children: fmtChave(d.chaveAcesso) }),
@@ -139,7 +140,7 @@ function TabelaTransmitidas({ docs }) {
     return h("div", { style: { display: "grid", gap: "8px" }, children: docs.map(d => hs("div", { key: d.id, style: { padding: "12px 16px", border: "1px solid hsl(var(--border))", borderRadius: "8px", background: "hsl(var(--card))" }, children: [
         hs("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center" }, children: [
             h("span", { style: { fontWeight: 600, fontSize: "14px" }, children: TIPO_LABELS[d.tipoManifestacao] || d.tipoManifestacao }),
-            h("span", { style: { fontSize: "11px", color: STATUS_TEXT[d.status] || "#64748b", background: STATUS_COLORS[d.status] || "#f1f5f9", padding: "2px 8px", borderRadius: "9999px" }, children: d.status }),
+            h("span", { style: { fontSize: "11px", fontWeight: 700, color: STATUS_TEXT[d.status] || "#6b7280", background: STATUS_COLORS[d.status] || "#f3f4f6", padding: "2px 8px", borderRadius: "9999px" }, children: d.status }),
         ] }),
         h("p", { style: { fontSize: "12px", color: "hsl(var(--muted-foreground))", marginTop: "4px" }, children: `Chave: ${fmtChave(d.chaveAcesso)} · ${fmtDate(d.dataTransmissao)}` }),
         d.justificativa && h("p", { style: { fontSize: "12px", marginTop: "4px", fontStyle: "italic" }, children: d.justificativa }),

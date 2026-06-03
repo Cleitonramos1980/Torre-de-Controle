@@ -580,7 +580,7 @@ export default function ChecklistPortariaFormPage() {
                 h(Field, { key:"motor", label:"Motorista" }, inp("motorista")),
                 hs("div", { key:"num", style: { display:"flex", flexDirection:"column", justifyContent:"flex-end" } }, [
                     h("label", { key:"l", style: LABEL_ST }, "Checklist Nº"),
-                    h("div", { key:"v", style: { padding:"5px 8px", border:"1px solid #d1d5db", borderRadius:"5px", fontSize:"14px", fontWeight:800, color:"#2563eb", background:"#f8fafc" } }, numChecklist),
+                    h("div", { key:"v", style: { padding:"5px 8px", border:"1px solid #d1d5db", borderRadius:"5px", fontSize:"14px", fontWeight:800, color:"#2563eb", background:"#f9fafb" } }, numChecklist),
                 ]),
             ]),
 

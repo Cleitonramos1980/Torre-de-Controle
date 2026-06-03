@@ -116,7 +116,7 @@ function PainelItens({ numped }) {
                 h("th", { key: "te",  style: th,               children: "Tp. Entrega"}),
             ]}) }),
             h("tbody", { key: "tb", children: itens.map((item, i) =>
-                hs("tr", { key: i, style: { background: i % 2 === 0 ? "#fff" : "#f8fafc" }, children: [
+                hs("tr", { key: i, style: { background: i % 2 === 0 ? "#fff" : "#f9fafb" }, children: [
                     h("td", { key: "sq",  style: { ...td, fontFamily: "monospace" },              children: String(item.NUMSEQ      || "—") }),
                     h("td", { key: "cp",  style: { ...td, fontFamily: "monospace" },              children: String(item.CODPROD     || "—") }),
                     h("td", { key: "dc",  style: { ...td, maxWidth: "220px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }, title: item.DESCRICAO || "", children: item.DESCRICAO || "—" }),

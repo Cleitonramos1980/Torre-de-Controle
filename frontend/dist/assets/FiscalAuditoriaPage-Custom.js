@@ -64,7 +64,7 @@ function acaoBadge(acao) {
     const aprovacao = ["MANIFESTACAO_TRANSMITIDA", "APROVACAO_MANIFESTACAO"];
     const ia = ["IA_GERAR_PARECER"];
 
-    let bg = "#f1f5f9", color = "#475569";
+    let bg = "#f3f4f6", color = "#374151";
     if (leitura.includes(acao)) { bg = "#dbeafe"; color = "#1e40af"; }
     else if (exportacao.includes(acao)) { bg = "#ede9fe"; color = "#5b21b6"; }
     else if (escrita.includes(acao)) { bg = "#fef3c7"; color = "#92400e"; }
@@ -72,19 +72,19 @@ function acaoBadge(acao) {
     else if (ia.includes(acao)) { bg = "#fce7f3"; color = "#9d174d"; }
 
     return h("span", {
-        style: { background: bg, color, padding: "2px 8px", borderRadius: 9999, fontSize: 11, fontWeight: 600, whiteSpace: "nowrap" },
+        style: { background: bg, color, padding: "2px 8px", borderRadius: "9999px", fontSize: "11px", fontWeight: 700, whiteSpace: "nowrap" },
         children: String(acao || "-").replace(/_/g, " "),
     });
 }
 
 function resultadoBadge(resultado) {
     if (resultado === "OK" || resultado === "SUCESSO") {
-        return h("span", { style: { background: "#dcfce7", color: "#166534", padding: "2px 8px", borderRadius: 9999, fontSize: 12, fontWeight: 600 }, children: resultado });
+        return h("span", { style: { background: "#dcfce7", color: "#166534", padding: "2px 8px", borderRadius: "9999px", fontSize: "11px", fontWeight: 700 }, children: resultado });
     }
     if (resultado === "ERRO" || resultado === "FALHA") {
-        return h("span", { style: { background: "#fee2e2", color: "#991b1b", padding: "2px 8px", borderRadius: 9999, fontSize: 12, fontWeight: 600 }, children: resultado });
+        return h("span", { style: { background: "#fee2e2", color: "#991b1b", padding: "2px 8px", borderRadius: "9999px", fontSize: "11px", fontWeight: 700 }, children: resultado });
     }
-    return h("span", { style: { background: "#f1f5f9", color: "#475569", padding: "2px 8px", borderRadius: 9999, fontSize: 12, fontWeight: 600 }, children: resultado || "-" });
+    return h("span", { style: { background: "#f3f4f6", color: "#374151", padding: "2px 8px", borderRadius: "9999px", fontSize: "11px", fontWeight: 700 }, children: resultado || "-" });
 }
 
 function DetalheModal({ log, onClose }) {
@@ -93,7 +93,7 @@ function DetalheModal({ log, onClose }) {
     function renderValor(val) {
         if (val == null) return h("span", { style: { color: "#94a3b8" }, children: "null" });
         if (typeof val === "object") {
-            return h("pre", { style: { margin: 0, fontSize: 12, whiteSpace: "pre-wrap", wordBreak: "break-all", background: "#f8fafc", padding: 8, borderRadius: 6 }, children: JSON.stringify(val, null, 2) });
+            return h("pre", { style: { margin: 0, fontSize: 12, whiteSpace: "pre-wrap", wordBreak: "break-all", background: "#f9fafb", padding: 8, borderRadius: 6 }, children: JSON.stringify(val, null, 2) });
         }
         return h("span", { style: { wordBreak: "break-all" }, children: String(val) });
     }
@@ -117,7 +117,7 @@ function DetalheModal({ log, onClose }) {
     ].filter(([, val]) => val != null && val !== "");
 
     return h("div", {
-        style: { position: "fixed", inset: 0, background: "rgba(0,0,0,0.45)", zIndex: 50, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 },
+        style: { position: "fixed", inset: 0, background: "rgba(0,0,0,0.45)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 },
         onClick: onClose,
         children: hs("div", {
             style: { background: "#fff", borderRadius: 10, padding: 24, width: 680, maxWidth: "95vw", maxHeight: "90vh", overflowY: "auto" },
@@ -134,10 +134,10 @@ function DetalheModal({ log, onClose }) {
                     style: { width: "100%", borderCollapse: "collapse", fontSize: 13 },
                     children: h("tbody", {
                         children: camposDetalhe.map(([label, val]) => hs("tr", {
-                            style: { borderBottom: "1px solid #f1f5f9" },
+                            style: { borderBottom: "1px solid #f3f4f6" },
                             children: [
-                                h("td", { style: { padding: "8px 10px", fontWeight: 600, color: "#475569", whiteSpace: "nowrap", verticalAlign: "top", width: "35%" }, children: label }),
-                                h("td", { style: { padding: "8px 10px", color: "#1e293b" }, children: renderValor(val) }),
+                                h("td", { style: { padding: "8px 10px", fontWeight: 600, color: "#374151", whiteSpace: "nowrap", verticalAlign: "top", width: "35%" }, children: label }),
+                                h("td", { style: { padding: "8px 10px", color: "#111827" }, children: renderValor(val) }),
                             ],
                         }, label)),
                     }),
@@ -208,8 +208,8 @@ function FiscalAuditoriaPage() {
             hs("div", {
                 style: { marginBottom: 20 },
                 children: [
-                    h("h1", { style: { fontSize: 22, fontWeight: 700, color: "#1e293b", margin: 0 }, children: "Auditoria Jurídica" }),
-                    h("p", { style: { fontSize: 14, color: "#64748b", marginTop: 4 }, children: "Rastreio completo de todas as ações executadas no sistema fiscal, com trilha de auditoria imutável." }),
+                    h("h1", { style: { fontSize: 22, fontWeight: 700, color: "#111827", margin: 0 }, children: "Auditoria Jurídica" }),
+                    h("p", { style: { fontSize: 14, color: "#6b7280", marginTop: 4 }, children: "Rastreio completo de todas as ações executadas no sistema fiscal, com trilha de auditoria imutável." }),
                 ],
             }),
 
@@ -233,7 +233,7 @@ function FiscalAuditoriaPage() {
                                     h("select", {
                                         value: filtros.acao,
                                         onChange: e => setFiltros(p => ({ ...p, acao: e.target.value })),
-                                        style: { height: 36, border: "1px solid #e2e8f0", borderRadius: 6, padding: "0 8px", fontSize: 14, maxWidth: 220 },
+                                        style: { height: 36, border: "1px solid #e5e7eb", borderRadius: 6, padding: "0 8px", fontSize: 14, maxWidth: 220 },
                                         children: [
                                             h("option", { value: "", children: "Todas" }),
                                             ...ACOES_DISPONIVEIS.map(a => h("option", { value: a, key: a, children: a.replace(/_/g, " ") })),
@@ -247,7 +247,7 @@ function FiscalAuditoriaPage() {
                                     h("select", {
                                         value: filtros.entidade,
                                         onChange: e => setFiltros(p => ({ ...p, entidade: e.target.value })),
-                                        style: { height: 36, border: "1px solid #e2e8f0", borderRadius: 6, padding: "0 8px", fontSize: 14 },
+                                        style: { height: 36, border: "1px solid #e5e7eb", borderRadius: 6, padding: "0 8px", fontSize: 14 },
                                         children: [
                                             h("option", { value: "", children: "Todas" }),
                                             ...ENTIDADES_DISPONIVEIS.map(e => h("option", { value: e, key: e, children: e.replace(/_/g, " ") })),
@@ -281,7 +281,7 @@ function FiscalAuditoriaPage() {
             }),
 
             erro ? h("div", { style: { color: "#991b1b", background: "#fee2e2", padding: 12, borderRadius: 8, marginBottom: 16 }, children: erro }) : null,
-            loading ? h("div", { style: { textAlign: "center", padding: 40, color: "#64748b" }, children: "Carregando..." }) : null,
+            loading ? h("div", { style: { textAlign: "center", padding: 40, color: "#6b7280" }, children: "Carregando..." }) : null,
 
             // Tabela
             !loading && h(Card, {
@@ -292,29 +292,29 @@ function FiscalAuditoriaPage() {
                         children: hs("tbody", {
                             children: [
                                 h("tr", {
-                                    style: { background: "#f8fafc", borderBottom: "1px solid #e2e8f0" },
+                                    style: { background: "#f9fafb", borderBottom: "1px solid #e5e7eb" },
                                     children: [
-                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#475569" }, children: "ID" }),
-                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#475569" }, children: "Usuário" }),
-                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#475569" }, children: "Ação" }),
-                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#475569" }, children: "Entidade" }),
-                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#475569" }, children: "Chave Documento" }),
-                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#475569" }, children: "IP" }),
-                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#475569" }, children: "Data/Hora" }),
-                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#475569" }, children: "Resultado" }),
-                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#475569" }, children: "Detalhes" }),
+                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#374151" }, children: "ID" }),
+                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#374151" }, children: "Usuário" }),
+                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#374151" }, children: "Ação" }),
+                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#374151" }, children: "Entidade" }),
+                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#374151" }, children: "Chave Documento" }),
+                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#374151" }, children: "IP" }),
+                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#374151" }, children: "Data/Hora" }),
+                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#374151" }, children: "Resultado" }),
+                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#374151" }, children: "Detalhes" }),
                                     ],
                                 }),
                                 ...lista.length === 0
-                                    ? [h("tr", { children: h("td", { colSpan: 9, style: { padding: 40, textAlign: "center", color: "#64748b" }, children: "Nenhum registro de auditoria encontrado." }) })]
+                                    ? [h("tr", { children: h("td", { colSpan: 9, style: { padding: 40, textAlign: "center", color: "#6b7280" }, children: "Nenhum registro de auditoria encontrado." }) })]
                                     : lista.map((row, idx) => hs("tr", {
-                                        style: { borderBottom: "1px solid #f1f5f9", cursor: "pointer" },
+                                        style: { borderBottom: "1px solid #f3f4f6", cursor: "pointer" },
                                         onClick: () => setDetalheLog(row),
                                         children: [
                                             h("td", { style: { padding: "8px 12px" }, children: row.id }),
                                             h("td", { style: { padding: "8px 12px", fontWeight: 600 }, children: row.usuario || row.user || "-" }),
                                             h("td", { style: { padding: "8px 12px" }, children: acaoBadge(row.acao || row.action) }),
-                                            h("td", { style: { padding: "8px 12px", color: "#475569" }, children: String(row.entidade || row.entity || "-").replace(/_/g, " ") }),
+                                            h("td", { style: { padding: "8px 12px", color: "#374151" }, children: String(row.entidade || row.entity || "-").replace(/_/g, " ") }),
                                             h("td", { style: { padding: "8px 12px", fontFamily: "monospace", fontSize: 12 }, children: truncar(row.chaveDocumento || row.chave || row.documentKey, 18) }),
                                             h("td", { style: { padding: "8px 12px", fontFamily: "monospace", fontSize: 12 }, children: row.ip || "-" }),
                                             h("td", { style: { padding: "8px 12px", whiteSpace: "nowrap" }, children: formatDateTime(row.dataHora || row.createdAt || row.created_at) }),
@@ -330,7 +330,7 @@ function FiscalAuditoriaPage() {
 
             // Paginação
             !loading && paginacao && hs("div", {
-                style: { display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 12, fontSize: 13, color: "#64748b" },
+                style: { display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 12, fontSize: 13, color: "#6b7280" },
                 children: [
                     hs("span", {
                         children: ["Página ", paginacao.page || pagina, " de ", paginacao.totalPages || 1, " (", paginacao.totalItems || lista.length, " registros)"],

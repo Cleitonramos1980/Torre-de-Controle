@@ -37,9 +37,9 @@ function prioridadeBadge(p) {
         MEDIA: { bg: "#dbeafe", color: "#1e40af" },
         BAIXA: { bg: "#dcfce7", color: "#166534" },
     };
-    const style = map[p] || { bg: "#f1f5f9", color: "#475569" };
+    const style = map[p] || { bg: "#f3f4f6", color: "#374151" };
     return h("span", {
-        style: { background: style.bg, color: style.color, padding: "2px 8px", borderRadius: 9999, fontSize: 12, fontWeight: 600, whiteSpace: "nowrap" },
+        style: { background: style.bg, color: style.color, padding: "2px 8px", borderRadius: "9999px", fontSize: "11px", fontWeight: 700, whiteSpace: "nowrap" },
         children: p || "-",
     });
 }
@@ -51,19 +51,19 @@ function statusBadge(status) {
         VENCIDO: { bg: "#fee2e2", color: "#991b1b" },
         CONCLUIDO: { bg: "#dcfce7", color: "#166534" },
     };
-    const style = map[status] || { bg: "#f1f5f9", color: "#475569" };
+    const style = map[status] || { bg: "#f3f4f6", color: "#374151" };
     return h("span", {
-        style: { background: style.bg, color: style.color, padding: "2px 8px", borderRadius: 9999, fontSize: 12, fontWeight: 600, whiteSpace: "nowrap" },
+        style: { background: style.bg, color: style.color, padding: "2px 8px", borderRadius: "9999px", fontSize: "11px", fontWeight: 700, whiteSpace: "nowrap" },
         children: String(status || "-").replace(/_/g, " "),
     });
 }
 
 function KpiCard({ title, value, color }) {
     return hs("div", {
-        style: { background: "#fff", border: "1px solid #e2e8f0", borderRadius: 8, padding: "16px 20px", minWidth: 120 },
+        style: { background: "#fff", border: "1px solid #e5e7eb", borderRadius: 8, padding: "16px 20px", minWidth: 120 },
         children: [
-            h("div", { style: { fontSize: 12, color: "#64748b", marginBottom: 4 }, children: title }),
-            h("div", { style: { fontSize: 22, fontWeight: 700, color: color || "#1e293b" }, children: value }),
+            h("div", { style: { fontSize: 12, color: "#6b7280", marginBottom: 4 }, children: title }),
+            h("div", { style: { fontSize: 22, fontWeight: 700, color: color || "#111827" }, children: value }),
         ],
     });
 }
@@ -92,7 +92,7 @@ function ComentarModal({ wfId, onClose, onDone }) {
     }
 
     return h("div", {
-        style: { position: "fixed", inset: 0, background: "rgba(0,0,0,0.4)", zIndex: 50, display: "flex", alignItems: "center", justifyContent: "center" },
+        style: { position: "fixed", inset: 0, background: "rgba(0,0,0,0.4)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center" },
         onClick: onClose,
         children: hs("div", {
             style: { background: "#fff", borderRadius: 10, padding: 28, width: 440, maxWidth: "95vw" },
@@ -107,7 +107,7 @@ function ComentarModal({ wfId, onClose, onDone }) {
                             value: comentario,
                             onChange: e => setComentario(e.target.value),
                             rows: 4,
-                            style: { width: "100%", border: "1px solid #e2e8f0", borderRadius: 6, padding: "6px 10px", fontSize: 14 },
+                            style: { width: "100%", border: "1px solid #e5e7eb", borderRadius: 6, padding: "6px 10px", fontSize: 14 },
                             placeholder: "Descreva a ação ou observação...",
                         }),
                     ],
@@ -149,7 +149,7 @@ function FinalizarModal({ wfId, onClose, onDone }) {
     }
 
     return h("div", {
-        style: { position: "fixed", inset: 0, background: "rgba(0,0,0,0.4)", zIndex: 50, display: "flex", alignItems: "center", justifyContent: "center" },
+        style: { position: "fixed", inset: 0, background: "rgba(0,0,0,0.4)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center" },
         onClick: onClose,
         children: hs("div", {
             style: { background: "#fff", borderRadius: 10, padding: 28, width: 440, maxWidth: "95vw" },
@@ -164,7 +164,7 @@ function FinalizarModal({ wfId, onClose, onDone }) {
                             value: decisao,
                             onChange: e => setDecisao(e.target.value),
                             rows: 4,
-                            style: { width: "100%", border: "1px solid #e2e8f0", borderRadius: 6, padding: "6px 10px", fontSize: 14 },
+                            style: { width: "100%", border: "1px solid #e5e7eb", borderRadius: 6, padding: "6px 10px", fontSize: 14 },
                             placeholder: "Descreva a decisão tomada...",
                         }),
                     ],
@@ -208,7 +208,7 @@ function NovoWorkflowModal({ onClose, onDone }) {
     }
 
     return h("div", {
-        style: { position: "fixed", inset: 0, background: "rgba(0,0,0,0.4)", zIndex: 50, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 },
+        style: { position: "fixed", inset: 0, background: "rgba(0,0,0,0.4)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 },
         onClick: onClose,
         children: hs("div", {
             style: { background: "#fff", borderRadius: 10, padding: 28, width: 520, maxWidth: "95vw", maxHeight: "90vh", overflowY: "auto" },
@@ -225,7 +225,7 @@ function NovoWorkflowModal({ onClose, onDone }) {
                                 h("select", {
                                     value: form.tipoWorkflow,
                                     onChange: e => setF("tipoWorkflow", e.target.value),
-                                    style: { width: "100%", height: 36, border: "1px solid #e2e8f0", borderRadius: 6, padding: "0 8px", fontSize: 14 },
+                                    style: { width: "100%", height: 36, border: "1px solid #e5e7eb", borderRadius: 6, padding: "0 8px", fontSize: 14 },
                                     children: [
                                         h("option", { value: "", children: "Selecione..." }),
                                         h("option", { value: "DIVERGENCIA", children: "Divergência" }),
@@ -244,7 +244,7 @@ function NovoWorkflowModal({ onClose, onDone }) {
                                 h("select", {
                                     value: form.prioridade,
                                     onChange: e => setF("prioridade", e.target.value),
-                                    style: { width: "100%", height: 36, border: "1px solid #e2e8f0", borderRadius: 6, padding: "0 8px", fontSize: 14 },
+                                    style: { width: "100%", height: 36, border: "1px solid #e5e7eb", borderRadius: 6, padding: "0 8px", fontSize: 14 },
                                     children: [
                                         h("option", { value: "", children: "Selecione..." }),
                                         h("option", { value: "CRITICA", children: "Crítica" }),
@@ -257,7 +257,7 @@ function NovoWorkflowModal({ onClose, onDone }) {
                         }),
                         hs("div", { children: [h(Label, { children: "Responsável" }), h(Input, { value: form.responsavel, onChange: e => setF("responsavel", e.target.value), placeholder: "Nome do responsável..." })] }),
                         hs("div", { children: [h(Label, { children: "Setor" }), h(Input, { value: form.setor, onChange: e => setF("setor", e.target.value), placeholder: "Ex: Fiscal, Jurídico..." })] }),
-                        hs("div", { style: { gridColumn: "1 / -1" }, children: [h(Label, { children: "Observação" }), h("textarea", { value: form.observacao, onChange: e => setF("observacao", e.target.value), rows: 3, style: { width: "100%", border: "1px solid #e2e8f0", borderRadius: 6, padding: "6px 10px", fontSize: 14 }, placeholder: "Observação adicional..." })] }),
+                        hs("div", { style: { gridColumn: "1 / -1" }, children: [h(Label, { children: "Observação" }), h("textarea", { value: form.observacao, onChange: e => setF("observacao", e.target.value), rows: 3, style: { width: "100%", border: "1px solid #e5e7eb", borderRadius: 6, padding: "6px 10px", fontSize: 14 }, placeholder: "Observação adicional..." })] }),
                     ],
                 }),
                 erro ? h("div", { style: { color: "#991b1b", fontSize: 13, marginBottom: 8 }, children: erro }) : null,
@@ -324,8 +324,8 @@ function FiscalWorkflowPage() {
                 children: [
                     hs("div", {
                         children: [
-                            h("h1", { style: { fontSize: 22, fontWeight: 700, color: "#1e293b", margin: 0 }, children: "Workflow Fiscal" }),
-                            h("p", { style: { fontSize: 14, color: "#64748b", marginTop: 4 }, children: "Gerencie o ciclo de vida dos processos fiscais com controle de SLA e responsabilidade." }),
+                            h("h1", { style: { fontSize: 22, fontWeight: 700, color: "#111827", margin: 0 }, children: "Workflow Fiscal" }),
+                            h("p", { style: { fontSize: 14, color: "#6b7280", marginTop: 4 }, children: "Gerencie o ciclo de vida dos processos fiscais com controle de SLA e responsabilidade." }),
                         ],
                     }),
                     h(Button, { onClick: () => setNovoModal(true), style: { background: "#2563eb", color: "#fff" }, children: "+ Novo Workflow" }),
@@ -358,7 +358,7 @@ function FiscalWorkflowPage() {
                                     h("select", {
                                         value: filtros.status,
                                         onChange: e => setFiltros(p => ({ ...p, status: e.target.value })),
-                                        style: { height: 36, border: "1px solid #e2e8f0", borderRadius: 6, padding: "0 8px", fontSize: 14 },
+                                        style: { height: 36, border: "1px solid #e5e7eb", borderRadius: 6, padding: "0 8px", fontSize: 14 },
                                         children: [
                                             h("option", { value: "", children: "Todos" }),
                                             h("option", { value: "ABERTO", children: "Aberto" }),
@@ -375,7 +375,7 @@ function FiscalWorkflowPage() {
                                     h("select", {
                                         value: filtros.prioridade,
                                         onChange: e => setFiltros(p => ({ ...p, prioridade: e.target.value })),
-                                        style: { height: 36, border: "1px solid #e2e8f0", borderRadius: 6, padding: "0 8px", fontSize: 14 },
+                                        style: { height: 36, border: "1px solid #e5e7eb", borderRadius: 6, padding: "0 8px", fontSize: 14 },
                                         children: [
                                             h("option", { value: "", children: "Todas" }),
                                             h("option", { value: "CRITICA", children: "Crítica" }),
@@ -406,7 +406,7 @@ function FiscalWorkflowPage() {
             }),
 
             erro ? h("div", { style: { color: "#991b1b", background: "#fee2e2", padding: 12, borderRadius: 8, marginBottom: 16 }, children: erro }) : null,
-            loading ? h("div", { style: { textAlign: "center", padding: 40, color: "#64748b" }, children: "Carregando..." }) : null,
+            loading ? h("div", { style: { textAlign: "center", padding: 40, color: "#6b7280" }, children: "Carregando..." }) : null,
 
             // Tabela
             !loading && h(Card, {
@@ -417,35 +417,35 @@ function FiscalWorkflowPage() {
                         children: hs("tbody", {
                             children: [
                                 h("tr", {
-                                    style: { background: "#f8fafc", borderBottom: "1px solid #e2e8f0" },
+                                    style: { background: "#f9fafb", borderBottom: "1px solid #e5e7eb" },
                                     children: [
-                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#475569" }, children: "ID" }),
-                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#475569" }, children: "Chave" }),
-                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#475569" }, children: "Tipo Workflow" }),
-                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#475569" }, children: "Prioridade" }),
-                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#475569" }, children: "Status" }),
-                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#475569" }, children: "Responsável" }),
-                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#475569" }, children: "Setor" }),
-                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#475569" }, children: "SLA" }),
-                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#475569" }, children: "Abertura" }),
-                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#475569" }, children: "Ações" }),
+                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#374151" }, children: "ID" }),
+                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#374151" }, children: "Chave" }),
+                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#374151" }, children: "Tipo Workflow" }),
+                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#374151" }, children: "Prioridade" }),
+                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#374151" }, children: "Status" }),
+                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#374151" }, children: "Responsável" }),
+                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#374151" }, children: "Setor" }),
+                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#374151" }, children: "SLA" }),
+                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#374151" }, children: "Abertura" }),
+                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#374151" }, children: "Ações" }),
                                     ],
                                 }),
                                 ...lista.length === 0
-                                    ? [h("tr", { children: h("td", { colSpan: 10, style: { padding: 40, textAlign: "center", color: "#64748b" }, children: "Nenhum workflow encontrado." }) })]
+                                    ? [h("tr", { children: h("td", { colSpan: 10, style: { padding: 40, textAlign: "center", color: "#6b7280" }, children: "Nenhum workflow encontrado." }) })]
                                     : lista.map(row => {
                                         const vencido = isSlaVencido(row.sla);
                                         return hs("tr", {
-                                            style: { borderBottom: "1px solid #f1f5f9" },
+                                            style: { borderBottom: "1px solid #f3f4f6" },
                                             children: [
                                                 h("td", { style: { padding: "8px 12px" }, children: row.id }),
                                                 h("td", { style: { padding: "8px 12px", fontFamily: "monospace", fontSize: 12 }, children: truncar(row.chave || row.chaveAcesso, 18) }),
-                                                h("td", { style: { padding: "8px 12px", color: "#475569" }, children: String(row.tipoWorkflow || row.tipo || "-").replace(/_/g, " ") }),
+                                                h("td", { style: { padding: "8px 12px", color: "#374151" }, children: String(row.tipoWorkflow || row.tipo || "-").replace(/_/g, " ") }),
                                                 h("td", { style: { padding: "8px 12px" }, children: prioridadeBadge(row.prioridade) }),
                                                 h("td", { style: { padding: "8px 12px" }, children: statusBadge(row.status) }),
                                                 h("td", { style: { padding: "8px 12px" }, children: row.responsavel || "-" }),
                                                 h("td", { style: { padding: "8px 12px" }, children: row.setor || "-" }),
-                                                h("td", { style: { padding: "8px 12px", color: vencido ? "#991b1b" : "#1e293b", fontWeight: vencido ? 700 : 400 }, children: formatDate(row.sla) }),
+                                                h("td", { style: { padding: "8px 12px", color: vencido ? "#991b1b" : "#111827", fontWeight: vencido ? 700 : 400 }, children: formatDate(row.sla) }),
                                                 h("td", { style: { padding: "8px 12px" }, children: formatDate(row.abertura || row.criadoEm || row.createdAt || row.created_at) }),
                                                 hs("td", {
                                                     style: { padding: "8px 12px", verticalAlign: "middle", whiteSpace: "nowrap" },

@@ -17,13 +17,13 @@ const STATUS_COLORS = {
     AUTORIZADA: { bg: "#dcfce7", color: "#166534" },
     CANCELADA:  { bg: "#fee2e2", color: "#dc2626" },
     NEGADA:     { bg: "#fef2f2", color: "#b91c1c" },
-    PENDENTE:   { bg: "#fef9c3", color: "#92400e" },
-    PROCESSANDO:{ bg: "#eff6ff", color: "#1d4ed8" },
+    PENDENTE:   { bg: "#fef3c7", color: "#92400e" },
+    PROCESSANDO:{ bg: "#dbeafe", color: "#1e40af" },
 };
 
 function Badge({ status }) {
     const s = STATUS_COLORS[status] || { bg: "#f3f4f6", color: "#374151" };
-    return h("span", { style: { background: s.bg, color: s.color, padding: "2px 8px", borderRadius: 9999, fontSize: 11, fontWeight: 700, whiteSpace: "nowrap" } }, status || "—");
+    return h("span", { style: { background: s.bg, color: s.color, padding: "2px 8px", borderRadius: "9999px", fontSize: "11px", fontWeight: 700, whiteSpace: "nowrap" } }, status || "—");
 }
 
 export default function FiscalNFSeEmitidasPage() {
@@ -142,7 +142,7 @@ export default function FiscalNFSeEmitidasPage() {
                 style: { border: "1px solid #d1d5db", borderRadius: 6, padding: "5px 14px", cursor: "pointer", background: "#fff" } }, "Próxima")
         ),
         // Modal cancelamento
-        cancelando && h("div", { style: { position: "fixed", inset: 0, background: "#0006", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 9999 } },
+        cancelando && h("div", { style: { position: "fixed", inset: 0, background: "#0006", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 } },
             h("div", { style: { background: "#fff", borderRadius: 12, padding: 28, width: 440, boxShadow: "0 20px 60px #0003" } },
                 h("h3", { style: { margin: "0 0 16px", fontSize: 16, fontWeight: 700 } }, "Cancelar NFS-e"),
                 h("p", { style: { fontSize: 13, color: "#6b7280", margin: "0 0 12px" } }, "Informe o motivo do cancelamento:"),

@@ -22,7 +22,7 @@ function ModalServico({ servico, onSalvar, onFechar, salvando }) {
             style: { border: "1px solid #d1d5db", borderRadius: 6, padding: "7px 10px", fontSize: 13 } })
     );
 
-    return h("div", { style: { position: "fixed", inset: 0, background: "#0006", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 9999 } },
+    return h("div", { style: { position: "fixed", inset: 0, background: "#0006", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 } },
         h("div", { style: { background: "#fff", borderRadius: 12, padding: 28, width: 480, boxShadow: "0 20px 60px #0003" } },
             h("h3", { style: { margin: "0 0 20px", fontSize: 16, fontWeight: 700 } }, servico ? "Editar Servico" : "Novo Servico"),
             h("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 14 } },
@@ -140,7 +140,7 @@ export default function FiscalNFSeServicosPage() {
                             h("td", { style: { padding: "10px 14px" } }, s.aliquota ? `${s.aliquota}%` : "—"),
                             h("td", { style: { padding: "10px 14px", fontFamily: "monospace", fontSize: 12 } }, s.cnaeVinculado || "—"),
                             h("td", { style: { padding: "10px 14px" } },
-                                h("span", { style: { background: s.ativo !== false ? "#dcfce7" : "#f3f4f6", color: s.ativo !== false ? "#166534" : "#6b7280", padding: "2px 8px", borderRadius: 9999, fontSize: 11, fontWeight: 700 } },
+                                h("span", { style: { background: s.ativo !== false ? "#dcfce7" : "#f3f4f6", color: s.ativo !== false ? "#166534" : "#6b7280", padding: "2px 8px", borderRadius: "9999px", fontSize: "11px", fontWeight: 700 } },
                                     s.ativo !== false ? "Ativo" : "Inativo")
                             ),
                             h("td", { style: { padding: "10px 14px" } },

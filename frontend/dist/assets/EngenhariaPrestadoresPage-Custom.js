@@ -35,7 +35,7 @@ function DocsBadge({ validade }) {
     if (!validade) return h("span", { style: { fontSize: "11px", color: "#9ca3af" }, children: "Docs: —" });
     const ok = new Date(`${String(validade).slice(0, 10)}T00:00:00`) > new Date();
     return h("span", {
-        style: { fontSize: "11px", padding: "2px 8px", borderRadius: "9999px", background: ok ? "#dcfce7" : "#fee2e2", color: ok ? "#166534" : "#991b1b", fontWeight: 600 },
+        style: { fontSize: "11px", padding: "2px 8px", borderRadius: "9999px", background: ok ? "#dcfce7" : "#fee2e2", color: ok ? "#166534" : "#991b1b", fontWeight: 700 },
         children: `Docs: ${ok ? "OK" : "Vencido"} (${formatDate(validade)})`,
     });
 }

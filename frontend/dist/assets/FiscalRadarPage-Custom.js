@@ -32,11 +32,11 @@ const CORES_MANIFESTACAO = {
 
 function BadgeEntrada({ status }) {
     const c = CORES_STATUS_ENTRADA[status] || { bg: "#f3f4f6", cor: "#374151", txt: status };
-    return React.createElement("span", { style: { background: c.bg, color: c.cor, borderRadius: 6, padding: "2px 8px", fontSize: 11, fontWeight: 600 } }, c.txt);
+    return React.createElement("span", { style: { background: c.bg, color: c.cor, borderRadius: "9999px", padding: "2px 8px", fontSize: 11, fontWeight: 700 } }, c.txt);
 }
 function BadgeManifest({ status }) {
     const c = CORES_MANIFESTACAO[status] || { bg: "#f3f4f6", cor: "#374151" };
-    return React.createElement("span", { style: { background: c.bg, color: c.cor, borderRadius: 6, padding: "2px 8px", fontSize: 11, fontWeight: 600 } }, status || "—");
+    return React.createElement("span", { style: { background: c.bg, color: c.cor, borderRadius: "9999px", padding: "2px 8px", fontSize: 11, fontWeight: 700 } }, status || "—");
 }
 
 // ─── Dashboard Cards ──────────────────────────────────────────────────────────
@@ -322,7 +322,7 @@ function AbaItens({ itens, cnpjEmitente, onMapear }) {
                             : React.createElement("span", { style: { color: "#9ca3af" } }, "—")
                     ),
                     React.createElement("td", { style: { padding: "5px 8px" } },
-                        React.createElement("span", { style: { background: it.STATUS_CADASTRO === "ENCONTRADO_WINTHOR" || it.STATUS_CADASTRO === "MAPEADO_MANUAL" ? "#d1fae5" : "#fee2e2", color: it.STATUS_CADASTRO === "ENCONTRADO_WINTHOR" || it.STATUS_CADASTRO === "MAPEADO_MANUAL" ? "#065f46" : "#991b1b", borderRadius: 4, padding: "2px 6px", fontSize: 10, fontWeight: 600 } },
+                        React.createElement("span", { style: { background: it.STATUS_CADASTRO === "ENCONTRADO_WINTHOR" || it.STATUS_CADASTRO === "MAPEADO_MANUAL" ? "#d1fae5" : "#fee2e2", color: it.STATUS_CADASTRO === "ENCONTRADO_WINTHOR" || it.STATUS_CADASTRO === "MAPEADO_MANUAL" ? "#065f46" : "#991b1b", borderRadius: "9999px", padding: "2px 8px", fontSize: 11, fontWeight: 700 } },
                             it.STATUS_CADASTRO === "ENCONTRADO_WINTHOR" ? "OK" : it.STATUS_CADASTRO === "MAPEADO_MANUAL" ? "Mapeado" : "Não encontrado")
                     ),
                     React.createElement("td", { style: { padding: "5px 8px" } },
@@ -400,7 +400,7 @@ function AbaEventos({ eventos }) {
             ),
             e.JUSTIFICATIVA && React.createElement("div", { style: { fontSize: 11, color: "#374151" } }, e.JUSTIFICATIVA),
             e.PROTOCOLO && React.createElement("div", { style: { fontSize: 11, color: "#6b7280", fontFamily: "monospace" } }, `Protocolo: ${e.PROTOCOLO}`),
-            React.createElement("span", { style: { background: e.STATUS === "PENDENTE" ? "#fef3c7" : "#d1fae5", color: e.STATUS === "PENDENTE" ? "#92400e" : "#065f46", borderRadius: 4, padding: "1px 6px", fontSize: 10, fontWeight: 600 } }, e.STATUS)
+            React.createElement("span", { style: { background: e.STATUS === "PENDENTE" ? "#fef3c7" : "#d1fae5", color: e.STATUS === "PENDENTE" ? "#92400e" : "#065f46", borderRadius: "9999px", padding: "2px 8px", fontSize: 11, fontWeight: 700 } }, e.STATUS)
         ))
     );
 }

@@ -38,9 +38,9 @@ function severidadeBadge(sev) {
         MEDIA: { bg: "#dbeafe", color: "#1e40af" },
         BAIXA: { bg: "#dcfce7", color: "#166534" },
     };
-    const style = map[sev] || { bg: "#f1f5f9", color: "#475569" };
+    const style = map[sev] || { bg: "#f3f4f6", color: "#374151" };
     return h("span", {
-        style: { background: style.bg, color: style.color, padding: "2px 8px", borderRadius: 9999, fontSize: 12, fontWeight: 600, whiteSpace: "nowrap" },
+        style: { background: style.bg, color: style.color, padding: "2px 8px", borderRadius: "9999px", fontSize: "11px", fontWeight: 700, whiteSpace: "nowrap" },
         children: sev || "-",
     });
 }
@@ -52,19 +52,19 @@ function statusBadge(status) {
         ENCAMINHADA: { bg: "#ede9fe", color: "#5b21b6" },
         FINALIZADA: { bg: "#dcfce7", color: "#166534" },
     };
-    const style = map[status] || { bg: "#f1f5f9", color: "#475569" };
+    const style = map[status] || { bg: "#f3f4f6", color: "#374151" };
     return h("span", {
-        style: { background: style.bg, color: style.color, padding: "2px 8px", borderRadius: 9999, fontSize: 12, fontWeight: 600, whiteSpace: "nowrap" },
+        style: { background: style.bg, color: style.color, padding: "2px 8px", borderRadius: "9999px", fontSize: "11px", fontWeight: 700, whiteSpace: "nowrap" },
         children: String(status || "-").replace(/_/g, " "),
     });
 }
 
 function KpiCard({ title, value, color }) {
     return hs("div", {
-        style: { background: "#fff", border: "1px solid #e2e8f0", borderRadius: 8, padding: "16px 20px", minWidth: 120 },
+        style: { background: "#fff", border: "1px solid #e5e7eb", borderRadius: 8, padding: "16px 20px", minWidth: 120 },
         children: [
-            h("div", { style: { fontSize: 12, color: "#64748b", marginBottom: 4 }, children: title }),
-            h("div", { style: { fontSize: 22, fontWeight: 700, color: color || "#1e293b" }, children: value }),
+            h("div", { style: { fontSize: 12, color: "#6b7280", marginBottom: 4 }, children: title }),
+            h("div", { style: { fontSize: 22, fontWeight: 700, color: color || "#111827" }, children: value }),
         ],
     });
 }
@@ -94,7 +94,7 @@ function EncaminharModal({ divId, onClose, onDone }) {
     }
 
     return h("div", {
-        style: { position: "fixed", inset: 0, background: "rgba(0,0,0,0.4)", zIndex: 50, display: "flex", alignItems: "center", justifyContent: "center" },
+        style: { position: "fixed", inset: 0, background: "rgba(0,0,0,0.4)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center" },
         onClick: onClose,
         children: hs("div", {
             style: { background: "#fff", borderRadius: 10, padding: 28, width: 400, maxWidth: "95vw" },
@@ -116,7 +116,7 @@ function EncaminharModal({ divId, onClose, onDone }) {
                             value: obs,
                             onChange: e => setObs(e.target.value),
                             rows: 3,
-                            style: { width: "100%", border: "1px solid #e2e8f0", borderRadius: 6, padding: "6px 10px", fontSize: 14 },
+                            style: { width: "100%", border: "1px solid #e5e7eb", borderRadius: 6, padding: "6px 10px", fontSize: 14 },
                             placeholder: "Opcional...",
                         }),
                     ],
@@ -209,8 +209,8 @@ function FiscalDivergenciasPage() {
                 children: [
                     hs("div", {
                         children: [
-                            h("h1", { style: { fontSize: 22, fontWeight: 700, color: "#1e293b", margin: 0 }, children: "Divergências Fiscais" }),
-                            h("p", { style: { fontSize: 14, color: "#64748b", marginTop: 4 }, children: "Gerencie e trate todas as divergências identificadas nos documentos fiscais." }),
+                            h("h1", { style: { fontSize: 22, fontWeight: 700, color: "#111827", margin: 0 }, children: "Divergências Fiscais" }),
+                            h("p", { style: { fontSize: 14, color: "#6b7280", marginTop: 4 }, children: "Gerencie e trate todas as divergências identificadas nos documentos fiscais." }),
                         ],
                     }),
                     h(Button, { onClick: exportarCsv, style: { background: "#2563eb", color: "#fff" }, children: "Exportar CSV" }),
@@ -243,7 +243,7 @@ function FiscalDivergenciasPage() {
                                     h("select", {
                                         value: filtros.status,
                                         onChange: e => setFiltros(p => ({ ...p, status: e.target.value })),
-                                        style: { height: 36, border: "1px solid #e2e8f0", borderRadius: 6, padding: "0 8px", fontSize: 14 },
+                                        style: { height: 36, border: "1px solid #e5e7eb", borderRadius: 6, padding: "0 8px", fontSize: 14 },
                                         children: [
                                             h("option", { value: "", children: "Todos" }),
                                             h("option", { value: "NOVA", children: "Nova" }),
@@ -260,7 +260,7 @@ function FiscalDivergenciasPage() {
                                     h("select", {
                                         value: filtros.severidade,
                                         onChange: e => setFiltros(p => ({ ...p, severidade: e.target.value })),
-                                        style: { height: 36, border: "1px solid #e2e8f0", borderRadius: 6, padding: "0 8px", fontSize: 14 },
+                                        style: { height: 36, border: "1px solid #e5e7eb", borderRadius: 6, padding: "0 8px", fontSize: 14 },
                                         children: [
                                             h("option", { value: "", children: "Todas" }),
                                             h("option", { value: "CRITICA", children: "Crítica" }),
@@ -277,7 +277,7 @@ function FiscalDivergenciasPage() {
                                     h("select", {
                                         value: filtros.tipoDfe,
                                         onChange: e => setFiltros(p => ({ ...p, tipoDfe: e.target.value })),
-                                        style: { height: 36, border: "1px solid #e2e8f0", borderRadius: 6, padding: "0 8px", fontSize: 14 },
+                                        style: { height: 36, border: "1px solid #e5e7eb", borderRadius: 6, padding: "0 8px", fontSize: 14 },
                                         children: [
                                             h("option", { value: "", children: "Todos" }),
                                             h("option", { value: "NFE", children: "NF-e" }),
@@ -314,7 +314,7 @@ function FiscalDivergenciasPage() {
             }),
 
             erro ? h("div", { style: { color: "#991b1b", background: "#fee2e2", padding: 12, borderRadius: 8, marginBottom: 16 }, children: erro }) : null,
-            loading ? h("div", { style: { textAlign: "center", padding: 40, color: "#64748b" }, children: "Carregando..." }) : null,
+            loading ? h("div", { style: { textAlign: "center", padding: 40, color: "#6b7280" }, children: "Carregando..." }) : null,
 
             // Tabela
             !loading && h(Card, {
@@ -325,18 +325,18 @@ function FiscalDivergenciasPage() {
                         children: hs("thead", {
                             children: [
                                 h("tr", {
-                                    style: { background: "#f8fafc", borderBottom: "1px solid #e2e8f0" },
+                                    style: { background: "#f9fafb", borderBottom: "1px solid #e5e7eb" },
                                     children: [
-                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#475569" }, children: "ID" }),
-                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#475569" }, children: "Tipo DFe" }),
-                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#475569" }, children: "Tipo Divergência" }),
-                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#475569" }, children: "Severidade" }),
-                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#475569" }, children: "Status" }),
-                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#475569" }, children: "Responsável" }),
-                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#475569" }, children: "Setor" }),
-                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#475569" }, children: "SLA" }),
-                                        h("th", { style: { padding: "10px 12px", textAlign: "right", fontWeight: 600, color: "#475569" }, children: "Valor Impacto" }),
-                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#475569" }, children: "Ações" }),
+                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#374151" }, children: "ID" }),
+                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#374151" }, children: "Tipo DFe" }),
+                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#374151" }, children: "Tipo Divergência" }),
+                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#374151" }, children: "Severidade" }),
+                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#374151" }, children: "Status" }),
+                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#374151" }, children: "Responsável" }),
+                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#374151" }, children: "Setor" }),
+                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#374151" }, children: "SLA" }),
+                                        h("th", { style: { padding: "10px 12px", textAlign: "right", fontWeight: 600, color: "#374151" }, children: "Valor Impacto" }),
+                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#374151" }, children: "Ações" }),
                                     ],
                                 }),
                             ],
@@ -346,27 +346,27 @@ function FiscalDivergenciasPage() {
             }),
 
             !loading && h("div", {
-                style: { background: "#fff", border: "1px solid #e2e8f0", borderRadius: 8, overflow: "hidden" },
+                style: { background: "#fff", border: "1px solid #e5e7eb", borderRadius: 8, overflow: "hidden" },
                 children: h("div", {
                     style: { overflowX: "auto" },
                     children: h("table", {
                         style: { width: "100%", borderCollapse: "collapse", fontSize: 13 },
                         children: hs("tbody", {
                             children: lista.length === 0
-                                ? [h("tr", { children: h("td", { colSpan: 10, style: { padding: 40, textAlign: "center", color: "#64748b" }, children: "Nenhuma divergência encontrada." }) })]
+                                ? [h("tr", { children: h("td", { colSpan: 10, style: { padding: 40, textAlign: "center", color: "#6b7280" }, children: "Nenhuma divergência encontrada." }) })]
                                 : lista.map(row => {
                                     const vencido = isSlaVencido(row.sla);
                                     return hs("tr", {
-                                        style: { borderBottom: "1px solid #f1f5f9" },
+                                        style: { borderBottom: "1px solid #f3f4f6" },
                                         children: [
                                             h("td", { style: { padding: "8px 12px" }, children: row.id }),
-                                            h("td", { style: { padding: "8px 12px" }, children: h("span", { style: { background: "#dbeafe", color: "#1e40af", padding: "2px 8px", borderRadius: 9999, fontSize: 12, fontWeight: 600 }, children: row.tipoDfe || "-" }) }),
-                                            h("td", { style: { padding: "8px 12px", color: "#475569" }, children: String(row.tipoDivergencia || "-").replace(/_/g, " ") }),
+                                            h("td", { style: { padding: "8px 12px" }, children: h("span", { style: { background: "#dbeafe", color: "#1e40af", padding: "2px 8px", borderRadius: "9999px", fontSize: "11px", fontWeight: 700 }, children: row.tipoDfe || "-" }) }),
+                                            h("td", { style: { padding: "8px 12px", color: "#374151" }, children: String(row.tipoDivergencia || "-").replace(/_/g, " ") }),
                                             h("td", { style: { padding: "8px 12px" }, children: severidadeBadge(row.severidade) }),
                                             h("td", { style: { padding: "8px 12px" }, children: statusBadge(row.status) }),
                                             h("td", { style: { padding: "8px 12px" }, children: row.responsavel || "-" }),
                                             h("td", { style: { padding: "8px 12px" }, children: row.setor || "-" }),
-                                            h("td", { style: { padding: "8px 12px", color: vencido ? "#991b1b" : "#1e293b", fontWeight: vencido ? 700 : 400 }, children: formatDate(row.sla) }),
+                                            h("td", { style: { padding: "8px 12px", color: vencido ? "#991b1b" : "#111827", fontWeight: vencido ? 700 : 400 }, children: formatDate(row.sla) }),
                                             h("td", { style: { padding: "8px 12px", textAlign: "right" }, children: formatMoney(row.valorImpacto) }),
                                             hs("td", {
                                                 style: { padding: "8px 12px", verticalAlign: "middle", whiteSpace: "nowrap" },

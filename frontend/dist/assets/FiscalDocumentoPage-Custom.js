@@ -74,7 +74,6 @@ function TabButton({ active, onClick, children }) {
             padding: "8px 16px",
             fontSize: "13px",
             fontWeight: active ? 700 : 400,
-            borderBottom: active ? "2px solid #2563eb" : "2px solid transparent",
             color: active ? "#2563eb" : "#6b7280",
             background: "none",
             border: "none",
@@ -109,7 +108,7 @@ function ModalObservacao({ onClose, onSalvar, chave }) {
     };
 
     return h("div", {
-        style: { position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center" },
+        style: { position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center" },
         onClick: onClose,
         children: h("div", {
             style: { background: "var(--background, #fff)", borderRadius: "10px", padding: "28px", width: "440px", maxWidth: "95vw", boxShadow: "0 8px 32px rgba(0,0,0,0.18)" },

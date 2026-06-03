@@ -65,7 +65,7 @@ export default function ChecklistPortariaListPage() {
         } catch(e) { alert("Erro ao cancelar: " + e.message); }
     }
 
-    const th  = { padding: "9px 14px", textAlign: "left",   fontWeight: 700, fontSize: "11px", color: "#374151", borderBottom: "2px solid #d1d5db", background: "#f8fafc", whiteSpace: "nowrap" };
+    const th  = { padding: "9px 14px", textAlign: "left",   fontWeight: 700, fontSize: "11px", color: "#374151", borderBottom: "2px solid #d1d5db", background: "#f9fafb", whiteSpace: "nowrap" };
     const thC = { ...th, textAlign: "center" };
     const td  = { padding: "9px 14px", fontSize: "12px", borderBottom: "1px solid #f3f4f6", verticalAlign: "middle" };
     const tdC = { ...td, textAlign: "center" };

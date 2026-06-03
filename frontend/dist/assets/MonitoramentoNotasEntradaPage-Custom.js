@@ -75,7 +75,7 @@ function PainelItens({ numTransEnt, codfilial, dtEnt }) {
                 h("th", { key: "sc", style: th, children: "Seção" }),
             ]}) }),
             h("tbody", { key: "tb", children: itens.map((item, i) =>
-                hs("tr", { key: i, style: { background: i % 2 === 0 ? "#fff" : "#f8fafc" }, children: [
+                hs("tr", { key: i, style: { background: i % 2 === 0 ? "#fff" : "#f9fafb" }, children: [
                     h("td", { key: "cp", style: { ...td, fontFamily: "monospace", whiteSpace: "nowrap" }, children: String(item.CODPROD || "—") }),
                     h("td", { key: "dc", style: { ...td, maxWidth: "220px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }, title: item.DESCRICAO || "", children: item.DESCRICAO || "—" }),
                     h("td", { key: "un", style: { ...td, whiteSpace: "nowrap" }, children: item.UNIDADE || "—" }),

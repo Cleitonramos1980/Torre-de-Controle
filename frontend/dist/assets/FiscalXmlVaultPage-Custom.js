@@ -33,16 +33,16 @@ function truncar(str, n) {
 }
 
 function statusBadge(status) {
-    if (status === "ATIVO") return h("span", { style: { background: "#dcfce7", color: "#166534", padding: "2px 8px", borderRadius: 9999, fontSize: 12, fontWeight: 600 }, children: "ATIVO" });
-    return h("span", { style: { background: "#f1f5f9", color: "#64748b", padding: "2px 8px", borderRadius: 9999, fontSize: 12, fontWeight: 600 }, children: status || "INATIVO" });
+    if (status === "ATIVO") return h("span", { style: { background: "#dcfce7", color: "#166534", padding: "2px 8px", borderRadius: "9999px", fontSize: "11px", fontWeight: 700 }, children: "ATIVO" });
+    return h("span", { style: { background: "#f3f4f6", color: "#6b7280", padding: "2px 8px", borderRadius: "9999px", fontSize: "11px", fontWeight: 700 }, children: status || "INATIVO" });
 }
 
 function KpiCard({ title, value }) {
     return hs("div", {
-        style: { background: "#fff", border: "1px solid #e2e8f0", borderRadius: 8, padding: "16px 20px", minWidth: 120 },
+        style: { background: "#fff", border: "1px solid #e5e7eb", borderRadius: 8, padding: "16px 20px", minWidth: 120 },
         children: [
-            h("div", { style: { fontSize: 12, color: "#64748b", marginBottom: 4 }, children: title }),
-            h("div", { style: { fontSize: 22, fontWeight: 700, color: "#1e293b" }, children: value }),
+            h("div", { style: { fontSize: 12, color: "#6b7280", marginBottom: 4 }, children: title }),
+            h("div", { style: { fontSize: 22, fontWeight: 700, color: "#111827" }, children: value }),
         ],
     });
 }
@@ -53,7 +53,7 @@ function MetadataModal({ xml, onClose }) {
     const campos = Object.entries(xml).filter(([k]) => !exclude.includes(k));
 
     return h("div", {
-        style: { position: "fixed", inset: 0, background: "rgba(0,0,0,0.45)", zIndex: 50, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 },
+        style: { position: "fixed", inset: 0, background: "rgba(0,0,0,0.45)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 },
         onClick: onClose,
         children: hs("div", {
             style: { background: "#fff", borderRadius: 10, padding: 24, width: 640, maxWidth: "95vw", maxHeight: "85vh", overflowY: "auto" },
@@ -70,10 +70,10 @@ function MetadataModal({ xml, onClose }) {
                     style: { width: "100%", borderCollapse: "collapse", fontSize: 13 },
                     children: h("tbody", {
                         children: campos.map(([key, val]) => hs("tr", {
-                            style: { borderBottom: "1px solid #f1f5f9" },
+                            style: { borderBottom: "1px solid #f3f4f6" },
                             children: [
-                                h("td", { style: { padding: "6px 10px", fontWeight: 600, color: "#475569", whiteSpace: "nowrap", width: "40%" }, children: key }),
-                                h("td", { style: { padding: "6px 10px", color: "#1e293b", wordBreak: "break-all" }, children: val == null ? h("span", { style: { color: "#94a3b8" }, children: "null" }) : String(val) }),
+                                h("td", { style: { padding: "6px 10px", fontWeight: 600, color: "#374151", whiteSpace: "nowrap", width: "40%" }, children: key }),
+                                h("td", { style: { padding: "6px 10px", color: "#111827", wordBreak: "break-all" }, children: val == null ? h("span", { style: { color: "#94a3b8" }, children: "null" }) : String(val) }),
                             ],
                         }, key)),
                     }),
@@ -141,8 +141,8 @@ function FiscalXmlVaultPage() {
             hs("div", {
                 style: { marginBottom: 20 },
                 children: [
-                    h("h1", { style: { fontSize: 22, fontWeight: 700, color: "#1e293b", margin: 0 }, children: "Cofre Fiscal — XML Vault" }),
-                    h("p", { style: { fontSize: 14, color: "#64748b", marginTop: 4 }, children: "Repositório imutável de XMLs fiscais com validação de integridade por hash SHA-256." }),
+                    h("h1", { style: { fontSize: 22, fontWeight: 700, color: "#111827", margin: 0 }, children: "Cofre Fiscal — XML Vault" }),
+                    h("p", { style: { fontSize: 14, color: "#6b7280", marginTop: 4 }, children: "Repositório imutável de XMLs fiscais com validação de integridade por hash SHA-256." }),
                 ],
             }),
 
@@ -173,7 +173,7 @@ function FiscalXmlVaultPage() {
                                     h("select", {
                                         value: filtros.tipoDfe,
                                         onChange: e => setFiltros(p => ({ ...p, tipoDfe: e.target.value })),
-                                        style: { height: 36, border: "1px solid #e2e8f0", borderRadius: 6, padding: "0 8px", fontSize: 14 },
+                                        style: { height: 36, border: "1px solid #e5e7eb", borderRadius: 6, padding: "0 8px", fontSize: 14 },
                                         children: [
                                             h("option", { value: "", children: "Todos" }),
                                             h("option", { value: "NFE", children: "NF-e" }),
@@ -190,7 +190,7 @@ function FiscalXmlVaultPage() {
                                     h("select", {
                                         value: filtros.status,
                                         onChange: e => setFiltros(p => ({ ...p, status: e.target.value })),
-                                        style: { height: 36, border: "1px solid #e2e8f0", borderRadius: 6, padding: "0 8px", fontSize: 14 },
+                                        style: { height: 36, border: "1px solid #e5e7eb", borderRadius: 6, padding: "0 8px", fontSize: 14 },
                                         children: [
                                             h("option", { value: "", children: "Todos" }),
                                             h("option", { value: "ATIVO", children: "Ativo" }),
@@ -225,7 +225,7 @@ function FiscalXmlVaultPage() {
             }),
 
             erro ? h("div", { style: { color: "#991b1b", background: "#fee2e2", padding: 12, borderRadius: 8, marginBottom: 16 }, children: erro }) : null,
-            loading ? h("div", { style: { textAlign: "center", padding: 40, color: "#64748b" }, children: "Carregando..." }) : null,
+            loading ? h("div", { style: { textAlign: "center", padding: 40, color: "#6b7280" }, children: "Carregando..." }) : null,
 
             // Tabela
             !loading && h(Card, {
@@ -236,34 +236,34 @@ function FiscalXmlVaultPage() {
                         children: hs("tbody", {
                             children: [
                                 h("tr", {
-                                    style: { background: "#f8fafc", borderBottom: "1px solid #e2e8f0" },
+                                    style: { background: "#f9fafb", borderBottom: "1px solid #e5e7eb" },
                                     children: [
-                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#475569" }, children: "ID" }),
-                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#475569" }, children: "Chave" }),
-                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#475569" }, children: "Tipo DFe" }),
-                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#475569" }, children: "Tipo XML" }),
-                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#475569" }, children: "Hash SHA-256" }),
-                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#475569" }, children: "Tamanho" }),
-                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#475569" }, children: "Capturado em" }),
-                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#475569" }, children: "Status" }),
-                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#475569" }, children: "Origem" }),
-                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#475569" }, children: "Ações" }),
+                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#374151" }, children: "ID" }),
+                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#374151" }, children: "Chave" }),
+                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#374151" }, children: "Tipo DFe" }),
+                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#374151" }, children: "Tipo XML" }),
+                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#374151" }, children: "Hash SHA-256" }),
+                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#374151" }, children: "Tamanho" }),
+                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#374151" }, children: "Capturado em" }),
+                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#374151" }, children: "Status" }),
+                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#374151" }, children: "Origem" }),
+                                        h("th", { style: { padding: "10px 12px", textAlign: "left", fontWeight: 600, color: "#374151" }, children: "Ações" }),
                                     ],
                                 }),
                                 ...lista.length === 0
-                                    ? [h("tr", { children: h("td", { colSpan: 10, style: { padding: 40, textAlign: "center", color: "#64748b" }, children: "Nenhum XML encontrado." }) })]
+                                    ? [h("tr", { children: h("td", { colSpan: 10, style: { padding: 40, textAlign: "center", color: "#6b7280" }, children: "Nenhum XML encontrado." }) })]
                                     : lista.map(row => h("tr", {
-                                        style: { borderBottom: "1px solid #f1f5f9" },
+                                        style: { borderBottom: "1px solid #f3f4f6" },
                                         children: [
                                             h("td", { style: { padding: "8px 12px" }, children: row.id }),
                                             h("td", { style: { padding: "8px 12px", fontFamily: "monospace", fontSize: 12 }, children: truncar(row.chave || row.chaveAcesso, 22) }),
-                                            h("td", { style: { padding: "8px 12px" }, children: h("span", { style: { background: "#dbeafe", color: "#1e40af", padding: "2px 8px", borderRadius: 9999, fontSize: 12, fontWeight: 600 }, children: row.tipoDfe || "-" }) }),
-                                            h("td", { style: { padding: "8px 12px", color: "#475569" }, children: row.tipoXml || row.tipo || "-" }),
+                                            h("td", { style: { padding: "8px 12px" }, children: h("span", { style: { background: "#dbeafe", color: "#1e40af", padding: "2px 8px", borderRadius: "9999px", fontSize: "11px", fontWeight: 700 }, children: row.tipoDfe || "-" }) }),
+                                            h("td", { style: { padding: "8px 12px", color: "#374151" }, children: row.tipoXml || row.tipo || "-" }),
                                             h("td", { style: { padding: "8px 12px", fontFamily: "monospace", fontSize: 11 }, children: truncar(row.hashSha256 || row.hash, 16) }),
                                             h("td", { style: { padding: "8px 12px" }, children: formatBytes(row.tamanho || row.size) }),
                                             h("td", { style: { padding: "8px 12px" }, children: formatDate(row.capturadoEm || row.createdAt || row.created_at) }),
                                             h("td", { style: { padding: "8px 12px" }, children: statusBadge(row.status) }),
-                                            h("td", { style: { padding: "8px 12px", color: "#64748b" }, children: row.origem || "-" }),
+                                            h("td", { style: { padding: "8px 12px", color: "#6b7280" }, children: row.origem || "-" }),
                                             hs("td", {
                                                 style: { padding: "8px 12px", verticalAlign: "middle", whiteSpace: "nowrap" },
                                                 children: hs("div", {

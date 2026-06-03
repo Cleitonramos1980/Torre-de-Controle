@@ -24,8 +24,8 @@ const statusColors = {
     DENTRO: { bg: "#dcfce7", text: "#166534", label: "Dentro" },
     PRESENTE: { bg: "#dcfce7", text: "#166534", label: "Presente" },
     AGUARDANDO_VALIDACAO: { bg: "#fef3c7", text: "#92400e", label: "Aguardando" },
-    SAIU: { bg: "#f1f5f9", text: "#64748b", label: "Saiu" },
-    FINALIZADO: { bg: "#f1f5f9", text: "#64748b", label: "Saiu" },
+    SAIU: { bg: "#f3f4f6", text: "#6b7280", label: "Saiu" },
+    FINALIZADO: { bg: "#f3f4f6", text: "#6b7280", label: "Saiu" },
 };
 
 export default function PortariaTotemPage() {
@@ -91,7 +91,7 @@ export default function PortariaTotemPage() {
 
             // Contadores topo
             hs("div", {
-                style: { display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "12px", padding: "16px 24px", background: "#f8fafc", borderBottom: "1px solid hsl(var(--border))" },
+                style: { display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "12px", padding: "16px 24px", background: "#f9fafb", borderBottom: "1px solid hsl(var(--border))" },
                 children: [
                     hs("div", { style: { background: "#dcfce7", borderRadius: "10px", padding: "14px 16px", textAlign: "center" }, children: [
                         h("p", { style: { fontSize: "32px", fontWeight: 800, color: "#166534", lineHeight: 1 }, children: acessos.length }),
@@ -122,14 +122,14 @@ export default function PortariaTotemPage() {
             showQr ? hs("div", {
                 style: { padding: "0 24px 12px" },
                 children: hs("div", {
-                    style: { display: "flex", alignItems: "center", gap: "24px", padding: "16px", background: "#f8fafc", borderRadius: "12px", border: "1px solid hsl(var(--border))" },
+                    style: { display: "flex", alignItems: "center", gap: "24px", padding: "16px", background: "#f9fafb", borderRadius: "12px", border: "1px solid hsl(var(--border))" },
                     children: [
                         h("img", { src: QR_IMG_URL, alt: "QR Entrada", style: { width: "160px", height: "160px", borderRadius: "8px", background: "#fff", border: "1px solid #e5e7eb" } }),
                         hs("div", {
                             children: [
                                 h("p", { style: { fontWeight: 700, fontSize: "15px" }, children: "Acesso de Visitante" }),
                                 h("p", { style: { fontSize: "13px", color: "hsl(var(--muted-foreground))", marginTop: "4px" }, children: "O visitante escaneia o QR, preenche os dados e recebe o código de entrada." }),
-                                h("p", { style: { fontSize: "11px", fontFamily: "monospace", marginTop: "8px", background: "#e2e8f0", padding: "4px 8px", borderRadius: "4px" }, children: ENTRADA_URL }),
+                                h("p", { style: { fontSize: "11px", fontFamily: "monospace", marginTop: "8px", background: "#e5e7eb", padding: "4px 8px", borderRadius: "4px" }, children: ENTRADA_URL }),
                             ],
                         }),
                     ],
@@ -156,7 +156,7 @@ export default function PortariaTotemPage() {
                                         h("p", { style: { fontSize: "12px", color: "hsl(var(--muted-foreground))" }, children: [a.empresa, a.documento].filter(Boolean).join(" · ") || "—" }),
                                     ] }),
                                     hs("div", { style: { textAlign: "right", flexShrink: 0 }, children: [
-                                        h("span", { style: { fontSize: "11px", fontWeight: 600, background: sc.bg, color: sc.text, padding: "2px 8px", borderRadius: "9999px" }, children: sc.label }),
+                                        h("span", { style: { fontSize: "11px", fontWeight: 700, background: sc.bg, color: sc.text, padding: "2px 8px", borderRadius: "9999px" }, children: sc.label }),
                                         h("p", { style: { fontSize: "11px", color: "hsl(var(--muted-foreground))", marginTop: "4px" }, children: a.dataHora ? `${fmtTime(a.dataHora)} · ${fmtElapsed(a.dataHora)}` : "—" }),
                                     ] }),
                                 ],

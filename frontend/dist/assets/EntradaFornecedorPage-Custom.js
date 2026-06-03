@@ -52,7 +52,7 @@ function calcPermanenciaAtual(horaEntrada) {
 }
 
 const statusLabel = { PRESENTE: "Presente", FINALIZADO: "Finalizado" };
-const statusColor = { PRESENTE: { background: "#dcfce7", color: "#166534" }, FINALIZADO: { background: "#f1f5f9", color: "#64748b" } };
+const statusColor = { PRESENTE: { background: "#dcfce7", color: "#166534" }, FINALIZADO: { background: "#f3f4f6", color: "#6b7280" } };
 
 const fieldStyle = { width: "100%" };
 
@@ -246,7 +246,7 @@ export default function EntradaFornecedorPage() {
 
             // Modal Form
             showForm ? h("div", {
-                style: { position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 50, display: "flex", alignItems: "center", justifyContent: "center", padding: "16px" },
+                style: { position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: "16px" },
                 children: h(Card, {
                     style: { width: "100%", maxWidth: "560px", maxHeight: "90vh", overflowY: "auto" },
                     children: h(CardContent, {
@@ -338,7 +338,7 @@ export default function EntradaFornecedorPage() {
                                                 h("td", { style: { padding: "10px 12px", whiteSpace: "nowrap", verticalAlign: "middle" }, children: fmtDateTime(e.horaEntrada) }),
                                                 h("td", { style: { padding: "10px 12px", whiteSpace: "nowrap", fontWeight: e.status === "PRESENTE" ? 600 : 400, verticalAlign: "middle" }, children: e.status === "PRESENTE" ? calcPermanenciaAtual(e.horaEntrada) : fmtPermanencia(e.permanenciaMin) }),
                                                 h("td", { style: { padding: "10px 12px", whiteSpace: "nowrap", verticalAlign: "middle" }, children: fmtDateTime(e.horaSaida) }),
-                                                h("td", { style: { padding: "10px 12px", verticalAlign: "middle" }, children: h("span", { style: { ...statusColor[e.status], padding: "2px 8px", borderRadius: "9999px", fontSize: "11px", fontWeight: 600, whiteSpace: "nowrap" }, children: statusLabel[e.status] || e.status }) }),
+                                                h("td", { style: { padding: "10px 12px", verticalAlign: "middle" }, children: h("span", { style: { ...statusColor[e.status], padding: "2px 8px", borderRadius: "9999px", fontSize: "11px", fontWeight: 700, whiteSpace: "nowrap" }, children: statusLabel[e.status] || e.status }) }),
                                                 h("td", { style: { padding: "10px 12px", verticalAlign: "middle", whiteSpace: "nowrap" }, children: e.status === "PRESENTE" ? h(Button, { size: "sm", variant: "outline", disabled: registrandoSaida === e.id, onClick: () => handleSaida(e.id), style: { fontSize: "12px", whiteSpace: "nowrap" }, children: registrandoSaida === e.id ? "..." : "Registrar Saída" }) : null }),
                                             ],
                                         })

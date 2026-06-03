@@ -27,7 +27,7 @@ function bq(params) {
 const RC = { CRITICO: ["#fee2e2","#991b1b"], ALTO: ["#fef3c7","#92400e"], ATENCAO: ["#dbeafe","#1e40af"], BAIXO: ["#dcfce7","#166534"] };
 function rBadge(r) { const [bg,fg] = RC[r] || ["#f3f4f6","#374151"]; return h("span",{style:{background:bg,color:fg,padding:"2px 8px",borderRadius:"9999px",fontSize:"11px",fontWeight:700},children:r||"—"}); }
 const SC = { AUTORIZADA:["#dcfce7","#166534"], CANCELADA:["#fee2e2","#991b1b"], DENEGADA:["#fef3c7","#92400e"], PENDENTE:["#e0e7ff","#3730a3"] };
-function sBadge(s) { const [bg,fg] = SC[String(s||"").toUpperCase()] || ["#f3f4f6","#374151"]; return h("span",{style:{background:bg,color:fg,padding:"2px 8px",borderRadius:"9999px",fontSize:"11px",fontWeight:600},children:s||"—"}); }
+function sBadge(s) { const [bg,fg] = SC[String(s||"").toUpperCase()] || ["#f3f4f6","#374151"]; return h("span",{style:{background:bg,color:fg,padding:"2px 8px",borderRadius:"9999px",fontSize:"11px",fontWeight:700},children:s||"—"}); }
 function scoreColor(n) { if (n>=76) return "#dc2626"; if (n>=51) return "#d97706"; if (n>=26) return "#2563eb"; return "#16a34a"; }
 
 function KpiCard({ label, value, color }) {
@@ -275,7 +275,7 @@ function PainelCTe({ chave, onClose }) {
 
                     // XML
                     doc.xmlComprimido ? h(Secao, { key:"xml", titulo:"XML do CT-e (SEFAZ)", cor:"#fafaf9", children:
-                        h("pre", { style:{ fontSize:"10.5px", background:"#0f172a", color:"#e2e8f0", padding:"16px", borderRadius:"6px", overflowX:"auto", maxHeight:"380px", overflowY:"auto", lineHeight:1.5, margin:0, whiteSpace:"pre-wrap" }, children:doc.xmlComprimido })
+                        h("pre", { style:{ fontSize:"10.5px", background:"#0f172a", color:"#e5e7eb", padding:"16px", borderRadius:"6px", overflowX:"auto", maxHeight:"380px", overflowY:"auto", lineHeight:1.5, margin:0, whiteSpace:"pre-wrap" }, children:doc.xmlComprimido })
                     }) : null,
                 ]})
             }),

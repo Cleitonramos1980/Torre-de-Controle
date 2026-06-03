@@ -224,7 +224,7 @@ export default function EngenhariaSolicitacaoPublicaPage() {
 
         // Passo 4: Confirmar
         passo === 4 ? hs("div", { style: { display: "flex", flexDirection: "column", gap: "12px" }, children: [
-            h("div", { style: { background: "#f8fafc", borderRadius: "10px", padding: "16px" }, children: hs("div", { style: { display: "flex", flexDirection: "column", gap: "8px", fontSize: "13px" }, children: [
+            h("div", { style: { background: "#f9fafb", borderRadius: "10px", padding: "16px" }, children: hs("div", { style: { display: "flex", flexDirection: "column", gap: "8px", fontSize: "13px" }, children: [
                 hs("div", { style: { display: "flex", justifyContent: "space-between" }, children: [h("span", { style: { color: "#6b7280" }, children: "Filial" }), h("span", { style: { fontWeight: 600 }, children: `${form.codfilial} — ${form.nome_filial}` })] }),
                 hs("div", { style: { display: "flex", justifyContent: "space-between" }, children: [h("span", { style: { color: "#6b7280" }, children: "Problema" }), h("span", { style: { fontWeight: 600, maxWidth: "65%", textAlign: "right" }, children: form.titulo })] }),
                 form.categoria ? hs("div", { style: { display: "flex", justifyContent: "space-between" }, children: [h("span", { style: { color: "#6b7280" }, children: "Categoria" }), h("span", { style: { fontWeight: 600 }, children: form.categoria })] }) : null,

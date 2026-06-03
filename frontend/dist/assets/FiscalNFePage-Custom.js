@@ -29,7 +29,7 @@ function bq(params) {
 const RC = { CRITICO: ["#fee2e2","#991b1b"], ALTO: ["#fef3c7","#92400e"], ATENCAO: ["#dbeafe","#1e40af"], BAIXO: ["#dcfce7","#166534"] };
 function rBadge(r) { const [bg, fg] = RC[r] || ["#f3f4f6","#374151"]; return h("span", { style: { background: bg, color: fg, padding: "2px 8px", borderRadius: "9999px", fontSize: "11px", fontWeight: 700 }, children: r || "—" }); }
 const SC = { AUTORIZADA: ["#dcfce7","#166534"], CANCELADA: ["#fee2e2","#991b1b"], DENEGADA: ["#fef3c7","#92400e"] };
-function sBadge(s) { const [bg, fg] = SC[String(s||"").toUpperCase()] || ["#f3f4f6","#374151"]; return h("span", { style: { background: bg, color: fg, padding: "2px 8px", borderRadius: "9999px", fontSize: "11px", fontWeight: 600 }, children: s || "—" }); }
+function sBadge(s) { const [bg, fg] = SC[String(s||"").toUpperCase()] || ["#f3f4f6","#374151"]; return h("span", { style: { background: bg, color: fg, padding: "2px 8px", borderRadius: "9999px", fontSize: "11px", fontWeight: 700 }, children: s || "—" }); }
 function scoreColor(n) { if (n >= 76) return "#dc2626"; if (n >= 51) return "#d97706"; if (n >= 26) return "#2563eb"; return "#16a34a"; }
 
 function KpiCard({ label, value, color }) {
@@ -107,7 +107,7 @@ function PainelNFe({ chave, onClose, fornecStatus, onFornecCadastrado }) {
                     hs("div", { key: "badges", style: { display: "flex", gap: "8px", flexWrap: "wrap", marginBottom: "16px" }, children: [
                         sBadge(doc.statusSefaz),
                         rBadge(doc.classificacaoRisco),
-                        doc.statusManifestacao ? h("span", { key: "mf", style: { background: "#e0e7ff", color: "#3730a3", padding: "2px 8px", borderRadius: "9999px", fontSize: "11px", fontWeight: 600 }, children: doc.statusManifestacao }) : null,
+                        doc.statusManifestacao ? h("span", { key: "mf", style: { background: "#e0e7ff", color: "#3730a3", padding: "2px 8px", borderRadius: "9999px", fontSize: "11px", fontWeight: 700 }, children: doc.statusManifestacao }) : null,
                         doc.origem ? h("span", { key: "or", style: { background: "#f3f4f6", color: "#6b7280", padding: "2px 8px", borderRadius: "9999px", fontSize: "11px" }, children: doc.origem }) : null,
                     ]}),
 
@@ -216,7 +216,7 @@ function PainelNFe({ chave, onClose, fornecStatus, onFornecCadastrado }) {
 
                     // XML
                     doc.xmlComprimido ? h(Secao, { key: "xml", titulo: "XML da Nota (SEFAZ)", cor: "#fafaf9", children:
-                        h("pre", { style: { fontSize: "10.5px", background: "#0f172a", color: "#e2e8f0", padding: "16px", borderRadius: "6px", overflowX: "auto", maxHeight: "400px", overflowY: "auto", lineHeight: 1.5, margin: 0, whiteSpace: "pre-wrap" }, children: doc.xmlComprimido })
+                        h("pre", { style: { fontSize: "10.5px", background: "#0f172a", color: "#e5e7eb", padding: "16px", borderRadius: "6px", overflowX: "auto", maxHeight: "400px", overflowY: "auto", lineHeight: 1.5, margin: 0, whiteSpace: "pre-wrap" }, children: doc.xmlComprimido })
                     }) : null,
 
                     // Manifestações
@@ -692,7 +692,7 @@ function PainelItensNFe({ doc, loading, erro, onCadastrarProduto, valorTotalNota
             ]}) }),
             h("tbody", { key: "tb", children:
                 itens.map((it, idx) =>
-                    hs("tr", { key: it.id || idx, style: { background: idx % 2 === 0 ? "#fff" : "#f8fafc" }, children: [
+                    hs("tr", { key: it.id || idx, style: { background: idx % 2 === 0 ? "#fff" : "#f9fafb" }, children: [
                         h("td", { key: "seq", style: { ...tdS, color: "#9ca3af" }, children: String(it.seq ?? idx + 1) }),
                         h("td", { key: "cod", style: { ...tdS, fontFamily: "monospace" }, children: it.codProd || "—" }),
                         h("td", { key: "ean", style: { ...tdS, fontFamily: "monospace", color: "#4b5563" }, children: it.ean && it.ean !== "SEM GTIN" && it.ean !== "0" ? it.ean : "—" }),
@@ -705,7 +705,7 @@ function PainelItensNFe({ doc, loading, erro, onCadastrarProduto, valorTotalNota
                         h("td", { key: "cst", style: tdS, children: it.cstIcms || it.cst || "—" }),
                         h("td", { key: "ac", style: { ...tdS, textAlign: "center" }, children:
                             it.produtoCadastrado
-                                ? h("span", { style: { background: "#dcfce7", color: "#166534", padding: "2px 8px", borderRadius: "9999px", fontSize: "11px", fontWeight: 600, whiteSpace: "nowrap" }, children: "✓ Cadastrado" })
+                                ? h("span", { style: { background: "#dcfce7", color: "#166534", padding: "2px 8px", borderRadius: "9999px", fontSize: "11px", fontWeight: 700, whiteSpace: "nowrap" }, children: "✓ Cadastrado" })
                                 : h("button", { style: { fontSize: "11px", padding: "2px 10px", borderRadius: "5px", border: "1px solid #2563eb", background: "#eff6ff", color: "#1d4ed8", cursor: "pointer", fontWeight: 600, whiteSpace: "nowrap" }, onClick: e => { e.stopPropagation(); onCadastrarProduto(it); }, children: "Cadastrar" })
                         }),
                     ]})
@@ -990,9 +990,9 @@ export default function FiscalNFePage() {
                                                         fStatus == null
                                                             ? h("span", { style: { color: "#9ca3af", fontSize: "11px" }, children: "…" })
                                                             : fStatus.cadastrado
-                                                                ? h("span", { style: { display: "inline-block", background: "#dcfce7", color: "#166534", padding: "2px 8px", borderRadius: "9999px", fontSize: "11px", fontWeight: 600 }, children: `#${fStatus.codfornec}` })
+                                                                ? h("span", { style: { display: "inline-block", background: "#dcfce7", color: "#166534", padding: "2px 8px", borderRadius: "9999px", fontSize: "11px", fontWeight: 700 }, children: `#${fStatus.codfornec}` })
                                                                 : hs("div", { style: { display: "flex", flexDirection: "column", gap: "3px" }, children: [
-                                                                    h("span", { key: "b", style: { display: "inline-block", background: "#fee2e2", color: "#991b1b", padding: "2px 8px", borderRadius: "9999px", fontSize: "11px", fontWeight: 600 }, children: "Não cadastrado" }),
+                                                                    h("span", { key: "b", style: { display: "inline-block", background: "#fee2e2", color: "#991b1b", padding: "2px 8px", borderRadius: "9999px", fontSize: "11px", fontWeight: 700 }, children: "Não cadastrado" }),
                                                                     chave ? h("button", { key: "cad", style: { fontSize: "10px", padding: "2px 8px", borderRadius: "4px", border: "1px solid #2563eb", background: "#eff6ff", color: "#1d4ed8", cursor: "pointer", fontWeight: 600 }, onClick: e => { e.stopPropagation(); setModalFornec(nfe); }, children: "Cadastrar Fornecedor" }) : null,
                                                                 ]})
                                                     }),

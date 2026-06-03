@@ -30,7 +30,7 @@ function Toast({ msg, tipo, onClose }) {
     const bg = tipo === "erro" ? "#fee2e2" : "#dcfce7";
     const color = tipo === "erro" ? "#991b1b" : "#166534";
     return hs("div", {
-        style: { position: "fixed", top: "20px", right: "20px", zIndex: 9999, background: bg, color, border: `1px solid ${color}`, borderRadius: "8px", padding: "14px 20px", minWidth: "280px", maxWidth: "420px", boxShadow: "0 4px 12px rgba(0,0,0,0.15)", display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "12px" },
+        style: { position: "fixed", top: "20px", right: "20px", zIndex: 1000, background: bg, color, border: `1px solid ${color}`, borderRadius: "8px", padding: "14px 20px", minWidth: "280px", maxWidth: "420px", boxShadow: "0 4px 12px rgba(0,0,0,0.15)", display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "12px" },
         children: [
             h("span", { style: { fontSize: "13px", lineHeight: "1.5" }, children: msg }),
             h("button", { onClick: onClose, style: { background: "none", border: "none", cursor: "pointer", fontSize: "16px", color, lineHeight: 1, padding: 0 }, children: "×" }),
@@ -40,7 +40,7 @@ function Toast({ msg, tipo, onClose }) {
 
 const SEVERIDADE_CONFIG = {
     CRITICA: { borderColor: "#dc2626", bg: "#fff1f2", badgeBg: "#fee2e2", badgeColor: "#991b1b", label: "Crítica", icon: "🔴" },
-    ALTA:    { borderColor: "#ea580c", bg: "#fff7ed", badgeBg: "#ffedd5", badgeColor: "#9a3412", label: "Alta",    icon: "🟠" },
+    ALTA:    { borderColor: "#d97706", bg: "#fff7ed", badgeBg: "#fef3c7", badgeColor: "#92400e", label: "Alta",    icon: "🟠" },
     MEDIA:   { borderColor: "#2563eb", bg: "#eff6ff", badgeBg: "#dbeafe", badgeColor: "#1e40af", label: "Média",   icon: "🔵" },
     BAIXA:   { borderColor: "#16a34a", bg: "#f0fdf4", badgeBg: "#dcfce7", badgeColor: "#166534", label: "Baixa",   icon: "🟢" },
 };
